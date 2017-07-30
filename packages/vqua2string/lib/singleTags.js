@@ -1,0 +1,18 @@
+module.exports = [
+  'area',
+  'base',
+  'col',
+  'command',
+  'embed',
+  'input',
+  'keygen',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+  'hr',
+  'img',
+  'br',
+]

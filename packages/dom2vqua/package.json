@@ -1,0 +1,27 @@
+{
+  "name": "dom2vqua",
+  "version": "1.0.0",
+  "description": "Convert dom to vqua",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "vqua",
+    "dom",
+    "converter"
+  ],
+  "dependencies": {
+    "vqua": "1.0.0",
+    "vqua-utils": "1.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.6.0",
+    "webpack": "^3.4.1"
+  }
+}

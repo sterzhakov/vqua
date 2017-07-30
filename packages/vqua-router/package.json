@@ -1,0 +1,21 @@
+{
+  "name": "vqua-router",
+  "version": "1.0.0",
+  "description": "Router for vqua.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "vqua",
+    "router"
+  ],
+  "dependencies": {
+    "vqua": "1.0.0"
+  },  
+  "author": "Igor Sterjakov",
+  "license": "ISC",
+  "directories": {
+    "lib": "lib"
+  }
+}

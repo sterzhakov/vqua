@@ -1,0 +1,8 @@
+module.exports = {
+  CREATE_ROOT:     0,
+  CREATE_TEXT:     1,
+  CREATE_TAG:      2,
+  CREATE_INSTANCE: 3,
+  UPDATE_INSTANCE: 4,
+  RESUME_INSTANCE: 5,
+}

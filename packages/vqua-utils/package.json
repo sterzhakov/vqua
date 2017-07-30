@@ -1,0 +1,26 @@
+{
+  "name": "vqua-utils",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Igor Sterjakov",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sterjakovigor/sakura-utils.git"
+  },
+  "keywords": [
+    "sakura",
+    "utils"
+  ],
+  "bugs": {
+    "url": "https://github.com/sterjakovigor/sakura-utils/issues"
+  },
+  "homepage": "https://github.com/sterjakovigor/sakura-utils#readme",
+  "description": "",
+  "devDependencies": {
+    "jasmine": "^2.5.3"
+  }
+}

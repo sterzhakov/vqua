@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="264" height="105" viewBox="0 0 264 105">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        font-size: 297px;
+      }
+
+      .cls-2 {
+        fill: #ffd200;
+        font-family: "Skia";
+      }
+    </style>
+  </defs>
+  <text transform="translate(0 79) scale(0.4 0.4)" class="cls-1"><tspan class="cls-2">Vqua</tspan></text>
+</svg>

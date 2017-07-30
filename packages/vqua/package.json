@@ -1,0 +1,34 @@
+{
+  "name": "vqua",
+  "version": "1.0.0",
+  "description": "Virtual DOM library with focus on server prerender.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "virtual dom",
+    "server render"
+  ],
+  "author": "Sterjakov Igor",
+  "license": "ISC",
+  "dependencies": {
+    "vqua-utils": "^1.0.0"
+  },
+  "devDependencies": {
+    "ajv": "^5.2.0",
+    "browserify": "^14.4.0",
+    "css-loader": "^0.28.4",
+    "jasmine": "^2.5.3",
+    "jasmine-node": "^1.14.5",
+    "karma-browserify": "^5.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-webpack": "^2.0.3",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "watchify": "^3.9.0",
+    "webpack": "^2.6.1"
+  }
+}
