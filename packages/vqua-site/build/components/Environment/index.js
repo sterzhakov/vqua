@@ -1,5 +1,3 @@
-require('./styles/index.scss')
-
 const { Component } = require('vqua')
 const html2vqua = require('../../helpers/html2vqua')
 

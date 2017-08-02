@@ -1,5 +1,3 @@
-require('./styles/index.scss')
-
 const { Component, html } = require('vqua')
 
 class Error404 extends Component {

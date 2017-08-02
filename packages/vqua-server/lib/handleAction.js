@@ -13,7 +13,13 @@ module.exports = (request, response, callback) => {
 
   try {
 
-    request.action(request, response).catch(callback)
+    const result = request.action(request, response)
+
+    if (result instanceof Promise) {
+
+      result.catch(callback)
+
+    }
 
   } catch(error) {
 

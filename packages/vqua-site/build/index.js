@@ -19,7 +19,7 @@ const navigate = (path) => {
 
     const response = { send: resolve }
 
-    route.action.controller(request, response)
+    route.action(request, response)
 
   }).then((data) => {
 
@@ -27,7 +27,7 @@ const navigate = (path) => {
     //
     // liveNodes = render($app, liveNodes, templateNodes, context)
 
-    console.log(data)
+    console.log('Data:',data)
 
   })
 

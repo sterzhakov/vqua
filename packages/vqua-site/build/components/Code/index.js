@@ -1,6 +1,3 @@
-require('./styles/index.scss')
-require('highlight.js/styles/github-gist.css')
-
 const highlightjs = require('highlight.js/lib/highlight.js')
 const javascriptSyntax = require('highlight.js/lib/languages/javascript')
 const shellSyntax = require('highlight.js/lib/languages/shell')
@@ -9,14 +6,14 @@ const CodePreview = require('../CodePreview')
 
 const { Component, html, render } = require('vqua')
 
-highlightjs.registerLanguage('javascript', javascriptSyntax)
-highlightjs.registerLanguage('shell', shellSyntax)
-highlightjs.registerLanguage('xml', xmlSyntax)
-
 
 class Code extends Component {
 
   afterMount() {
+
+    highlightjs.registerLanguage('javascript', javascriptSyntax)
+    highlightjs.registerLanguage('shell', shellSyntax)
+    highlightjs.registerLanguage('xml', xmlSyntax)
 
     const { code } = this.refs
 

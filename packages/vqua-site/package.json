@@ -9,10 +9,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "css-entry-webpack-plugin": "^1.0.0-beta.4",
     "css-loader": "^0.28.4",
     "express": "^4.15.3",
     "forever": "^0.15.3",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^3.1.0",
+    "webpack-stream": "^3.2.0",
     "jasmine": "^2.6.0",
+    "merge-stream": "^1.0.1",
     "node-sass": "^4.5.3",
     "nodemon": "^1.11.0",
     "raw-loader": "^0.5.1",
@@ -20,7 +26,15 @@
     "style-loader": "^0.18.2"
   },
   "dependencies": {
+    "dom2vqua": "1.0.0",
     "highlight.js": "^9.12.0",
-    "node-static": "^0.7.9"
+    "html2vqua": "1.0.0",
+    "recursive-readdir": "^2.2.1",
+    "vqua": "1.0.0",
+    "vqua-interpolate": "1.0.0",
+    "vqua-router": "1.0.0",
+    "vqua-server": "1.0.0",
+    "vqua-utils": "1.0.0",
+    "vqua2string": "1.0.0"
   }
 }

@@ -1,27 +1,18 @@
-
-let modules = {}
-
-const names = [
-  'asyncMap',
-  'clone',
-  'flatten',
-  'include',
-  'kindOf',
-  'pick',
-  'omit',
-  'union',
-  'capitalize',
-  'classNames',
-  'first',
-  'last',
-  'intersect',
-  'times',
-  'findRightIndex',
-  'compose'
-]
-
-names.forEach((name) => {
-  modules[name] = require('./lib/' + name)
-})
-
-module.exports = modules
+module.exports = {
+  asyncMap:       require('./lib/asyncMap.js'),
+  clone:          require('./lib/clone.js'),
+  flatten:        require('./lib/flatten.js'),
+  include:        require('./lib/include.js'),
+  kindOf:         require('./lib/kindOf.js'),
+  pick:           require('./lib/pick.js'),
+  omit:           require('./lib/omit.js'),
+  union:          require('./lib/union.js'),
+  capitalize:     require('./lib/capitalize.js'),
+  classNames:     require('./lib/classNames.js'),
+  first:          require('./lib/first.js'),
+  last:           require('./lib/last.js'),
+  intersect:      require('./lib/intersect.js'),
+  times:          require('./lib/times.js'),
+  findRightIndex: require('./lib/findRightIndex.js'),
+  compose:        require('./lib/compose.js'),
+}

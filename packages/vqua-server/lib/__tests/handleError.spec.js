@@ -18,7 +18,7 @@ describe('Handle error', () => {
       })
     )
 
-    request('http://localhost:8080/error', (error, response, body) => {
+    request('http://localhost:8888/error', (error, response, body) => {
 
       expect(response.statusCode).toBe(500)
       expect(!!body.match('undefinedVariable is not defined')).toBe(true)
@@ -51,7 +51,7 @@ describe('Handle error', () => {
       })
     )
 
-    request('http://localhost:8080/error/async', (error, response, body) => {
+    request('http://localhost:8888/error/async', (error, response, body) => {
 
       expect(response.statusCode).toBe(500)
       expect(!!body.match('undefinedVariable is not defined')).toBe(true)

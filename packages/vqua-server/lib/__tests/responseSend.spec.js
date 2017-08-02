@@ -19,7 +19,7 @@ describe('Handle action', () => {
       })
     )
 
-    request('http://localhost:8080/send', (error, response, body) => {
+    request('http://localhost:8888/send', (error, response, body) => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('<layout><p>Hello <span>world</span>!</p></layout>')
@@ -40,7 +40,7 @@ describe('Handle action', () => {
       })
     )
 
-    request('http://localhost:8080/send/new-layout', (error, response, body) => {
+    request('http://localhost:8888/send/new-layout', (error, response, body) => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('<l><p>Hello <span>world</span>!</p></l>')

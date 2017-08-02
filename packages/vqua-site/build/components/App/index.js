@@ -1,11 +1,9 @@
-require('./styles/index.scss')
-require('./styles/reset.scss')
-
 const { Component, html } = require('vqua')
 
 const Sidebar = require('../Sidebar')
 const Content = require('../Content')
 const Locale = require('../Locale')
+
 
 
 class App extends Component {

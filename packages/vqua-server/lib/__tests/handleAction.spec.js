@@ -18,7 +18,7 @@ describe('Handle action', () => {
       })
     )
 
-    request('http://localhost:8080/hello', (error, response, body) => {
+    request('http://localhost:8888/hello', (error, response, body) => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('Hello world!')
@@ -49,7 +49,7 @@ describe('Handle action', () => {
       })
     )
 
-    request('http://localhost:8080/hello/async', (error, response, body) => {
+    request('http://localhost:8888/hello/async', (error, response, body) => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('Hello world!')
@@ -72,7 +72,7 @@ describe('Handle action', () => {
       })
     )
 
-    request('http://localhost:8080/hello/world', (error, response, body) => {
+    request('http://localhost:8888/hello/world', (error, response, body) => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('{"name":"world"}')
@@ -82,5 +82,6 @@ describe('Handle action', () => {
     })
 
   })
+
 
 })

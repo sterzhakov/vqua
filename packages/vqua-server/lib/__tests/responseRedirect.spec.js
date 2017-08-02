@@ -20,7 +20,7 @@ describe('Handle action', () => {
     )
 
     request({
-      url: 'http://localhost:8080/redirect',
+      url: 'http://localhost:8888/redirect',
       followRedirect: false,
     }, (error, response, body) => {
 

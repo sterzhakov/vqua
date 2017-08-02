@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = (config) => {
 
-  const publicPath = path.join(__dirname, config.publicPath)
+  const publicPath = path.join(process.cwd(), config.publicPath)
 
   return Object.assign({}, {
     routes: config.routes,

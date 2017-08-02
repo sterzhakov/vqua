@@ -1,4 +1,6 @@
 const url = require('url')
+const path = require('path')
+const { include } = require('vqua-utils')
 const { matchRoutes } = require('vqua-router')
 const handleAction = require('./handleAction')
 const handleNotFound = require('./handleNotFound')
@@ -11,7 +13,11 @@ module.exports = (request, response) => (async () => {
 
   const route = matchRoutes(request.config.routes, pathname)
 
-  if (route) {
+  const extname = path.extname(pathname)
+
+  const isRouteExtension = include(['', '.html', '.htm', '.json'], extname)
+
+  if (route && isRouteExtension) {
 
     const requestRoute = Object.assign({}, request, {
       params: route.request.params,

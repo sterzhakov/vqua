@@ -1,5 +1,3 @@
-require('./styles/index.scss')
-
 const { Component, html } = require('vqua')
 const { classNames } = require('vqua-utils')
 const MenuItems = require('..//MenuItems')

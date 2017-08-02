@@ -1,5 +1,3 @@
-require('./styles/index.scss')
-
 const { Component } = require('vqua')
 
 class Locale extends Component {

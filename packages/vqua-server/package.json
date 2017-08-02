@@ -12,7 +12,8 @@
     "request": "^2.81.0",
     "vqua": "1.0.0",
     "vqua-router": "1.0.0",
-    "vqua2string": "1.0.0"
+    "vqua2string": "1.0.0",
+    "vqua-utils": "1.0.0"
   },
   "devDependencies": {},
   "scripts": {

@@ -2,6 +2,8 @@ module.exports = (html = '') => {
   return (
     '<html>' +
       '<head>' +
+        '<meta charset="utf-8">' +
+        '<link type="text/css" href="/index.css">' +
       '</head>' +
       '<body>' +
         '<div id="app">' +
