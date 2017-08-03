@@ -8,13 +8,6 @@ const Locale = require('../Locale')
 
 class App extends Component {
 
-  passContext() {
-
-    return {
-      locale: this.props.locale
-    }
-
-  }
 
   render() {
     return [

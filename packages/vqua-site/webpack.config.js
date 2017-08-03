@@ -8,7 +8,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   node: {
-    fs: 'empty'
+    fs: 'empty',
+    path: 'empty'
   },
   plugins: []
 }

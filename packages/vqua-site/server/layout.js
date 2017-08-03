@@ -3,7 +3,7 @@ module.exports = (html = '') => {
     '<html>' +
       '<head>' +
         '<meta charset="utf-8">' +
-        '<link type="text/css" href="/index.css">' +
+        '<link rel="stylesheet" type="text/css" href="/index.css">' +
       '</head>' +
       '<body>' +
         '<div id="app">' +

@@ -8,7 +8,7 @@ describe('Convert vqua tag to string', () => {
     const node = {
       type: TAG_TYPE,
       tag: 'div',
-      props: { id: 'test', class: 'test' },
+      props: { id: 'test', class: 'test', onClick: () => {} },
       childs: []
     }
 
@@ -25,7 +25,7 @@ describe('Convert vqua tag to string', () => {
     const node = {
       type: TAG_TYPE,
       tag: 'img',
-      props: { src: 'test.jpg' },
+      props: { src: 'test.jpg', onClick: () => {} },
       childs: []
     }
 

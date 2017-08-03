@@ -19,8 +19,8 @@ module.exports = (request, response, callback) => {
       const file = fs.createReadStream(requestPath)
 
       response.writeHead(200, {
-        'ContentLength': stats.size,
-        'ContentType': mime.contentType(path.extname(requestPath)),
+        'Content-Length': stats.size,
+        'Content-Type': mime.lookup(requestPath),
       })
 
       file.pipe(response)

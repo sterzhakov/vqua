@@ -10,35 +10,6 @@ class Article extends Component {
 
   }
 
-  static defaultProps(props, context) {
-
-    try {
-
-      const article =
-        createArticle({
-          locale: context.locale,
-          name: props.name,
-        })
-
-      return (resolve) => {
-
-        setTimeout(() => {
-
-          resolve(Object.assign({}, props, { article }))
-
-        }, 1500)
-
-      }
-
-    } catch (error) {
-
-      const article = Error404.v()
-
-      return Object.assign({}, props, { article })
-
-    }
-
-  }
 
   render() {
 

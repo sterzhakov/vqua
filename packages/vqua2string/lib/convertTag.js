@@ -1,5 +1,6 @@
 const { include } = require('vqua-utils')
 const singleTags = require('./singleTags')
+const events = require('vqua/lib/dom/events')
 
 module.exports = (node, childs) => {
 
@@ -7,7 +8,9 @@ module.exports = (node, childs) => {
 
   const props = keys.reduce((string, key, index) => {
 
-    return string + ' ' + `${key}="${node.props[key]}"`
+    return (key in events)
+      ? string
+      : string + ' ' + `${key}="${node.props[key]}"`
 
   }, '')
 

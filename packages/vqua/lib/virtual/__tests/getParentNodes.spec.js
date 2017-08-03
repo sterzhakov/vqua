@@ -107,6 +107,7 @@ describe('Get instance update info', () => {
 
     const newLiveNodes = createLiveTree([], templateNodes, {})
 
+
     const targetNode = (
       newLiveNodes[0].childs[1].childs[0].childs[1].childs[1].childs[3]
     )

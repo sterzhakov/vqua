@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 
 module.exports = {
 
@@ -15,16 +16,16 @@ module.exports = {
     } else {
 
       const filePath =
-        require.resolve(
+        path.join(
           __dirname,
-          '../../articles/${name}.${locale}.html'
+          '../../articles/' + name + '.' + locale + '.html'
         )
 
       fs.readFile(filePath, 'utf8', (error, file) => {
 
         if (error) {
 
-          throw error
+          resolve(error.message)
 
         } else {
 

@@ -450,6 +450,7 @@ module.exports = flatten
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
+const { flatten } = __webpack_require__(0)
 const createNodes = __webpack_require__(57)
 const createCallback = __webpack_require__(58)
 const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(16)
@@ -462,7 +463,7 @@ module.exports = (liveNodes, templateNodes, options) => {
   const filterNodes = (liveNodes, templateNodes) => {
 
     const textTemplateNodes =
-      createTextNodes(templateNodes)
+      createTextNodes(flatten(templateNodes))
 
     const sortedTemplateNodes =
       sortTemplateNodes(textTemplateNodes)
@@ -1467,7 +1468,7 @@ class Base {
 
     const liveNodes = this.node.childs
 
-    const templateNodes = flatten([ this.render() ])
+    const templateNodes = this.render()
 
     const newLiveNodes =
       createLiveTree(liveNodes, templateNodes, {
@@ -3513,7 +3514,6 @@ module.exports = updateNodes
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(1)
 const tags = __webpack_require__(81)
 const { flatten, include, omit } = __webpack_require__(0)
-const createTextNodes = __webpack_require__(18)
 
 const h = (tag, props = {}, childs) => {
 

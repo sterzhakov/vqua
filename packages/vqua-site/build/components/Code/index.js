@@ -19,10 +19,6 @@ class Code extends Component {
 
     code.innerHTML = ''
 
-    const textNode = document.createTextNode(this.props.code)
-
-    code.appendChild(textNode)
-
     highlightjs.highlightBlock(code)
 
   }
@@ -40,7 +36,9 @@ class Code extends Component {
 
     return (
       div({ class: 'code' },
-        code({ class: 'code__highlight javascript', ref: 'code' }),
+        code({ class: 'code__highlight javascript', ref: 'code' },
+          this.props.code
+        ),
         codePreview
       )
     )

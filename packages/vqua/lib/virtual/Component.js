@@ -91,7 +91,7 @@ class Base {
 
     const liveNodes = this.node.childs
 
-    const templateNodes = flatten([ this.render() ])
+    const templateNodes = this.render()
 
     const newLiveNodes =
       createLiveTree(liveNodes, templateNodes, {

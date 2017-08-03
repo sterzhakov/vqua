@@ -1,6 +1,6 @@
 const { Component, html } = require('vqua')
 const { classNames, omit } = require('vqua-utils')
-const { Link } = require('vqua-router')
+const Link = require('../Link')
 
 class MenuItems extends Component {
 
@@ -11,12 +11,6 @@ class MenuItems extends Component {
       divClass: '',
       aClass: '',
     }
-
-  }
-
-  afterUpdate() {
-
-    console.log('update')
 
   }
 

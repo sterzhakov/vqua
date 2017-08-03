@@ -1,3 +1,4 @@
+const { flatten } = require('vqua-utils')
 const createNodes = require('./createNodes')
 const createCallback = require('./createCallback')
 const { sortLiveNodes, sortTemplateNodes } = require('../sortNodes')
@@ -10,7 +11,7 @@ module.exports = (liveNodes, templateNodes, options) => {
   const filterNodes = (liveNodes, templateNodes) => {
 
     const textTemplateNodes =
-      createTextNodes(templateNodes)
+      createTextNodes(flatten(templateNodes))
 
     const sortedTemplateNodes =
       sortTemplateNodes(textTemplateNodes)
