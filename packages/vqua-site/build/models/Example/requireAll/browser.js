@@ -1,6 +1,6 @@
 const getPathInfo = require('./getPathInfo')
 
-module.exports = ({ name, raw } = {}) => {
+module.exports = ({ humanId, raw } = {}) => {
 
   const context = raw
     ? require.context('raw-loader!../../../examples/', true, /\.(js|sh|html)$/)
@@ -10,7 +10,7 @@ module.exports = ({ name, raw } = {}) => {
 
     const pathInfo = getPathInfo(pathname)
 
-    if (pathInfo.articleName == name) {
+    if (pathInfo.articleName == humanId) {
 
       const content = context(pathname)
 

@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const getPathInfo = require('./getPathInfo')
 
-module.exports = async ({ name, raw } = {}) => {
+module.exports = async ({ humanId, raw } = {}) => {
 
   const dir = path.join(__dirname, '../../../examples')
 
@@ -13,7 +13,7 @@ module.exports = async ({ name, raw } = {}) => {
 
     const pathInfo = getPathInfo(pathname)
 
-    if (pathInfo.articleName == name) {
+    if (pathInfo.articleName == humanId) {
 
       const content = raw
         ? fs.readFileSync(pathname).toString()

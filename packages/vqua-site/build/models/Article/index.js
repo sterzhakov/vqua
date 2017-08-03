@@ -3,12 +3,12 @@ const path = require('path')
 
 module.exports = {
 
-  find: ({ name, locale }) => new Promise((resolve, reject) => {
+  find: ({ humanId, locale }) => new Promise((resolve, reject) => {
 
     if (typeof __webpack_require__ == 'function') {
 
       const file = require(
-        'raw-loader!../../articles/' + name + '.' + locale + '.html'
+        'raw-loader!../../articles/' + humanId + '.' + locale + '.html'
       )
 
       resolve(file)
@@ -18,7 +18,7 @@ module.exports = {
       const filePath =
         path.join(
           __dirname,
-          '../../articles/' + name + '.' + locale + '.html'
+          '../../articles/' + humanId + '.' + locale + '.html'
         )
 
       fs.readFile(filePath, 'utf8', (error, file) => {

@@ -6,5 +6,5 @@ const ArticleController = require('../controllers/ArticleController')
 module.exports = [
   route('/', MainController.index),
   route('/:locale', ArticleController.show),
-  route('/:locale/:articleId', ArticleController.show)
+  route('/:locale/:humanId', ArticleController.show)
 ]

@@ -5,7 +5,7 @@ const App = require('./data/App')
 
 let routes = []
 
-describe('Handle action', () => {
+describe('Handle send', () => {
 
   initServer(routes)
 
@@ -14,7 +14,7 @@ describe('Handle action', () => {
     routes.push(
       route('/send', (request, response) => {
 
-        response.send(App.v())
+        response.send(App)
 
       })
     )
@@ -35,7 +35,7 @@ describe('Handle action', () => {
     routes.push(
       route('/send/new-layout', (request, response) => {
 
-        response.send(App.v(), { layout: html => `<l>${html}</l>` })
+        response.send(App, {}, { layout: html => `<l>${html}</l>` })
 
       })
     )

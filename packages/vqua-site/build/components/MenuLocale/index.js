@@ -2,11 +2,15 @@ const { Component, html } = require('vqua')
 const { classNames } = require('vqua-utils')
 const MenuItems = require('..//MenuItems')
 
+const replacePathLocale = (pathname, locale) => {
+  return pathname.replace(/(^\/)[A-z]+/, '$1' + locale)
+}
+
 class MenuLocale extends Component {
 
   static injectContext() {
 
-    return ['locale', 'router']
+    return ['locale', 'url']
 
   }
 
@@ -38,19 +42,7 @@ class MenuLocale extends Component {
 
     if (locale != item.locale) {
 
-      const path =
-        '/' +
-        location.pathname
-          .split('/')
-          .filter(segment => segment)
-          .map((segment, index) => {
-            return (index == 0) ? item.locale : segment
-          })
-          .join('/')
-
-      history.pushState({}, '', path)
-
-      router.handleClick(path)
+      router.handleClick(url)
 
 
     }
@@ -60,7 +52,7 @@ class MenuLocale extends Component {
 
   render() {
 
-    const { locale } = this.context
+    const { locale, url } = this.context
 
     const { div, a, p } = html
 
@@ -74,15 +66,19 @@ class MenuLocale extends Component {
             if (item.separator) {
 
               return (
-                p({ class: 'locale-items__separator' },
+                a({ class: 'locale-items__separator' },
                   item.separator
                 )
               )
 
             } else {
 
+              const href = item.locale == locale
+                ? url
+                : replacePathLocale(url, item.locale)
 
               const aProps = {
+                href,
                 class: classNames(
                   'locale-items__item',
                   { 'locale-items__item--selected': item.locale == locale }

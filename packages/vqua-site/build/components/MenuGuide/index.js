@@ -51,7 +51,7 @@ class MenuGuide extends Component {
 
   static injectContext() {
 
-    return ['locale', 'router']
+    return ['locale', 'segments']
 
   }
 
@@ -63,19 +63,17 @@ class MenuGuide extends Component {
 
   render() {
 
-    const { locale, router } = this.context
+    const { locale, segments } = this.context
 
 
     const decoratedItems = items.map((item) => {
-
-      const routerSegment = router.segments[1]
 
       const linkSegment = item.href.split('/')[2]
 
       return Object.assign({}, item, {
         name: t[locale].MenuGuide[item.key],
         href: item.href.replace(':locale', locale),
-        selected: routerSegment == linkSegment
+        selected: segments[1] == linkSegment
       })
 
     })

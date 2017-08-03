@@ -1168,7 +1168,7 @@ describe('Examples', () => {
 
 const getPathInfo = __webpack_require__(29)
 
-module.exports = ({ name, raw } = {}) => {
+module.exports = ({ humanId, raw } = {}) => {
 
   const context = raw
     ? __webpack_require__(30)
@@ -1178,7 +1178,7 @@ module.exports = ({ name, raw } = {}) => {
 
     const pathInfo = getPathInfo(pathname)
 
-    if (pathInfo.articleName == name) {
+    if (pathInfo.articleName == humanId) {
 
       const content = context(pathname)
 

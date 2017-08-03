@@ -2,15 +2,15 @@ const vqua2string = require('vqua2string')
 const createLiveTree = require('vqua/lib/virtual/createTree')
 const filterDomNodes = require('vqua/lib/virtual/filterDomNodes')
 
-module.exports = (request, response, { nodes, layout, context } = {}) => {
+module.exports = (request, response, { node, props, context, layout } = {}) => {
 
   const params = {
     layout: layout || request.config.layout,
     context: context || {},
-    nodes
+    node
   }
 
-  const templateNodes = Array.isArray(nodes) ? nodes : [nodes]
+  const templateNodes = [ node.v(props) ]
 
   const liveNodes =
     createLiveTree([], templateNodes, {

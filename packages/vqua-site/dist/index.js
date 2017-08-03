@@ -1260,7 +1260,7 @@ const ArticleController = __webpack_require__(63)
 module.exports = [
   route('/', MainController.index),
   route('/:locale', ArticleController.show),
-  route('/:locale/:articleId', ArticleController.show)
+  route('/:locale/:humanId', ArticleController.show)
 ]
 
 
@@ -2410,10 +2410,16 @@ const Sidebar = __webpack_require__(62)
 const Content = __webpack_require__(55)
 const Locale = __webpack_require__(57)
 
-
-
 class App extends Component {
 
+  passContext() {
+
+    return {
+      url: this.props.url,
+      locale: this.props.locale,
+      segments: this.props.segments,
+    }
+  }
 
   render() {
     return [
@@ -2711,7 +2717,7 @@ class MenuGuide extends Component {
 
   static injectContext() {
 
-    return ['locale', 'router']
+    return ['locale', 'segments']
 
   }
 
@@ -2723,19 +2729,17 @@ class MenuGuide extends Component {
 
   render() {
 
-    const { locale, router } = this.context
+    const { locale, segments } = this.context
 
 
     const decoratedItems = items.map((item) => {
-
-      const routerSegment = router.segments[1]
 
       const linkSegment = item.href.split('/')[2]
 
       return Object.assign({}, item, {
         name: t[locale].MenuGuide[item.key],
         href: item.href.replace(':locale', locale),
-        selected: routerSegment == linkSegment
+        selected: segments[1] == linkSegment
       })
 
     })
@@ -2763,11 +2767,15 @@ const { Component, html } = __webpack_require__(1)
 const { classNames } = __webpack_require__(0)
 const MenuItems = __webpack_require__(6)
 
+const replacePathLocale = (pathname, locale) => {
+  return pathname.replace(/(^\/)[A-z]+/, '$1' + locale)
+}
+
 class MenuLocale extends Component {
 
   static injectContext() {
 
-    return ['locale', 'router']
+    return ['locale', 'url']
 
   }
 
@@ -2799,19 +2807,7 @@ class MenuLocale extends Component {
 
     if (locale != item.locale) {
 
-      const path =
-        '/' +
-        location.pathname
-          .split('/')
-          .filter(segment => segment)
-          .map((segment, index) => {
-            return (index == 0) ? item.locale : segment
-          })
-          .join('/')
-
-      history.pushState({}, '', path)
-
-      router.handleClick(path)
+      router.handleClick(url)
 
 
     }
@@ -2821,7 +2817,7 @@ class MenuLocale extends Component {
 
   render() {
 
-    const { locale } = this.context
+    const { locale, url } = this.context
 
     const { div, a, p } = html
 
@@ -2835,15 +2831,19 @@ class MenuLocale extends Component {
             if (item.separator) {
 
               return (
-                p({ class: 'locale-items__separator' },
+                a({ class: 'locale-items__separator' },
                   item.separator
                 )
               )
 
             } else {
 
+              const href = item.locale == locale
+                ? url
+                : replacePathLocale(url, item.locale)
 
               const aProps = {
+                href,
                 class: classNames(
                   'locale-items__item',
                   { 'locale-items__item--selected': item.locale == locale }
@@ -2957,52 +2957,31 @@ module.exports = Sidebar
 /* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { html } = __webpack_require__(1)
-const html2vqua = __webpack_require__(37)
-const vquaInterpolate = __webpack_require__(44)
 const ArticleModel = __webpack_require__(73)
 const ExampleModel = __webpack_require__(74)
-const App = __webpack_require__(52)
-const createArticleVars = __webpack_require__(142)
+const ArticleContainer = __webpack_require__(143)
 
 class ArticleController {
 
   static async show(req, res) {
 
-    const name = req.params.articleId || 'introduction'
+    const { locale } = req.params
 
-    const locale = req.params.locale
+    const humanId = req.params.humanId || 'introduction'
 
-    const rawArticle = await ArticleModel.find({ name, locale })
+    const article = await ArticleModel.find({ humanId, locale })
 
+    const examples = await ExampleModel.all({ humanId, locale })
 
-    const examples = await ExampleModel.all({ name, locale })
+    const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
 
-    const rawExamples = await ExampleModel.all({ name, locale, raw: true })
-
-    const vquaArticle = html2vqua(rawArticle)
-
-    const extension2language = {
-      '.js':   'javascript',
-      '.sh':   'shell',
-      '.html': 'xml'
-    }
-
-    const articleVars =
-      createArticleVars({
-        vquaArticle,
-        locale,
-        examples,
-        rawExamples
-      })
-
-    const article = vquaInterpolate(vquaArticle, articleVars)
-
-    res.send(App.v({ locale }, article), {
-      context: {
-        locale: req.params.locale,
-        router: { segments: req.segments },
-      }
+    res.send(ArticleContainer, {
+      url: req.url,
+      segments: req.segments,
+      locale,
+      article,
+      examples,
+      rawExamples,
     })
 
   }
@@ -3332,11 +3311,11 @@ const path = __webpack_require__(16)
 
 module.exports = {
 
-  find: ({ name, locale }) => new Promise((resolve, reject) => {
+  find: ({ humanId, locale }) => new Promise((resolve, reject) => {
 
     if (true) {
 
-      const file = __webpack_require__(51)("./" + name + '.' + locale + '.html')
+      const file = __webpack_require__(51)("./" + humanId + '.' + locale + '.html')
 
       resolve(file)
 
@@ -3345,7 +3324,7 @@ module.exports = {
       const filePath =
         path.join(
           __dirname,
-          '../../articles/' + name + '.' + locale + '.html'
+          '../../articles/' + humanId + '.' + locale + '.html'
         )
 
       fs.readFile(filePath, 'utf8', (error, file) => {
@@ -3395,7 +3374,7 @@ module.exports = Example
 
 const getPathInfo = __webpack_require__(76)
 
-module.exports = ({ name, raw } = {}) => {
+module.exports = ({ humanId, raw } = {}) => {
 
   const context = raw
     ? __webpack_require__(65)
@@ -3405,7 +3384,7 @@ module.exports = ({ name, raw } = {}) => {
 
     const pathInfo = getPathInfo(pathname)
 
-    if (pathInfo.articleName == name) {
+    if (pathInfo.articleName == humanId) {
 
       const content = context(pathname)
 
@@ -7922,6 +7901,58 @@ module.exports = ({ vquaArticle, locale, examples, rawExamples }) => {
   }, {})
 
 }
+
+
+/***/ }),
+/* 143 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { Component } = __webpack_require__(1)
+const html2vqua = __webpack_require__(37)
+const vquaInterpolate = __webpack_require__(44)
+const App = __webpack_require__(52)
+const createArticleVars = __webpack_require__(142)
+
+class ArticleContainer extends Component {
+
+  render() {
+
+    const {
+      article,
+      examples,
+      rawExamples,
+      locale,
+    } = this.props
+
+    const vquaArticle = html2vqua(article)
+
+    const extension2language = {
+      '.js':   'javascript',
+      '.sh':   'shell',
+      '.html': 'xml'
+    }
+
+    const articleVars =
+      createArticleVars({
+        vquaArticle,
+        locale,
+        examples,
+        rawExamples
+      })
+
+    const newArticle = vquaInterpolate(vquaArticle, articleVars)
+
+    return (
+      App.v(this.props,
+        newArticle
+      )
+    )
+
+  }
+
+}
+
+module.exports = ArticleContainer
 
 
 /***/ })

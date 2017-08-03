@@ -14,7 +14,7 @@ describe('Handle action', () => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('Hello world!\n')
-      expect(response.headers.contenttype).toBe('text/plain; charset=utf-8')
+      expect(response.headers['content-type']).toBe('text/plain')
 
       done()
 
@@ -28,7 +28,7 @@ describe('Handle action', () => {
 
       expect(response.statusCode).toBe(200)
       expect(body).toBe('Hello world!\n')
-      expect(response.headers.contenttype).toBe('text/plain; charset=utf-8')
+      expect(response.headers['content-type']).toBe('text/plain')
 
       done()
 
@@ -50,7 +50,7 @@ describe('Handle action', () => {
     request('http://localhost:8888/test.txt', (error, response, body) => {
 
       expect(body).toBe('Hello world!\n')
-      expect(response.headers.contenttype).toBe('text/plain; charset=utf-8')
+      expect(response.headers['content-type']).toBe('text/plain')
 
       routes.pop()
 

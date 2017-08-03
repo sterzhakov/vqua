@@ -4,10 +4,16 @@ const Sidebar = require('../Sidebar')
 const Content = require('../Content')
 const Locale = require('../Locale')
 
-
-
 class App extends Component {
 
+  passContext() {
+
+    return {
+      url: this.props.url,
+      locale: this.props.locale,
+      segments: this.props.segments,
+    }
+  }
 
   render() {
     return [
