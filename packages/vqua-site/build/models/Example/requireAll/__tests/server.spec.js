@@ -5,7 +5,7 @@ describe('Examples', () => {
   it('require all by server', (done) => {
 
     requireAllExamples({
-      name: 'sample'
+      humanId: 'sample'
     }).then((examples) => {
 
       expect(examples.length).toBe(1)
@@ -26,7 +26,7 @@ describe('Examples', () => {
   it('require all by server', (done) => {
 
     requireAllExamples({
-      name: 'sample',
+      humanId: 'sample',
       raw: true
     }).then((examples) => {
 

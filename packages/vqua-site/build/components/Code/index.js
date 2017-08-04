@@ -3,6 +3,7 @@ const javascriptSyntax = require('highlight.js/lib/languages/javascript')
 const shellSyntax = require('highlight.js/lib/languages/shell')
 const xmlSyntax = require('highlight.js/lib/languages/xml')
 const CodePreview = require('../CodePreview')
+const { htmlQuotes } = require('vqua-utils')
 
 const { Component, html, render } = require('vqua')
 
@@ -17,7 +18,11 @@ class Code extends Component {
 
     const { code } = this.refs
 
-    code.innerHTML = ''
+    if (this.props.language == 'xml') {
+
+      code.textContent = htmlQuotes.decode(code.textContent)
+
+    }
 
     highlightjs.highlightBlock(code)
 
@@ -27,19 +32,20 @@ class Code extends Component {
 
     const { div, code } = html
 
-    const codePreview = this.props.preview
-      ? CodePreview.v({
-          locale: this.props.locale,
-          preview: this.props.preview
-        })
-      : null
-
     return (
       div({ class: 'code' },
-        code({ class: 'code__highlight javascript', ref: 'code' },
-          this.props.code
+        code({
+          class: 'code__highlight javascript',
+          ref: 'code',
+        },
+          htmlQuotes.encode(this.props.code)
         ),
-        codePreview
+        this.props.preview
+          ? CodePreview.v({
+              locale: this.props.locale,
+              preview: this.props.preview
+            })
+          : null
       )
     )
 

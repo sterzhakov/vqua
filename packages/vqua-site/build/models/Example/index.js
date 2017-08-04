@@ -1,3 +1,5 @@
+const escapeHtml = require('escape-html')
+
 class Example {
 
   static async all(params) {

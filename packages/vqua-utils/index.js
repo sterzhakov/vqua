@@ -15,4 +15,5 @@ module.exports = {
   times:          require('./lib/times.js'),
   findRightIndex: require('./lib/findRightIndex.js'),
   compose:        require('./lib/compose.js'),
+  htmlQuotes:     require('./lib/htmlQuotes.js'),
 }

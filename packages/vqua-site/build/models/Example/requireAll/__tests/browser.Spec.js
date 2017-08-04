@@ -6,7 +6,7 @@ describe('Examples', () => {
 
     const examples =
       requireAllExamples({
-        name: 'sample'
+        humanId: 'sample'
       })
 
     expect(examples.length).toBe(1)
@@ -24,7 +24,7 @@ describe('Examples', () => {
 
     const examples =
       requireAllExamples({
-        name: 'sample',
+        humanId: 'sample',
         raw: true
       })
 

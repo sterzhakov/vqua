@@ -1,4 +1,5 @@
-module.exports = (html = '') => {
+module.exports = (html = '', data = '') => {
+
   return (
     '<html>' +
       '<head>' +
@@ -9,6 +10,9 @@ module.exports = (html = '') => {
         '<div id="app">' +
           html +
         '</div>' +
+        '<script id="vqua-container-data" type="application/json">' +
+          data +
+        '</script>' +
         '<script src="/index.js" type="text/javascript"></script>' +
       '</body>' +
     '</html>'

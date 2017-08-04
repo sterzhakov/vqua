@@ -1,7 +1,8 @@
 const { render } = require('vqua')
 const { matchRoutes } = require('vqua-router')
-const routes = require('./config/routes')
+const { htmlQuotes } = require('vqua-utils')
 const dom2vqua = require('dom2vqua')
+const routes = require('./config/routes')
 
 const $app = document.getElementById('app')
 
@@ -11,23 +12,49 @@ const navigate = (path) => {
 
   new Promise((resolve, reject) => {
 
-    const route = matchRoutes(routes, path)
+    const vquaContainerData = document.getElementById('vqua-container-data')
 
-    if (!route) resolve(false)
+    if (vquaContainerData) {
 
-    const request = Object.assign({}, route.request)
+      const json = htmlQuotes.decode(vquaContainerData.innerHTML)
 
-    const response = { send: resolve }
+      const data = JSON.parse(json)
 
-    route.action(request, response)
+      vquaContainerData.parentNode.removeChild(vquaContainerData)
+
+      resolve(data)
+
+    } else {
+
+      const route = matchRoutes(routes, path)
+
+      if (!route) resolve(false)
+
+      const request = Object.assign({}, route.request)
+
+      const response = {
+        send: (containerName, props = {}, params = {}) => {
+          resolve({ containerName, props, params })
+        }
+      }
+
+      route.action(request, response)
+
+    }
 
   }).then((data) => {
 
-    // const context = { router: { navigate } }
-    //
-    // liveNodes = render($app, liveNodes, templateNodes, context)
+    const newContext = {
+      context: Object.assign({}, data.context, { navigate })
+    }
 
-    console.log('Data:',data)
+    const newData = Object.assign({}, data, newContext)
+
+    const Container = require('./containers/' + newData.containerName)
+
+    const templateNodes = [Container.v(newData.props)]
+
+    liveNodes = render($app, liveNodes, templateNodes, newData.context)
 
   })
 

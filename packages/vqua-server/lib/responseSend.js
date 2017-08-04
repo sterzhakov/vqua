@@ -1,16 +1,34 @@
+const path = require('path')
 const vqua2string = require('vqua2string')
 const createLiveTree = require('vqua/lib/virtual/createTree')
 const filterDomNodes = require('vqua/lib/virtual/filterDomNodes')
+const { htmlQuotes } = require('vqua-utils')
 
-module.exports = (request, response, { node, props, context, layout } = {}) => {
+module.exports = (
+  request,
+  response,
+  {
+    containerName,
+    props,
+    context,
+    layout
+  } = {}
+) => {
 
   const params = {
     layout: layout || request.config.layout,
-    context: context || {},
-    node
   }
 
-  const templateNodes = [ node.v(props) ]
+  const containerPath =
+    path.join(
+      request.config.buildPath,
+      'containers',
+      containerName
+    )
+
+  const container = require(containerPath)
+
+  const templateNodes = [ container.v(props, context) ]
 
   const liveNodes =
     createLiveTree([], templateNodes, {
@@ -20,9 +38,15 @@ module.exports = (request, response, { node, props, context, layout } = {}) => {
 
   const domNodes = filterDomNodes(liveNodes)
 
-  const html = params.layout(vqua2string(domNodes))
+  const data = JSON.stringify({ containerName, props, context })
+
+  const encodedData = htmlQuotes.encode(data)
+
+  const html = vqua2string(domNodes)
+
+  const result = params.layout(html, encodedData)
 
   response.statusCode = 200
-  response.end(html)
+  response.end(result)
 
 }

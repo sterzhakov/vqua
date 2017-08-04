@@ -1,6 +1,5 @@
 const ArticleModel = require('../models/Article')
 const ExampleModel = require('../models/Example')
-const ArticleContainer = require('../containers/ArticleContainer')
 
 class ArticleController {
 
@@ -16,7 +15,8 @@ class ArticleController {
 
     const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
 
-    res.send(ArticleContainer, {
+
+    res.send('ArticleContainer', {
       url: req.url,
       segments: req.segments,
       locale,

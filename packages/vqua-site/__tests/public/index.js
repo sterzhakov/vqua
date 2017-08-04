@@ -84,6 +84,7 @@ module.exports = {
   times:          __webpack_require__(54),
   findRightIndex: __webpack_require__(55),
   compose:        __webpack_require__(56),
+  htmlQuotes:     __webpack_require__(86),
 }
 
 
@@ -1126,7 +1127,7 @@ describe('Examples', () => {
 
     const examples =
       requireAllExamples({
-        name: 'sample'
+        humanId: 'sample'
       })
 
     expect(examples.length).toBe(1)
@@ -1144,7 +1145,7 @@ describe('Examples', () => {
 
     const examples =
       requireAllExamples({
-        name: 'sample',
+        humanId: 'sample',
         raw: true
       })
 
@@ -3831,6 +3832,43 @@ class Counter extends Component {
 // cut after
 
 module.exports = Counter
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports) {
+
+const OPEN_QUOTE_SPECIAL = '&lt;'
+const CLOSE_QUOTE_SPECIAL = '&gt;'
+
+const OPEN_QUOTE_SIMPLE = '<'
+const CLOSE_QUOTE_SIMPLE = '>'
+
+const SPECIAL_TO_SIMPLE = {
+  [OPEN_QUOTE_SPECIAL]:  OPEN_QUOTE_SIMPLE,
+  [CLOSE_QUOTE_SPECIAL]: CLOSE_QUOTE_SIMPLE
+}
+
+const SIMPLE_TO_SPECIAL = {
+  [OPEN_QUOTE_SIMPLE]:  OPEN_QUOTE_SPECIAL,
+  [CLOSE_QUOTE_SIMPLE]: CLOSE_QUOTE_SPECIAL
+}
+
+const SIMPLE_QUOTES =
+  new RegExp(OPEN_QUOTE_SIMPLE + '|' + CLOSE_QUOTE_SIMPLE, 'g')
+
+const SPECIAL_QUOTES =
+  new RegExp(OPEN_QUOTE_SPECIAL + '|' + CLOSE_QUOTE_SPECIAL, 'g')
+
+const encode = (string) => (
+  string.replace(SIMPLE_QUOTES, match => SIMPLE_TO_SPECIAL[match])
+)
+
+const decode = (string) => (
+  string.replace(SPECIAL_QUOTES, match => SPECIAL_TO_SIMPLE[match])
+)
+
+module.exports = { encode, decode }
 
 
 /***/ })

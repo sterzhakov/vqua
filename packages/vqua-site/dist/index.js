@@ -87,6 +87,7 @@ module.exports = {
   times:          __webpack_require__(110),
   findRightIndex: __webpack_require__(104),
   compose:        __webpack_require__(103),
+  htmlQuotes:     __webpack_require__(145),
 }
 
 
@@ -2446,6 +2447,7 @@ const javascriptSyntax = __webpack_require__(78)
 const shellSyntax = __webpack_require__(79)
 const xmlSyntax = __webpack_require__(80)
 const CodePreview = __webpack_require__(54)
+const { htmlQuotes } = __webpack_require__(0)
 
 const { Component, html, render } = __webpack_require__(1)
 
@@ -2460,7 +2462,11 @@ class Code extends Component {
 
     const { code } = this.refs
 
-    code.innerHTML = ''
+    if (this.props.language == 'xml') {
+
+      code.textContent = htmlQuotes.decode(code.textContent)
+
+    }
 
     highlightjs.highlightBlock(code)
 
@@ -2470,19 +2476,20 @@ class Code extends Component {
 
     const { div, code } = html
 
-    const codePreview = this.props.preview
-      ? CodePreview.v({
-          locale: this.props.locale,
-          preview: this.props.preview
-        })
-      : null
-
     return (
       div({ class: 'code' },
-        code({ class: 'code__highlight javascript', ref: 'code' },
-          this.props.code
+        code({
+          class: 'code__highlight javascript',
+          ref: 'code',
+        },
+          htmlQuotes.encode(this.props.code)
         ),
-        codePreview
+        this.props.preview
+          ? CodePreview.v({
+              locale: this.props.locale,
+              preview: this.props.preview
+            })
+          : null
       )
     )
 
@@ -2959,7 +2966,6 @@ module.exports = Sidebar
 
 const ArticleModel = __webpack_require__(73)
 const ExampleModel = __webpack_require__(74)
-const ArticleContainer = __webpack_require__(143)
 
 class ArticleController {
 
@@ -2975,7 +2981,8 @@ class ArticleController {
 
     const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
 
-    res.send(ArticleContainer, {
+
+    res.send('ArticleContainer', {
       url: req.url,
       segments: req.segments,
       locale,
@@ -3260,8 +3267,9 @@ module.exports = filter
 
 const { render } = __webpack_require__(1)
 const { matchRoutes } = __webpack_require__(13)
-const routes = __webpack_require__(31)
+const { htmlQuotes } = __webpack_require__(0)
 const dom2vqua = __webpack_require__(30)
+const routes = __webpack_require__(31)
 
 const $app = document.getElementById('app')
 
@@ -3271,23 +3279,49 @@ const navigate = (path) => {
 
   new Promise((resolve, reject) => {
 
-    const route = matchRoutes(routes, path)
+    const vquaContainerData = document.getElementById('vqua-container-data')
 
-    if (!route) resolve(false)
+    if (vquaContainerData) {
 
-    const request = Object.assign({}, route.request)
+      const json = htmlQuotes.decode(vquaContainerData.innerHTML)
 
-    const response = { send: resolve }
+      const data = JSON.parse(json)
 
-    route.action(request, response)
+      vquaContainerData.parentNode.removeChild(vquaContainerData)
+
+      resolve(data)
+
+    } else {
+
+      const route = matchRoutes(routes, path)
+
+      if (!route) resolve(false)
+
+      const request = Object.assign({}, route.request)
+
+      const response = {
+        send: (containerName, props = {}, params = {}) => {
+          resolve({ containerName, props, params })
+        }
+      }
+
+      route.action(request, response)
+
+    }
 
   }).then((data) => {
 
-    // const context = { router: { navigate } }
-    //
-    // liveNodes = render($app, liveNodes, templateNodes, context)
+    const newContext = {
+      context: Object.assign({}, data.context, { navigate })
+    }
 
-    console.log('Data:',data)
+    const newData = Object.assign({}, data, newContext)
+
+    const Container = __webpack_require__(146)("./" + newData.containerName)
+
+    const templateNodes = [Container.v(newData.props)]
+
+    liveNodes = render($app, liveNodes, templateNodes, newData.context)
 
   })
 
@@ -3352,6 +3386,8 @@ module.exports = {
 /***/ }),
 /* 74 */
 /***/ (function(module, exports, __webpack_require__) {
+
+const escapeHtml = __webpack_require__(144)
 
 class Example {
 
@@ -7954,6 +7990,152 @@ class ArticleContainer extends Component {
 
 module.exports = ArticleContainer
 
+
+/***/ }),
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * escape-html
+ * Copyright(c) 2012-2013 TJ Holowaychuk
+ * Copyright(c) 2015 Andreas Lubbe
+ * Copyright(c) 2015 Tiancheng "Timothy" Gu
+ * MIT Licensed
+ */
+
+
+
+/**
+ * Module variables.
+ * @private
+ */
+
+var matchHtmlRegExp = /["'&<>]/;
+
+/**
+ * Module exports.
+ * @public
+ */
+
+module.exports = escapeHtml;
+
+/**
+ * Escape special characters in the given string of html.
+ *
+ * @param  {string} string The string to escape for inserting into HTML
+ * @return {string}
+ * @public
+ */
+
+function escapeHtml(string) {
+  var str = '' + string;
+  var match = matchHtmlRegExp.exec(str);
+
+  if (!match) {
+    return str;
+  }
+
+  var escape;
+  var html = '';
+  var index = 0;
+  var lastIndex = 0;
+
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 34: // "
+        escape = '&quot;';
+        break;
+      case 38: // &
+        escape = '&amp;';
+        break;
+      case 39: // '
+        escape = '&#39;';
+        break;
+      case 60: // <
+        escape = '&lt;';
+        break;
+      case 62: // >
+        escape = '&gt;';
+        break;
+      default:
+        continue;
+    }
+
+    if (lastIndex !== index) {
+      html += str.substring(lastIndex, index);
+    }
+
+    lastIndex = index + 1;
+    html += escape;
+  }
+
+  return lastIndex !== index
+    ? html + str.substring(lastIndex, index)
+    : html;
+}
+
+
+/***/ }),
+/* 145 */
+/***/ (function(module, exports) {
+
+const OPEN_QUOTE_SPECIAL = '&lt;'
+const CLOSE_QUOTE_SPECIAL = '&gt;'
+
+const OPEN_QUOTE_SIMPLE = '<'
+const CLOSE_QUOTE_SIMPLE = '>'
+
+const SPECIAL_TO_SIMPLE = {
+  [OPEN_QUOTE_SPECIAL]:  OPEN_QUOTE_SIMPLE,
+  [CLOSE_QUOTE_SPECIAL]: CLOSE_QUOTE_SIMPLE
+}
+
+const SIMPLE_TO_SPECIAL = {
+  [OPEN_QUOTE_SIMPLE]:  OPEN_QUOTE_SPECIAL,
+  [CLOSE_QUOTE_SIMPLE]: CLOSE_QUOTE_SPECIAL
+}
+
+const SIMPLE_QUOTES =
+  new RegExp(OPEN_QUOTE_SIMPLE + '|' + CLOSE_QUOTE_SIMPLE, 'g')
+
+const SPECIAL_QUOTES =
+  new RegExp(OPEN_QUOTE_SPECIAL + '|' + CLOSE_QUOTE_SPECIAL, 'g')
+
+const encode = (string) => (
+  string.replace(SIMPLE_QUOTES, match => SIMPLE_TO_SPECIAL[match])
+)
+
+const decode = (string) => (
+  string.replace(SPECIAL_QUOTES, match => SPECIAL_TO_SIMPLE[match])
+)
+
+module.exports = { encode, decode }
+
+
+/***/ }),
+/* 146 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./ArticleContainer": 143,
+	"./ArticleContainer.js": 143
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 146;
 
 /***/ })
 /******/ ]);
