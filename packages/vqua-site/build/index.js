@@ -30,7 +30,9 @@ const navigate = (path) => {
 
       if (!route) resolve(false)
 
-      const request = Object.assign({}, route.request)
+      const request = Object.assign({}, route.request, {
+        url: window.location.pathname
+      })
 
       const response = {
         send: (containerName, props = {}, params = {}) => {
@@ -45,7 +47,13 @@ const navigate = (path) => {
   }).then((data) => {
 
     const newContext = {
-      context: Object.assign({}, data.context, { navigate })
+      context: Object.assign({}, data.context, { navigate: (url) => {
+
+        history.pushState({}, '', url)
+
+        navigate(url)
+
+      } })
     }
 
     const newData = Object.assign({}, data, newContext)

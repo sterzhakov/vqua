@@ -7,11 +7,9 @@ const extension2language = {
   '.html': 'xml'
 }
 
-module.exports = ({ vquaArticle, locale, examples, rawExamples }) => {
+module.exports = ({ vquaArticle, locale, examples, rawExamples, humanId }) => {
 
   return rawExamples.reduce((articleVars, rawExample, index) => {
-
-    const example = examples[index]
 
     const language = extension2language[rawExample.fileExtension]
 
@@ -21,18 +19,13 @@ module.exports = ({ vquaArticle, locale, examples, rawExamples }) => {
         cutAfter: true
       })
 
-    const previewParams = example
-      ? { preview: example.content }
-      : {}
-
-
-    const codeParams =
-      Object.assign({}, previewParams, {
-        locale,
-        code,
-        language,
-        key: rawExample.name,
-      })
+    const codeParams = {
+      locale,
+      code,
+      language,
+      humanId,
+      key: rawExample.name,
+    }
 
     return Object.assign({}, articleVars, {
       [rawExample.variableName]: Code.v(codeParams)

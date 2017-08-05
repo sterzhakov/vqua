@@ -470,7 +470,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       sortTemplateNodes(textTemplateNodes)
 
     const decoratedLiveNodes =
-      decorateNodes(liveNodes, { order: true })
+      decorateNodes(flatten([liveNodes]), { order: true })
 
     const sortedLiveNodes =
       sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
@@ -1234,7 +1234,6 @@ var map = {
 	"./fast-start_webpack-config.js": 33,
 	"./fast-start_webpack-install.sh": 34,
 	"./fast-start_webpack-run.sh": 35,
-	"./introduction_async-render.preview.js": 36,
 	"./introduction_pure-javascript.preview.js": 37,
 	"./sample_test.preview.js": 38,
 	"./state_counter.preview.js": 39
@@ -1286,12 +1285,7 @@ module.exports = "mkdir ./hello-world\n\ncd ./hello-world\n\nnpm install --save 
 module.exports = "webpack\n"
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-module.exports = "const { Component } = require('vqua')\n\n// cut before\n\nclass Frank extends Component {\n\n  static defaultProps() {\n\n    return (resolve) => {\n\n      setTimeout(() => {\n\n        resolve({ lyrics: 'New York, New York...' })\n\n      }, 1500)\n\n    }\n\n  }\n\n  render() {\n\n    return this.props.lyrics\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Frank\n"
-
-/***/ }),
+/* 36 */,
 /* 37 */
 /***/ (function(module, exports) {
 
@@ -1314,7 +1308,6 @@ module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./introduction_async-render.preview.js": 41,
 	"./introduction_pure-javascript.preview.js": 83,
 	"./sample_test.preview.js": 84,
 	"./state_counter.preview.js": 85
@@ -1336,43 +1329,7 @@ module.exports = webpackContext;
 webpackContext.id = 40;
 
 /***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const { Component } = __webpack_require__(5)
-
-// cut before
-
-class Frank extends Component {
-
-  static defaultProps() {
-
-    return (resolve) => {
-
-      setTimeout(() => {
-
-        resolve({ lyrics: 'New York, New York...' })
-
-      }, 1500)
-
-    }
-
-  }
-
-  render() {
-
-    return this.props.lyrics
-
-  }
-
-}
-
-// cut after
-
-module.exports = Frank
-
-
-/***/ }),
+/* 41 */,
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 

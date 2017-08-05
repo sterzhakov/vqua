@@ -10,9 +10,9 @@ class ArticleContainer extends Component {
 
     const {
       article,
-      examples,
       rawExamples,
       locale,
+      humanId,
     } = this.props
 
     const vquaArticle = html2vqua(article)
@@ -27,11 +27,12 @@ class ArticleContainer extends Component {
       createArticleVars({
         vquaArticle,
         locale,
-        examples,
-        rawExamples
+        rawExamples,
+        humanId
       })
 
-    const newArticle = vquaInterpolate(vquaArticle, articleVars)
+    const newArticle =
+      vquaInterpolate(vquaArticle, articleVars)
 
     return (
       App.v(this.props,

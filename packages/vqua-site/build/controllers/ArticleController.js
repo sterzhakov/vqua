@@ -11,17 +11,14 @@ class ArticleController {
 
     const article = await ArticleModel.find({ humanId, locale })
 
-    const examples = await ExampleModel.all({ humanId, locale })
-
     const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
-
 
     res.send('ArticleContainer', {
       url: req.url,
       segments: req.segments,
+      humanId,
       locale,
       article,
-      examples,
       rawExamples,
     })
 

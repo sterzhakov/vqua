@@ -3,6 +3,7 @@ const { classNames } = require('vqua-utils')
 const MenuItems = require('..//MenuItems')
 
 const replacePathLocale = (pathname, locale) => {
+
   return pathname.replace(/(^\/)[A-z]+/, '$1' + locale)
 }
 
@@ -10,7 +11,7 @@ class MenuLocale extends Component {
 
   static injectContext() {
 
-    return ['locale', 'url']
+    return ['locale', 'url', 'navigate']
 
   }
 
@@ -38,12 +39,11 @@ class MenuLocale extends Component {
 
     event.preventDefault()
 
-    const { locale, router } = this.context
+    const { locale, navigate} = this.context
 
     if (locale != item.locale) {
 
-      router.handleClick(url)
-
+      navigate(event.target.pathname)
 
     }
 

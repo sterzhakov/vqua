@@ -938,7 +938,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       sortTemplateNodes(textTemplateNodes)
 
     const decoratedLiveNodes =
-      decorateNodes(liveNodes, { order: true })
+      decorateNodes(flatten([liveNodes]), { order: true })
 
     const sortedLiveNodes =
       sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
@@ -2419,6 +2419,7 @@ class App extends Component {
       url: this.props.url,
       locale: this.props.locale,
       segments: this.props.segments,
+      humanId: this.props.humanId,
     }
   }
 
@@ -2448,11 +2449,22 @@ const shellSyntax = __webpack_require__(79)
 const xmlSyntax = __webpack_require__(80)
 const CodePreview = __webpack_require__(54)
 const { htmlQuotes } = __webpack_require__(0)
+const ExampleModel = __webpack_require__(74)
 
 const { Component, html, render } = __webpack_require__(1)
 
 
 class Code extends Component {
+
+  constructor(props, context) {
+
+    super(props, context)
+
+    this.state = {
+      examples: {}
+    }
+
+  }
 
   afterMount() {
 
@@ -2470,9 +2482,19 @@ class Code extends Component {
 
     highlightjs.highlightBlock(code)
 
+    ExampleModel.all({
+      humanId: this.props.humanId,
+      locale: this.props.locale
+    }).then((examples) => {
+
+      // return examples.reduce
+
+    })
+
   }
 
   render() {
+
 
     const { div, code } = html
 
@@ -2484,12 +2506,10 @@ class Code extends Component {
         },
           htmlQuotes.encode(this.props.code)
         ),
-        this.props.preview
-          ? CodePreview.v({
-              locale: this.props.locale,
-              preview: this.props.preview
-            })
-          : null
+        CodePreview.v({
+          humanId: this.props.humanId,
+          locale: this.props.locale,
+        })
       )
     )
 
@@ -2513,13 +2533,11 @@ class CodePreview extends Component {
 
     super(props, context)
 
-    this.loadPreview = this.loadPreview.bind(this)
-
   }
 
   afterMount() {
 
-    this.loadPreview()
+    // this.loadPreview()
 
   }
 
@@ -2536,23 +2554,27 @@ class CodePreview extends Component {
 
   render() {
 
-    const { div, a } = html
+    if (typeof window == 'undefined') return null
 
-    return [
-      div({ class: 'code__menu' },
-        div({ class: 'code__menu__line' }),
-        a({
-          class: 'code__menu__item',
-          href: '#refresh',
-          ref: 'refresh',
-          onClick: this.loadPreview
-        },
-          translations[this.props.locale].Code.refresh
-        ),
-        div({ class: 'code__menu__line' })
-      ),
-      div({ class: 'code__preview', ref: 'preview' })
-    ]
+    // console.log(rawExamples)
+
+    // const { div, a } = html
+    //
+    // return [
+    //   div({ class: 'code__menu' },
+    //     div({ class: 'code__menu__line' }),
+    //     a({
+    //       class: 'code__menu__item',
+    //       href: '#refresh',
+    //       ref: 'refresh',
+    //       onClick: () => this.loadPreview()
+    //     },
+    //       translations[this.props.locale].Code.refresh
+    //     ),
+    //     div({ class: 'code__menu__line' })
+    //   ),
+    //   div({ class: 'code__preview', ref: 'preview' })
+    // ]
 
   }
 
@@ -2594,11 +2616,29 @@ const { omit } = __webpack_require__(0)
 
 class Link extends Component {
 
+  static injectContext() {
+
+    return ['navigate']
+
+  }
+
+  handleClick(event) {
+
+    event.preventDefault()
+
+    const { navigate } = this.context
+
+    navigate(this.props.href)
+
+  }
+
   render() {
 
     const { a } = html
 
-    const aProps = omit(this.props, 'childs')
+    const aProps = Object.assign({}, omit(this.props, 'childs'), {
+      onClick: (e) => this.handleClick(e)
+    })
 
     return (
       a(aProps, ...this.props.childs)
@@ -2775,6 +2815,7 @@ const { classNames } = __webpack_require__(0)
 const MenuItems = __webpack_require__(6)
 
 const replacePathLocale = (pathname, locale) => {
+
   return pathname.replace(/(^\/)[A-z]+/, '$1' + locale)
 }
 
@@ -2782,7 +2823,7 @@ class MenuLocale extends Component {
 
   static injectContext() {
 
-    return ['locale', 'url']
+    return ['locale', 'url', 'navigate']
 
   }
 
@@ -2810,12 +2851,11 @@ class MenuLocale extends Component {
 
     event.preventDefault()
 
-    const { locale, router } = this.context
+    const { locale, navigate} = this.context
 
     if (locale != item.locale) {
 
-      router.handleClick(url)
-
+      navigate(event.target.pathname)
 
     }
 
@@ -2977,17 +3017,14 @@ class ArticleController {
 
     const article = await ArticleModel.find({ humanId, locale })
 
-    const examples = await ExampleModel.all({ humanId, locale })
-
     const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
-
 
     res.send('ArticleContainer', {
       url: req.url,
       segments: req.segments,
+      humanId,
       locale,
       article,
-      examples,
       rawExamples,
     })
 
@@ -3025,7 +3062,6 @@ var map = {
 	"./fast-start_webpack-config.js": 88,
 	"./fast-start_webpack-install.sh": 89,
 	"./fast-start_webpack-run.sh": 90,
-	"./introduction_async-render.preview.js": 91,
 	"./introduction_pure-javascript.preview.js": 92,
 	"./sample_test.preview.js": 93,
 	"./state_counter.preview.js": 94
@@ -3051,7 +3087,6 @@ webpackContext.id = 65;
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./introduction_async-render.preview.js": 67,
 	"./introduction_pure-javascript.preview.js": 68,
 	"./sample_test.preview.js": 69,
 	"./state_counter.preview.js": 70
@@ -3073,43 +3108,7 @@ module.exports = webpackContext;
 webpackContext.id = 66;
 
 /***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const { Component } = __webpack_require__(1)
-
-// cut before
-
-class Frank extends Component {
-
-  static defaultProps() {
-
-    return (resolve) => {
-
-      setTimeout(() => {
-
-        resolve({ lyrics: 'New York, New York...' })
-
-      }, 1500)
-
-    }
-
-  }
-
-  render() {
-
-    return this.props.lyrics
-
-  }
-
-}
-
-// cut after
-
-module.exports = Frank
-
-
-/***/ }),
+/* 67 */,
 /* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3297,7 +3296,9 @@ const navigate = (path) => {
 
       if (!route) resolve(false)
 
-      const request = Object.assign({}, route.request)
+      const request = Object.assign({}, route.request, {
+        url: window.location.pathname
+      })
 
       const response = {
         send: (containerName, props = {}, params = {}) => {
@@ -3312,7 +3313,13 @@ const navigate = (path) => {
   }).then((data) => {
 
     const newContext = {
-      context: Object.assign({}, data.context, { navigate })
+      context: Object.assign({}, data.context, { navigate: (url) => {
+
+        history.pushState({}, '', url)
+
+        navigate(url)
+
+      } })
     }
 
     const newData = Object.assign({}, data, newContext)
@@ -4788,13 +4795,13 @@ module.exports = "<h1>Быстрый старт</h1>\n\n<p>Создаем пап
 /* 83 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Introduction</h1>\n\n<p><b>Vqua</b> is a javascript library for building web-interfaces.</p>\n\n<h2>Benefits:</h2>\n\n<p>1. Pure JavaScript</p>\n\n{{ pure-javascript }}\n\n<p>2. Asynchronius rendering</p>\n\n{{ async-render }}\n\n<p>3. 10kb size</p>\n"
+module.exports = "<h1>Introduction</h1>\n\n<p><b>Vqua</b> is a javascript library for building web-interfaces.</p>\n\n<h2>Benefits:</h2>\n\n<p>1. Pure JavaScript</p>\n\n{{ pure-javascript }}\n\n<p>2. 10kb size</p>\n"
 
 /***/ }),
 /* 84 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Вступление</h1>\n\n<p><b>Vqua</b> это JavaScript бибилиотека для создание веб-интерфейсов.</p>\n\n<h2>Преимущества:</h2>\n\n<p>1. Чистый JavaScript</p>\n\n{{ pure-javascript }}\n\n<p>2. Асинхронный рендеринг</p>\n\n{{ async-render }}\n\n<p>3. Размер 10kb</p>\n"
+module.exports = "<h1>Вступление</h1>\n\n<p><b>Vqua</b> это JavaScript бибилиотека для создание веб-интерфейсов.</p>\n\n<h2>Преимущества:</h2>\n\n<p>1. Чистый JavaScript</p>\n\n{{ pure-javascript }}\n\n<p>2. Размер 10kb</p>\n"
 
 /***/ }),
 /* 85 */
@@ -4833,12 +4840,7 @@ module.exports = "mkdir ./hello-world\n\ncd ./hello-world\n\nnpm install --save 
 module.exports = "webpack\n"
 
 /***/ }),
-/* 91 */
-/***/ (function(module, exports) {
-
-module.exports = "const { Component } = require('vqua')\n\n// cut before\n\nclass Frank extends Component {\n\n  static defaultProps() {\n\n    return (resolve) => {\n\n      setTimeout(() => {\n\n        resolve({ lyrics: 'New York, New York...' })\n\n      }, 1500)\n\n    }\n\n  }\n\n  render() {\n\n    return this.props.lyrics\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Frank\n"
-
-/***/ }),
+/* 91 */,
 /* 92 */
 /***/ (function(module, exports) {
 
@@ -7903,11 +7905,9 @@ const extension2language = {
   '.html': 'xml'
 }
 
-module.exports = ({ vquaArticle, locale, examples, rawExamples }) => {
+module.exports = ({ vquaArticle, locale, examples, rawExamples, humanId }) => {
 
   return rawExamples.reduce((articleVars, rawExample, index) => {
-
-    const example = examples[index]
 
     const language = extension2language[rawExample.fileExtension]
 
@@ -7917,18 +7917,13 @@ module.exports = ({ vquaArticle, locale, examples, rawExamples }) => {
         cutAfter: true
       })
 
-    const previewParams = example
-      ? { preview: example.content }
-      : {}
-
-
-    const codeParams =
-      Object.assign({}, previewParams, {
-        locale,
-        code,
-        language,
-        key: rawExample.name,
-      })
+    const codeParams = {
+      locale,
+      code,
+      language,
+      humanId,
+      key: rawExample.name,
+    }
 
     return Object.assign({}, articleVars, {
       [rawExample.variableName]: Code.v(codeParams)
@@ -7955,9 +7950,9 @@ class ArticleContainer extends Component {
 
     const {
       article,
-      examples,
       rawExamples,
       locale,
+      humanId,
     } = this.props
 
     const vquaArticle = html2vqua(article)
@@ -7972,11 +7967,12 @@ class ArticleContainer extends Component {
       createArticleVars({
         vquaArticle,
         locale,
-        examples,
-        rawExamples
+        rawExamples,
+        humanId
       })
 
-    const newArticle = vquaInterpolate(vquaArticle, articleVars)
+    const newArticle =
+      vquaInterpolate(vquaArticle, articleVars)
 
     return (
       App.v(this.props,

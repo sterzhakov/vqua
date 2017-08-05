@@ -4,11 +4,22 @@ const shellSyntax = require('highlight.js/lib/languages/shell')
 const xmlSyntax = require('highlight.js/lib/languages/xml')
 const CodePreview = require('../CodePreview')
 const { htmlQuotes } = require('vqua-utils')
+const ExampleModel = require('../../models/Example')
 
 const { Component, html, render } = require('vqua')
 
 
 class Code extends Component {
+
+  constructor(props, context) {
+
+    super(props, context)
+
+    this.state = {
+      examples: {}
+    }
+
+  }
 
   afterMount() {
 
@@ -26,9 +37,19 @@ class Code extends Component {
 
     highlightjs.highlightBlock(code)
 
+    ExampleModel.all({
+      humanId: this.props.humanId,
+      locale: this.props.locale
+    }).then((examples) => {
+
+      // return examples.reduce
+
+    })
+
   }
 
   render() {
+
 
     const { div, code } = html
 
@@ -40,12 +61,10 @@ class Code extends Component {
         },
           htmlQuotes.encode(this.props.code)
         ),
-        this.props.preview
-          ? CodePreview.v({
-              locale: this.props.locale,
-              preview: this.props.preview
-            })
-          : null
+        CodePreview.v({
+          humanId: this.props.humanId,
+          locale: this.props.locale,
+        })
       )
     )
 

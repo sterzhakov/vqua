@@ -12,6 +12,7 @@ class App extends Component {
       url: this.props.url,
       locale: this.props.locale,
       segments: this.props.segments,
+      humanId: this.props.humanId,
     }
   }
 

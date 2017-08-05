@@ -497,7 +497,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       sortTemplateNodes(textTemplateNodes)
 
     const decoratedLiveNodes =
-      decorateNodes(liveNodes, { order: true })
+      decorateNodes(flatten([liveNodes]), { order: true })
 
     const sortedLiveNodes =
       sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)

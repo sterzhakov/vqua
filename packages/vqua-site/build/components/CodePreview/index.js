@@ -7,13 +7,11 @@ class CodePreview extends Component {
 
     super(props, context)
 
-    this.loadPreview = this.loadPreview.bind(this)
-
   }
 
   afterMount() {
 
-    this.loadPreview()
+    // this.loadPreview()
 
   }
 
@@ -30,23 +28,27 @@ class CodePreview extends Component {
 
   render() {
 
-    const { div, a } = html
+    if (typeof window == 'undefined') return null
 
-    return [
-      div({ class: 'code__menu' },
-        div({ class: 'code__menu__line' }),
-        a({
-          class: 'code__menu__item',
-          href: '#refresh',
-          ref: 'refresh',
-          onClick: this.loadPreview
-        },
-          translations[this.props.locale].Code.refresh
-        ),
-        div({ class: 'code__menu__line' })
-      ),
-      div({ class: 'code__preview', ref: 'preview' })
-    ]
+    // console.log(rawExamples)
+
+    // const { div, a } = html
+    //
+    // return [
+    //   div({ class: 'code__menu' },
+    //     div({ class: 'code__menu__line' }),
+    //     a({
+    //       class: 'code__menu__item',
+    //       href: '#refresh',
+    //       ref: 'refresh',
+    //       onClick: () => this.loadPreview()
+    //     },
+    //       translations[this.props.locale].Code.refresh
+    //     ),
+    //     div({ class: 'code__menu__line' })
+    //   ),
+    //   div({ class: 'code__preview', ref: 'preview' })
+    // ]
 
   }
 
