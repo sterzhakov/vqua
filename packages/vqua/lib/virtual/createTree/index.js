@@ -8,19 +8,27 @@ const createTextNodes = require('../createTextNodes')
 
 module.exports = (liveNodes, templateNodes, options) => {
 
-  const filterNodes = (liveNodes, templateNodes) => {
+  const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
 
     const textTemplateNodes =
-      createTextNodes(flatten(templateNodes))
+      createTextNodes(flatten([templateNodes]))
+
+    const refsTemplateNodes =
+      createNodesWithRefs(textTemplateNodes, liveParentInstanceNode)
+
 
     const sortedTemplateNodes =
-      sortTemplateNodes(textTemplateNodes)
+      sortTemplateNodes(refsTemplateNodes)
+
 
     const decoratedLiveNodes =
       decorateNodes(flatten([liveNodes]), { order: true })
 
+    const refsLiveNodes =
+      createNodesWithRefs(decoratedLiveNodes, liveParentInstanceNode)
+
     const sortedLiveNodes =
-      sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
+      sortLiveNodes(refsLiveNodes, sortedTemplateNodes)
 
     return {
       filteredLiveNodes: sortedLiveNodes,
@@ -41,6 +49,7 @@ module.exports = (liveNodes, templateNodes, options) => {
         index: true
       },
       liveParentNode: options.liveParentNode || null,
+      liveParentInstanceNode: options.liveParentInstanceNode || null,
       createContext: options.context || {},
       filterNodes,
     })

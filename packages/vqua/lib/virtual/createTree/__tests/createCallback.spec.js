@@ -25,6 +25,7 @@ describe('Create tree, create callback:', () => {
       newLiveNode: null,
       isNeedChilds: false,
       newContext: {},
+      newLiveParentInstanceNode: null,
     })
 
   })
@@ -195,13 +196,15 @@ describe('Create tree, create callback:', () => {
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.instance instanceof App).toBe(true)
       expect(newLiveNode.instance.props).toEqual({ id: 1 })
       expect(newContext).toEqual({ id: 1 })
+      expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
     })
 
@@ -245,12 +248,14 @@ describe('Create tree, create callback:', () => {
         isNeedChilds,
         newLiveNode,
         newContext,
-        liveParentNode
+        liveParentNode,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.childs).toEqual([ null ])
       expect(newContext).toEqual({ id: 2 })
+      expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
     })
 
@@ -293,7 +298,8 @@ describe('Create tree, create callback:', () => {
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(isNeedChilds).toBe(false)
@@ -301,6 +307,7 @@ describe('Create tree, create callback:', () => {
       expect(newLiveNode.instance.nextProps).toEqual({})
       expect(newLiveNode.instance.nextContext).toEqual({})
       expect(newContext).toEqual({ id: 2 })
+      expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
     })
 
@@ -318,18 +325,22 @@ describe('Create tree, create callback:', () => {
         createCallback({
           templateNode,
           liveNode: null,
-          context: true
+          context: true,
+          liveParentInstanceNode: null,
         })
 
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(newLiveNode).toEqual(templateNode)
       expect(isNeedChilds).toBe(true)
       expect(newContext).toBe(true)
+      expect(newLiveParentInstanceNode).toBe(null)
+
 
     })
 
@@ -344,18 +355,21 @@ describe('Create tree, create callback:', () => {
         createCallback({
           templateNode,
           liveNode: null,
-          context: true
+          context: true,
+          liveParentInstanceNode: null,
         })
 
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(templateNode).toEqual(newLiveNode)
       expect(newContext).toBe(true)
       expect(isNeedChilds).toBe(false)
+      expect(newLiveParentInstanceNode).toBe(null)
 
     })
 

@@ -10,10 +10,9 @@ module.exports = ({
   beforeRender
 } = {}) => {
 
-  const injectedContext =
-    templateNode.class.injectContext
-      ? pick(context, ...templateNode.class.injectContext())
-      : {}
+  const injectedContext = templateNode.class.injectContext
+    ? pick(context, ...templateNode.class.injectContext())
+    : {}
 
   const defaultProps = templateNode.class.defaultProps()
 
@@ -23,14 +22,11 @@ module.exports = ({
 
   if (beforeRender) beforeRender(instance)
 
-  const childs = 'render' in instance && flatten([instance.render()]) || null
+  const childs = 'render' in instance && flatten([instance.render()]) || []
 
-  const refParams =
-    templateNode.ref
-      ? { ref: templateNode.ref }
-      : {}
-
-  const childsWithRefs = createNodesWithRefs(childs, instance)
+  const refParams = templateNode.ref
+    ? { ref: templateNode.ref }
+    : {}
 
   const newInstanceNode =
     Object.assign({}, {
@@ -38,7 +34,7 @@ module.exports = ({
       instance,
       type: INSTANCE_TYPE,
       ref: templateNode.ref,
-      childs: childsWithRefs,
+      childs,
     }, refParams)
 
   instance.node = newInstanceNode

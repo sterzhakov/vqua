@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 64);
+/******/ 	return __webpack_require__(__webpack_require__.s = 65);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -86,21 +86,21 @@ module.exports = {
 module.exports = {
   asyncMap:       __webpack_require__(51),
   clone:          __webpack_require__(54),
-  flatten:        __webpack_require__(22),
+  flatten:        __webpack_require__(21),
   include:        __webpack_require__(11),
   kindOf:         __webpack_require__(12),
-  pick:           __webpack_require__(61),
-  omit:           __webpack_require__(60),
-  union:          __webpack_require__(63),
+  pick:           __webpack_require__(62),
+  omit:           __webpack_require__(61),
+  union:          __webpack_require__(64),
   capitalize:     __webpack_require__(52),
   classNames:     __webpack_require__(53),
   first:          __webpack_require__(57),
-  last:           __webpack_require__(59),
-  intersect:      __webpack_require__(58),
-  times:          __webpack_require__(62),
+  last:           __webpack_require__(60),
+  intersect:      __webpack_require__(59),
+  times:          __webpack_require__(63),
   findRightIndex: __webpack_require__(56),
   compose:        __webpack_require__(55),
-  htmlQuotes:     __webpack_require__(111),
+  htmlQuotes:     __webpack_require__(58),
 }
 
 
@@ -112,12 +112,12 @@ const humanizeNodes = __webpack_require__(47)
 const { flatten, omit, clone } = __webpack_require__(1)
 const countDomNodes = __webpack_require__(7)
 const createLiveTree = __webpack_require__(9)
-const filterDomNodes = __webpack_require__(19)
+const filterDomNodes = __webpack_require__(18)
 const getParentNodes = __webpack_require__(45)
 const filterNodesOffsets = __webpack_require__(43)
-const createPatchTree = __webpack_require__(17)
+const createPatchTree = __webpack_require__(16)
 const findDomNode = __webpack_require__(27)
-const updateDomTree = __webpack_require__(15)
+const updateDomTree = __webpack_require__(14)
 const eachNodes = __webpack_require__(10)
 const hookNode = __webpack_require__(6)
 const { AFTER_DOM_CREATE } = __webpack_require__(5)
@@ -151,6 +151,7 @@ class Base {
     }
 
     return Object.assign({}, baseParams, refParams, keyParams)
+
   }
 
   constructor(props, context) {
@@ -201,7 +202,7 @@ class Base {
 
     const liveNodes = this.node.childs
 
-    const templateNodes = this.render()
+    const templateNodes = flatten([ this.render() ])
 
     const newLiveNodes =
       createLiveTree(liveNodes, templateNodes, {
@@ -211,15 +212,16 @@ class Base {
         index: true,
         context: clone(contextWithPassed),
         liveParentNode: this.node,
+        liveParentInstanceNode: this.node,
       })
 
     this.node.childs = newLiveNodes
 
     this.node.childDomNodesCount = countDomNodes(newLiveNodes)
 
-    const filteredLiveNodes = filterDomNodes(liveNodes)
+    const filteredLiveNodes = filterDomNodes(liveNodes, this)
 
-    const filteredTemplateNodes = filterDomNodes(newLiveNodes)
+    const filteredTemplateNodes = filterDomNodes(newLiveNodes, this)
 
     const parentNodes = getParentNodes(filteredLiveNodes[0])
 
@@ -233,7 +235,7 @@ class Base {
 
     const domRootChildNodes =
       Array.from(domRootNode.childNodes)
-        .slice(offset, filteredLiveNodes.length)
+        .slice(offset, offset + filteredLiveNodes.length)
 
     const patchNodes =
       createPatchTree({
@@ -307,7 +309,7 @@ module.exports = {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { removeRef } = __webpack_require__(20)
+const { removeRef } = __webpack_require__(19)
 const eachNodes = __webpack_require__(10)
 const isNodeForUnmount = __webpack_require__(48)
 
@@ -481,26 +483,34 @@ module.exports = (nodes, instance) => {
 const { flatten } = __webpack_require__(1)
 const createNodes = __webpack_require__(42)
 const createCallback = __webpack_require__(41)
-const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(21)
-const decorateNodes = __webpack_require__(18)
+const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(20)
+const decorateNodes = __webpack_require__(17)
 const createNodesWithRefs = __webpack_require__(8)
 const createTextNodes = __webpack_require__(40)
 
 module.exports = (liveNodes, templateNodes, options) => {
 
-  const filterNodes = (liveNodes, templateNodes) => {
+  const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
 
     const textTemplateNodes =
-      createTextNodes(flatten(templateNodes))
+      createTextNodes(flatten([templateNodes]))
+
+    const refsTemplateNodes =
+      createNodesWithRefs(textTemplateNodes, liveParentInstanceNode)
+
 
     const sortedTemplateNodes =
-      sortTemplateNodes(textTemplateNodes)
+      sortTemplateNodes(refsTemplateNodes)
+
 
     const decoratedLiveNodes =
       decorateNodes(flatten([liveNodes]), { order: true })
 
+    const refsLiveNodes =
+      createNodesWithRefs(decoratedLiveNodes, liveParentInstanceNode)
+
     const sortedLiveNodes =
-      sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
+      sortLiveNodes(refsLiveNodes, sortedTemplateNodes)
 
     return {
       filteredLiveNodes: sortedLiveNodes,
@@ -521,6 +531,7 @@ module.exports = (liveNodes, templateNodes, options) => {
         index: true
       },
       liveParentNode: options.liveParentNode || null,
+      liveParentInstanceNode: options.liveParentInstanceNode || null,
       createContext: options.context || {},
       filterNodes,
     })
@@ -631,67 +642,6 @@ module.exports = kindOf
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { union } = __webpack_require__(1)
-const isPropsEqual = __webpack_require__(28)
-
-module.exports = (leftProps = {}, rightProps = {}) => {
-
-  const keys = union(
-    Object.keys(leftProps),
-    Object.keys(rightProps)
-  )
-
-  return keys.reduce((sortedProps, key) => {
-
-    if (leftProps.hasOwnProperty(key) && !rightProps.hasOwnProperty(key)) {
-
-      return {
-        addProps: sortedProps.addProps,
-        removeProps: [
-          ...sortedProps.removeProps,
-          { key, value: leftProps[key] }
-        ],
-      }
-
-    } else
-
-    if (!leftProps.hasOwnProperty(key) && rightProps.hasOwnProperty(key)) {
-
-      return {
-        addProps: [
-          ...sortedProps.addProps,
-          { key, value: rightProps[key] }
-        ],
-        removeProps: sortedProps.removeProps,
-      }
-
-    } else {
-
-      const addProps = (
-        isPropsEqual(leftProps[key], rightProps[key])
-          ? sortedProps.addProps
-          : [
-              ...sortedProps.addProps,
-              { key, value: rightProps[key] }
-            ]
-      )
-
-      return {
-        addProps,
-        removeProps: sortedProps.removeProps,
-      }
-
-    }
-
-  }, { addProps: [], removeProps: [] })
-
-}
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
 const events = __webpack_require__(26)
 
 module.exports = (props) => {
@@ -734,7 +684,7 @@ module.exports = (props) => {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const updateDomNode = __webpack_require__(30)
@@ -748,7 +698,7 @@ module.exports = ({ parentDomNode, patchNodes }) => {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = (error, errorExists, errorNotExists) => {
@@ -767,11 +717,11 @@ module.exports = (error, errorExists, errorNotExists) => {
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { sortLiveNodes } = __webpack_require__(21)
-const decorateNodes = __webpack_require__(18)
+const { sortLiveNodes } = __webpack_require__(20)
+const decorateNodes = __webpack_require__(17)
 const createNodes = __webpack_require__(33)
 const createCallback = __webpack_require__(32)
 
@@ -788,10 +738,15 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
         const decoratedLiveNodes =
-          decorateNodes(liveNodes, { order: true, dom: domNodes })
+          decorateNodes(liveNodes, {
+            order: { startFrom: offset },
+            dom: domNodes
+          })
 
         const decoratedTemplateNodes =
-          decorateNodes(templateNodes, { order: { startFrom: offset } })
+          decorateNodes(templateNodes, {
+            order: { startFrom: offset }
+          })
 
         return {
           filteredLiveNodes: sortLiveNodes(decoratedLiveNodes, templateNodes),
@@ -809,7 +764,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports) {
 
 const decorateOrder = ({ startFrom, index }) => {
@@ -826,17 +781,13 @@ module.exports = (nodes, { dom = false, order = false }) => {
 
   return nodes.map((liveNode, index) => {
 
-    const nodeOrder = (
-      order
-        ? decorateOrder({ index, startFrom: order.startFrom || 0 })
-        : {}
-    )
+    const nodeOrder = order
+      ? decorateOrder({ index, startFrom: order.startFrom || 0 })
+      : {}
 
-    const nodeDom = (
-      dom
-        ? decorateDom({ dom, index })
-        : {}
-    )
+    const nodeDom = dom
+      ? decorateDom({ dom, index })
+      : {}
 
     return Object.assign({}, liveNode, nodeDom, nodeOrder)
 
@@ -846,7 +797,7 @@ module.exports = (nodes, { dom = false, order = false }) => {
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit, flatten } = __webpack_require__(1)
@@ -906,7 +857,7 @@ module.exports = loop
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
@@ -931,7 +882,7 @@ module.exports = { addRef, removeRef }
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten, include } = __webpack_require__(1)
@@ -1051,7 +1002,7 @@ module.exports = {
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports) {
 
 const flatten = (items, newItems = []) => {
@@ -1079,7 +1030,7 @@ module.exports = flatten
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { CREATE_NODE, DELETE_NODE } = __webpack_require__(3)
@@ -1116,7 +1067,7 @@ module.exports = (actions) => {
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -1205,13 +1156,74 @@ module.exports = ({ liveNode, templateNode }) => {
 
 
 /***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { union } = __webpack_require__(1)
+const isPropsEqual = __webpack_require__(28)
+
+module.exports = (leftProps = {}, rightProps = {}) => {
+
+  const keys = union(
+    Object.keys(leftProps),
+    Object.keys(rightProps)
+  )
+
+  return keys.reduce((sortedProps, key) => {
+
+    if (leftProps.hasOwnProperty(key) && !rightProps.hasOwnProperty(key)) {
+
+      return {
+        addProps: sortedProps.addProps,
+        removeProps: [
+          ...sortedProps.removeProps,
+          { key, value: leftProps[key] }
+        ],
+      }
+
+    } else
+
+    if (!leftProps.hasOwnProperty(key) && rightProps.hasOwnProperty(key)) {
+
+      return {
+        addProps: [
+          ...sortedProps.addProps,
+          { key, value: rightProps[key] }
+        ],
+        removeProps: sortedProps.removeProps,
+      }
+
+    } else {
+
+      const addProps = (
+        isPropsEqual(leftProps[key], rightProps[key])
+          ? sortedProps.addProps
+          : [
+              ...sortedProps.addProps,
+              { key, value: rightProps[key] }
+            ]
+      )
+
+      return {
+        addProps,
+        removeProps: sortedProps.removeProps,
+      }
+
+    }
+
+  }, { addProps: [], removeProps: [] })
+
+}
+
+
+/***/ }),
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
-const sortProps = __webpack_require__(14)
+const sortProps = __webpack_require__(13)
 const events = __webpack_require__(26)
-const diffProps = __webpack_require__(13)
+const diffProps = __webpack_require__(24)
 
 const updateProps = (
   domNode, liveProps, templateProps, { event = true, element = true } = {}
@@ -1564,12 +1576,12 @@ module.exports = (leftProp, rightProp) => {
 const { flatten } = __webpack_require__(1)
 const { ROOT_TYPE, INSTANCE_TYPE } = __webpack_require__(0)
 const createLiveTree = __webpack_require__(9)
-const filterDomNodes = __webpack_require__(19)
+const filterDomNodes = __webpack_require__(18)
 const eachNodes = __webpack_require__(10)
 const hookNode = __webpack_require__(6)
 const { AFTER_DOM_CREATE } = __webpack_require__(5)
-const createPatchTree = __webpack_require__(17)
-const updateDomTree = __webpack_require__(15)
+const createPatchTree = __webpack_require__(16)
+const updateDomTree = __webpack_require__(14)
 
 module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 
@@ -1628,10 +1640,9 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 /* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { addRef, removeRef } = __webpack_require__(20)
+const { addRef, removeRef } = __webpack_require__(19)
 const { createElement, insertAt, updateProps } = __webpack_require__(25)
-const diffProps = __webpack_require__(13)
-const sortProps = __webpack_require__(14)
+const sortProps = __webpack_require__(13)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(3)
@@ -1675,17 +1686,13 @@ module.exports = ({
 
         } else {
 
-          const {
-            addProps, removeProps
-          } = diffProps(liveNode.props, templateNode.props)
-
           updateProps(liveNode.dom, liveNode.props, templateNode.props)
 
           if (templateNode.ref) {
 
             addRef(templateNode, liveNode.dom)
 
-          }          
+          }
 
         }
 
@@ -1797,8 +1804,8 @@ module.exports = updateNodes
 /***/ (function(module, exports, __webpack_require__) {
 
 const { intersect } = __webpack_require__(1)
-const countActionsScore = __webpack_require__(23)
-const getNodeActions = __webpack_require__(24)
+const countActionsScore = __webpack_require__(22)
+const getNodeActions = __webpack_require__(23)
 const { DELETE_NODE, REPLACE_NODE } = __webpack_require__(3)
 
 module.exports = ({ liveNode, templateNode, limit }) => {
@@ -1930,10 +1937,9 @@ module.exports = ({
   beforeRender
 } = {}) => {
 
-  const injectedContext =
-    templateNode.class.injectContext
-      ? pick(context, ...templateNode.class.injectContext())
-      : {}
+  const injectedContext = templateNode.class.injectContext
+    ? pick(context, ...templateNode.class.injectContext())
+    : {}
 
   const defaultProps = templateNode.class.defaultProps()
 
@@ -1943,14 +1949,11 @@ module.exports = ({
 
   if (beforeRender) beforeRender(instance)
 
-  const childs = 'render' in instance && flatten([instance.render()]) || null
+  const childs = 'render' in instance && flatten([instance.render()]) || []
 
-  const refParams =
-    templateNode.ref
-      ? { ref: templateNode.ref }
-      : {}
-
-  const childsWithRefs = createNodesWithRefs(childs, instance)
+  const refParams = templateNode.ref
+    ? { ref: templateNode.ref }
+    : {}
 
   const newInstanceNode =
     Object.assign({}, {
@@ -1958,7 +1961,7 @@ module.exports = ({
       instance,
       type: INSTANCE_TYPE,
       ref: templateNode.ref,
-      childs: childsWithRefs,
+      childs,
     }, refParams)
 
   instance.node = newInstanceNode
@@ -1995,6 +1998,12 @@ module.exports = ({ templateNode }) => {
     templateNode.ref
       ? { ref: templateNode.ref }
       : {}
+
+    if (templateNode.tag == 'code') {
+
+      // console.log(templateNode)
+
+    }
 
   const newTagNode = {
     type: templateNode.type,
@@ -2033,7 +2042,7 @@ const createInstanceNode = __webpack_require__(34)
 const updateInstanceNode = __webpack_require__(39)
 const createTagNode = __webpack_require__(36)
 const createTextNode = __webpack_require__(37)
-const handleError = __webpack_require__(16)
+const handleError = __webpack_require__(15)
 
 const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
@@ -2155,13 +2164,11 @@ module.exports = ({ liveNode, templateNode, context }) => {
 
   const childs = flatten([liveInstance.render() || null])
 
-  const childsWithRefs = createNodesWithRefs(childs, liveInstance)
-
   const newInstanceNode = {
     context,
     type: liveType,
     instance: liveInstance,
-    childs: childsWithRefs,
+    childs,
   }
 
   liveInstance.node = newInstanceNode
@@ -2209,11 +2216,10 @@ module.exports = (childs) => {
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
 const createNode = __webpack_require__(38)
 const hookNode = __webpack_require__(6)
 const getCreateAction = __webpack_require__(44)
-const handleError = __webpack_require__(16)
+const handleError = __webpack_require__(15)
 
 const {
   BEFORE_EACH_ITERATION, BEFORE_INSTANCE_UPDATE, ON_INSTANCE_CREATE
@@ -2228,6 +2234,7 @@ module.exports = ({
   index,
   liveNode,
   templateNode,
+  liveParentInstanceNode,
   options = {
     hooks: false
   },
@@ -2262,6 +2269,7 @@ module.exports = ({
         newContext: context,
         templateChilds: newLiveNode ? newLiveNode.childs : [],
         liveChilds: liveNode ? liveNode.childs : [],
+        newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
     }
@@ -2298,6 +2306,7 @@ module.exports = ({
         newContext,
         liveChilds: liveNode ? liveNode.childs : [],
         templateChilds: newLiveNode ? newLiveNode.childs : [],
+        newLiveParentInstanceNode: newLiveNode,
       }
 
     }
@@ -2333,6 +2342,7 @@ module.exports = ({
         newContext,
         liveChilds: liveNode && liveNode.childs || [],
         templateChilds: newLiveNode.childs,
+        newLiveParentInstanceNode: newLiveNode,
       }
 
     }
@@ -2349,7 +2359,8 @@ module.exports = ({
       return {
         newLiveNode,
         isNeedChilds: false,
-        newContext: context
+        newContext: context,
+        newLiveParentInstanceNode: newLiveNode,
       }
 
     }
@@ -2369,6 +2380,7 @@ module.exports = ({
         isNeedChilds: true,
         liveChilds: liveNode ? liveNode.childs : [],
         templateChilds: templateNode ? templateNode.childs : [],
+        newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
     }
@@ -2385,7 +2397,8 @@ module.exports = ({
       return {
         newLiveNode,
         isNeedChilds: false,
-        newContext: context
+        newContext: context,
+        newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
       break
@@ -2396,7 +2409,8 @@ module.exports = ({
       return {
         newLiveNode: null,
         isNeedChilds: false,
-        newContext: context
+        newContext: context,
+        newLiveParentInstanceNode: null,
       }
 
     }
@@ -2420,7 +2434,8 @@ const createNodes = ({
   createOptions = {},
   createContext = {},
   liveParentNode = null,
-  filterNodes = (liveNodes, templateNodes) => {
+  liveParentInstanceNode = null,
+  filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
     return {
       filteredLiveNodes: liveNodes,
       filteredTemplateNodes: templateNodes
@@ -2433,7 +2448,7 @@ const createNodes = ({
   const {
     filteredLiveNodes,
     filteredTemplateNodes
-  } = filterNodes(liveNodes, templateNodes)
+  } = filterNodes(liveNodes, templateNodes, liveParentInstanceNode)
 
   return filteredLiveNodes.reduce((newLiveNodes, liveNode, index) => {
 
@@ -2445,12 +2460,14 @@ const createNodes = ({
       liveChilds,
       templateChilds,
       newContext,
+      newLiveParentInstanceNode,
     } = createNode({
       index,
       liveNode,
       templateNode,
       options: createOptions,
       context: createContext,
+      liveParentInstanceNode,
     })
 
     if (!newLiveNode) return newLiveNodes
@@ -2460,6 +2477,7 @@ const createNodes = ({
     const childs =
       createNodes({
         liveParentNode: newLiveNode,
+        liveParentInstanceNode: newLiveParentInstanceNode,
         liveNodes: liveChilds || [],
         templateNodes: templateChilds || [],
         createNode,
@@ -2933,49 +2951,49 @@ module.exports = loop
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./action/__tests/countActionsScore.spec.js": 65,
-	"./action/__tests/getNodeActions.spec.js": 66,
-	"./dom/__tests/diffProps.spec.js": 67,
-	"./dom/__tests/domActions.spec.js": 68,
-	"./dom/__tests/findDomNode.spec.js": 69,
-	"./dom/__tests/isPropsEqual.spec.js": 70,
-	"./dom/__tests/render.spec.js": 71,
-	"./dom/__tests/sortProps.spec.js": 72,
-	"./dom/__tests/updateTree/index.spec.js": 73,
-	"./dom/__tests/updateTree/updateCallback.spec.js": 74,
-	"./dom/__tests/updateTree/updateNodes.spec.js": 75,
-	"./helpers/__tests/handleError.spec.js": 76,
-	"./patch/__tests/createTree/createCallback.spec.js": 77,
-	"./patch/__tests/createTree/createNodes.spec.js": 78,
-	"./patch/__tests/createTree/index.spec.js": 79,
-	"./virtual/__tests/Component.spec.js": 80,
-	"./virtual/__tests/assignDomNodes.spec.js": 81,
-	"./virtual/__tests/countDomNodes.spec.js": 82,
-	"./virtual/__tests/createNode/createInstanceNode.spec.js": 83,
-	"./virtual/__tests/createNode/createRootNode.spec.js": 84,
-	"./virtual/__tests/createNode/createTagNode.spec.js": 85,
-	"./virtual/__tests/createNode/createTextNode.spec.js": 86,
-	"./virtual/__tests/createNode/index.spec.js": 87,
-	"./virtual/__tests/createNode/updateInstanceNode.spec.js": 88,
-	"./virtual/__tests/createNodesWithRefs.spec.js": 89,
-	"./virtual/__tests/createTextNodes.spec.js": 90,
-	"./virtual/__tests/createTree/createCallback.spec.js": 91,
-	"./virtual/__tests/createTree/createNodes.spec.js": 92,
-	"./virtual/__tests/createTree/index.spec.js": 93,
-	"./virtual/__tests/decorateNodes.spec.js": 94,
-	"./virtual/__tests/eachNodes.spec.js": 95,
-	"./virtual/__tests/filterDomNodes.spec.js": 96,
-	"./virtual/__tests/filterNodesOffsets.spec.js": 97,
-	"./virtual/__tests/getCreateAction.spec.js": 98,
-	"./virtual/__tests/getParentNodes.spec.js": 99,
-	"./virtual/__tests/hookNode/hooks.spec.js": 100,
-	"./virtual/__tests/hookNode/index.spec.js": 101,
-	"./virtual/__tests/html/index.spec.js": 102,
-	"./virtual/__tests/humanizeNodes.spec.js": 103,
-	"./virtual/__tests/isNodeForUnmount.spec.js": 104,
-	"./virtual/__tests/mapNodes.spec.js": 105,
-	"./virtual/__tests/refs.spec.js": 106,
-	"./virtual/__tests/sortNodes.spec.js": 107
+	"./action/__tests/countActionsScore.spec.js": 66,
+	"./action/__tests/getNodeActions.spec.js": 67,
+	"./dom/__tests/diffProps.spec.js": 68,
+	"./dom/__tests/domActions.spec.js": 69,
+	"./dom/__tests/findDomNode.spec.js": 70,
+	"./dom/__tests/isPropsEqual.spec.js": 71,
+	"./dom/__tests/render.spec.js": 72,
+	"./dom/__tests/sortProps.spec.js": 73,
+	"./dom/__tests/updateTree/index.spec.js": 74,
+	"./dom/__tests/updateTree/updateCallback.spec.js": 75,
+	"./dom/__tests/updateTree/updateNodes.spec.js": 76,
+	"./helpers/__tests/handleError.spec.js": 77,
+	"./patch/__tests/createTree/createCallback.spec.js": 78,
+	"./patch/__tests/createTree/createNodes.spec.js": 79,
+	"./patch/__tests/createTree/index.spec.js": 80,
+	"./virtual/__tests/Component.spec.js": 81,
+	"./virtual/__tests/assignDomNodes.spec.js": 82,
+	"./virtual/__tests/countDomNodes.spec.js": 83,
+	"./virtual/__tests/createNodesWithRefs.spec.js": 84,
+	"./virtual/__tests/createTextNodes.spec.js": 85,
+	"./virtual/__tests/decorateNodes.spec.js": 86,
+	"./virtual/__tests/eachNodes.spec.js": 87,
+	"./virtual/__tests/filterDomNodes.spec.js": 88,
+	"./virtual/__tests/filterNodesOffsets.spec.js": 89,
+	"./virtual/__tests/getCreateAction.spec.js": 90,
+	"./virtual/__tests/getParentNodes.spec.js": 91,
+	"./virtual/__tests/humanizeNodes.spec.js": 92,
+	"./virtual/__tests/isNodeForUnmount.spec.js": 93,
+	"./virtual/__tests/mapNodes.spec.js": 94,
+	"./virtual/__tests/refs.spec.js": 95,
+	"./virtual/__tests/sortNodes.spec.js": 96,
+	"./virtual/createNode/__tests/createInstanceNode.spec.js": 98,
+	"./virtual/createNode/__tests/createRootNode.spec.js": 99,
+	"./virtual/createNode/__tests/createTagNode.spec.js": 100,
+	"./virtual/createNode/__tests/createTextNode.spec.js": 101,
+	"./virtual/createNode/__tests/index.spec.js": 102,
+	"./virtual/createNode/__tests/updateInstanceNode.spec.js": 103,
+	"./virtual/createTree/__tests/createCallback.spec.js": 104,
+	"./virtual/createTree/__tests/createNodes.spec.js": 105,
+	"./virtual/createTree/__tests/index.spec.js": 106,
+	"./virtual/hookNode/__tests/hooks.spec.js": 107,
+	"./virtual/hookNode/__tests/index.spec.js": 108,
+	"./virtual/html/__tests/index.spec.js": 109
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -3054,7 +3072,7 @@ module.exports = (string) => {
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const flatten = __webpack_require__(22)
+const flatten = __webpack_require__(21)
 const kindOf = __webpack_require__(12)
 const include = __webpack_require__(11)
 
@@ -3261,6 +3279,43 @@ module.exports = (array) => {
 /* 58 */
 /***/ (function(module, exports) {
 
+const OPEN_QUOTE_SPECIAL = '&lt;'
+const CLOSE_QUOTE_SPECIAL = '&gt;'
+
+const OPEN_QUOTE_SIMPLE = '<'
+const CLOSE_QUOTE_SIMPLE = '>'
+
+const SPECIAL_TO_SIMPLE = {
+  [OPEN_QUOTE_SPECIAL]:  OPEN_QUOTE_SIMPLE,
+  [CLOSE_QUOTE_SPECIAL]: CLOSE_QUOTE_SIMPLE
+}
+
+const SIMPLE_TO_SPECIAL = {
+  [OPEN_QUOTE_SIMPLE]:  OPEN_QUOTE_SPECIAL,
+  [CLOSE_QUOTE_SIMPLE]: CLOSE_QUOTE_SPECIAL
+}
+
+const SIMPLE_QUOTES =
+  new RegExp(OPEN_QUOTE_SIMPLE + '|' + CLOSE_QUOTE_SIMPLE, 'g')
+
+const SPECIAL_QUOTES =
+  new RegExp(OPEN_QUOTE_SPECIAL + '|' + CLOSE_QUOTE_SPECIAL, 'g')
+
+const encode = (string) => (
+  string.replace(SIMPLE_QUOTES, match => SIMPLE_TO_SPECIAL[match])
+)
+
+const decode = (string) => (
+  string.replace(SPECIAL_QUOTES, match => SPECIAL_TO_SIMPLE[match])
+)
+
+module.exports = { encode, decode }
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports) {
+
 module.exports = (left, right) => {
 
   if (!Array.isArray(left) || !Array.isArray(right)) return null
@@ -3277,7 +3332,7 @@ module.exports = (left, right) => {
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = (array) => {
@@ -3288,7 +3343,7 @@ module.exports = (array) => {
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 const omit = (object, ...keys) => {
@@ -3305,7 +3360,7 @@ module.exports = omit
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 const pick = (object, ...keys) => {
@@ -3321,7 +3376,7 @@ module.exports = pick
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = (count) => {
@@ -3332,7 +3387,7 @@ module.exports = (count) => {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 const union = (first, second) => {
@@ -3345,7 +3400,7 @@ module.exports = union
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const context = __webpack_require__(50)
@@ -3353,13 +3408,13 @@ context.keys().forEach(context)
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
   INSERT_NODE, CREATE_NODE, UPDATE_NODE, REPLACE_NODE, DELETE_NODE
 } = __webpack_require__(3)
-const countActionsScore = __webpack_require__(23)
+const countActionsScore = __webpack_require__(22)
 
 describe('Count actions score for', () => {
 
@@ -3385,10 +3440,10 @@ describe('Count actions score for', () => {
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const getNodeActions = __webpack_require__(24)
+const getNodeActions = __webpack_require__(23)
 const {
   INSERT_NODE, CREATE_NODE, UPDATE_NODE, REPLACE_NODE, DELETE_NODE
 } = __webpack_require__(3)
@@ -3482,10 +3537,10 @@ describe('Get node actions', () => {
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const diffProps = __webpack_require__(13)
+const diffProps = __webpack_require__(24)
 
 describe('Get props diff for', () => {
 
@@ -3579,7 +3634,7 @@ describe('Get props diff for', () => {
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
@@ -3781,7 +3836,7 @@ describe('Dom actions', () => {
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const findDomNode = __webpack_require__(27)
@@ -3819,7 +3874,7 @@ describe('Find node by offset', () => {
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const isPropsEqual = __webpack_require__(28)
@@ -3934,7 +3989,7 @@ describe('Is props equal for', () => {
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const render = __webpack_require__(29)
@@ -3996,10 +4051,10 @@ describe('Render dom', () => {
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const sortProps = __webpack_require__(14)
+const sortProps = __webpack_require__(13)
 
 describe('Sort props', () => {
 
@@ -4039,10 +4094,10 @@ describe('Sort props', () => {
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const updateDomTree = __webpack_require__(15)
+const updateDomTree = __webpack_require__(14)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(3)
@@ -4084,7 +4139,7 @@ describe('Update dom tree', () => {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const updateNode = __webpack_require__(30)
@@ -4439,7 +4494,7 @@ describe('Update dom callback', () => {
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
@@ -4502,10 +4557,10 @@ describe('Update dom nodes, call update callback', () => {
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const handleError = __webpack_require__(16)
+const handleError = __webpack_require__(15)
 
 describe('Handle error', () => {
 
@@ -4543,7 +4598,7 @@ describe('Handle error', () => {
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createNode = __webpack_require__(32)
@@ -4606,7 +4661,7 @@ describe('Create patch node', () => {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
@@ -4820,10 +4875,10 @@ describe('Create patch nodes', () => {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createTree = __webpack_require__(17)
+const createTree = __webpack_require__(16)
 const {
   TEXT_TYPE, TAG_TYPE
 } = __webpack_require__(0)
@@ -4931,7 +4986,7 @@ describe('Create patch tree', () => {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -5017,10 +5072,10 @@ describe('Component', () => {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const assignDomNodes = __webpack_require__(108)
+const assignDomNodes = __webpack_require__(97)
 
 describe('Assign dom nodes', () => {
 
@@ -5070,7 +5125,7 @@ describe('Assign dom nodes', () => {
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const countDomNodes = __webpack_require__(7)
@@ -5130,7 +5185,1289 @@ describe('Count dom nodes for', () => {
 
 
 /***/ }),
-/* 83 */
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const createNodesWithRefs = __webpack_require__(8)
+
+describe('Create nodes with refs', () => {
+
+  it('return new array ob ojects with asigned instance and ref name', () => {
+
+    expect(
+      createNodesWithRefs([{ ref: 'test' }], 'instance')
+    ).toEqual([
+      {
+        ref: {
+          name: 'test',
+          instance: 'instance'
+        },
+      }
+    ])
+
+  })
+
+})
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const createTextNodes = __webpack_require__(40)
+const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
+
+describe('Create child nodes', () => {
+
+  it('return one level nesting array with tag and text nodes', () => {
+
+    const newNodes =
+      createTextNodes([
+        'test',
+        {
+          type: TAG_TYPE,
+          tag: 'div',
+          props: {},
+          childs: []
+        },
+        false,
+        true,
+        123,
+        undefined
+      ])
+
+    expect(newNodes).toEqual([
+      {
+        type: TEXT_TYPE,
+        text: 'test',
+        childs: []
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: {},
+        childs: []
+      },
+      {
+        type: TEXT_TYPE,
+        text: '',
+        childs: []
+      },
+      {
+        type: TEXT_TYPE,
+        text: true,
+        childs: []
+      },
+      {
+        type: TEXT_TYPE,
+        text: 123,
+        childs: []
+      },
+      null
+      ,
+    ])
+
+  })
+
+})
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const decorateNodes = __webpack_require__(17)
+const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
+
+describe('Decorate live nodes', () => {
+
+  it('decorate with order with startFrom param', () => {
+
+    const liveNodes = [{}, {}]
+
+    const decoratedNodes =
+      decorateNodes(liveNodes, { order: { startFrom: 2 } })
+
+    expect(
+      decoratedNodes[0].order
+    ).toBe(2)
+
+    expect(
+      decoratedNodes[1].order
+    ).toBe(3)
+
+  })
+
+  it('decorate with order', () => {
+
+    const liveNodes = [{}, {}]
+
+    const decoratedNodes = decorateNodes(liveNodes, { order: true })
+
+    expect(
+      decoratedNodes[0].order
+    ).toBe(0)
+
+    expect(
+      decoratedNodes[1].order
+    ).toBe(1)
+
+
+  })
+
+  it('decorate with dom node', () => {
+
+    const liveNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+      },
+      {
+        type: TEXT_TYPE,
+        text: 'text',
+      }
+    ]
+
+    const textNode = document.createTextNode('text')
+    const tagNode = document.createElement('div')
+
+    const domNodes = [ tagNode, textNode ]
+
+    const decoratedNodes = decorateNodes(liveNodes, { dom: domNodes })
+
+    expect(
+      decoratedNodes[0].dom.isSameNode(tagNode)
+    ).toBe(true)
+
+    expect(
+      decoratedNodes[1].dom.isSameNode(textNode)
+    ).toBe(true)
+
+  })
+
+})
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const eachNodes = __webpack_require__(10)
+
+describe('Virtual tree iterate', () => {
+
+  it('call function at each iteration', () => {
+
+    const virtualTree = {
+      name: 'div',
+      props: {},
+      childs: [
+        'example',
+        {
+          name: new Object,
+          props: {},
+          childs: [
+            {
+              name: Object,
+              props: {},
+              childs: []
+            },
+          ]
+        },
+        'example',
+      ]
+    }
+
+    const assertions = [
+      (element, level) => {
+        return level == 0 && element.name == 'div'
+      },
+      (element, level) => {
+        return level == 1 && element == 'example'
+      },
+      (element, level) => {
+        return level == 1 && element.name instanceof Object
+      },
+      (element, level) => {
+        return level == 2 && element.name == Object
+      },
+      (element, level) => {
+        return level == 1 && element == 'example'
+      },
+
+    ]
+
+    eachNodes(virtualTree, (virtualElement, level, index) => {
+
+      expect(
+        assertions[index](virtualElement, level)
+      ).toBe(true)
+
+    })
+
+  })
+
+})
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const filterDomNodes = __webpack_require__(18)
+const {
+  ROOT_TYPE, TEXT_TYPE, TAG_TYPE, INSTANCE_TYPE, CLASS_TYPE
+} = __webpack_require__(0)
+
+describe('Get virtual DOM elements:', () => {
+
+  it('pass parent instance to all nodes', () => {
+
+    const nodes = [
+      {
+        type: INSTANCE_TYPE,
+        instance: { id: 1 },
+        childs: [
+          {
+            type: TAG_TYPE,
+            id: 1,
+            childs: [
+              {
+                type: INSTANCE_TYPE,
+                instance: { id: 2 },
+                childs: [
+                  {
+                    id: 2,
+                    type: TAG_TYPE,
+                    childs: [
+                      {
+                        id: 3,
+                        type: TEXT_TYPE,
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+
+    const domNodes = filterDomNodes(nodes)
+
+    expect(domNodes[0].instance).toEqual({ id: 1 })
+    expect(domNodes[0].childs[0].instance).toEqual({ id: 2 })
+    expect(domNodes[0].childs[0].childs[0].instance).toEqual({ id: 2 })
+
+  })
+
+  it('by array', () => {
+
+    const nodes = [
+      {
+        type: ROOT_TYPE,
+        childs: [
+          {
+            type: INSTANCE_TYPE,
+            childs: [
+              {
+                type: TAG_TYPE,
+                tag: 'div',
+                childs: [
+                  {
+                    type: INSTANCE_TYPE,
+                    childs: [
+                      {
+                        type: TEXT_TYPE,
+                        text: 'text',
+                      },
+                    ]
+                  }
+                ]
+              },
+            ]
+          },
+          {
+            type: TAG_TYPE,
+            text: 'div',
+            childs: []
+          },
+        ]
+      }
+    ]
+
+    const willBe = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        instance: null,
+        childs: [
+          {
+            type: TEXT_TYPE,
+            instance: null,
+            text: 'text',
+          },        ]
+      },
+      {
+        type: TAG_TYPE,
+        instance: null,
+        text: 'div',
+        childs: []
+      },
+    ]
+
+    expect(
+      filterDomNodes(nodes)
+    ).toEqual(willBe)
+  })
+
+})
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const filterNodesOffsets = __webpack_require__(43)
+
+describe('Filter nodes offsets', () => {
+
+  it('return array of numbers', () => {
+    expect(
+      filterNodesOffsets([
+        {},
+        { offset: 0 },
+        { offset: 1 },
+        { offset: 2 },
+      ])
+    ).toEqual([0,1,2])
+
+  })
+
+})
+
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const getCreateAction = __webpack_require__(44)
+
+const {
+  CREATE_ROOT, CREATE_TAG, CREATE_TEXT,
+  CREATE_INSTANCE, UPDATE_INSTANCE, RESUME_INSTANCE
+} = __webpack_require__(4)
+
+const {
+  ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
+} = __webpack_require__(0)
+
+describe('Get create action:', () => {
+
+  it('create root', () => {
+
+    expect(
+      getCreateAction(null, { type: ROOT_TYPE, childs: [] })
+    ).toBe(CREATE_ROOT)
+
+  })
+
+  it('create text', () => {
+
+    expect(
+      getCreateAction(null, { type: TEXT_TYPE, text: 'some text' })
+    ).toBe(CREATE_TEXT)
+
+  })
+
+  it('create tag', () => {
+
+    expect(
+      getCreateAction(null, { type: TAG_TYPE, tag: 'div' })
+    ).toBe(CREATE_TAG)
+
+  })
+
+  it('create instance with existed live node', () => {
+
+    expect(
+      getCreateAction(
+        { type: INSTANCE_TYPE, instance: new Date },
+        { type: CLASS_TYPE, class: Array }
+      )
+    ).toBe(CREATE_INSTANCE)
+
+  })
+
+  it('create instance with null live node', () => {
+
+    expect(
+      getCreateAction(
+        null,
+        { type: CLASS_TYPE, class: Array }
+      )
+    ).toBe(CREATE_INSTANCE)
+
+  })
+
+  it('update instance', () => {
+
+    expect(
+      getCreateAction(
+        { type: INSTANCE_TYPE, instance: { isNeedUpdate: () => true } },
+        { type: CLASS_TYPE, class: Object }
+      )
+    ).toBe(UPDATE_INSTANCE)
+
+  })
+
+  it('resume instance', () => {
+
+    expect(
+      getCreateAction(
+        { type: INSTANCE_TYPE, instance: { isNeedUpdate: () => false } },
+        { type: CLASS_TYPE, class: Object }
+      )
+    ).toBe(RESUME_INSTANCE)
+
+  })
+
+
+
+})
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const {
+  ROOT_TYPE, TEXT_TYPE, TAG_TYPE, INSTANCE_TYPE, CLASS_TYPE
+} = __webpack_require__(0)
+
+const Component = __webpack_require__(2)
+
+const createLiveTree = __webpack_require__(9)
+
+const getParentNodes = __webpack_require__(45)
+
+describe('Get instance update info', () => {
+
+  it('array of numbers', () => {
+
+    class App3 extends Component {
+
+      render() {
+        return null
+      }
+
+    }
+
+    class App2 extends Component {
+
+      render() {
+        return [
+          {
+            type: TAG_TYPE,
+            childs: []
+          },
+          // 2
+          {
+            type: TAG_TYPE,
+            childs: [
+              {
+                type: TAG_TYPE,
+                childs: []
+              },
+              {
+                type: TAG_TYPE,
+                childs: []
+              },
+              {
+                type: TAG_TYPE,
+                childs: []
+              },
+              // 3
+              {
+                type: CLASS_TYPE,
+                class: App3,
+                childs: []
+              },
+            ]
+          },
+        ]
+      }
+
+    }
+
+    class App1 extends Component {
+
+      render() {
+        return [
+          // 1
+          {
+            type: TAG_TYPE,
+            childs: [
+              {
+                type: TAG_TYPE,
+                childs: []
+              },
+              {
+                type: CLASS_TYPE,
+                class: App2,
+              },
+              {
+                type: TAG_TYPE,
+                childs: []
+              },
+            ]
+          },
+          {
+            type: TAG_TYPE,
+            childs: []
+          },
+        ]
+      }
+
+    }
+
+    const templateNodes = [
+      {
+        type: ROOT_TYPE,
+        liveRootDom: { name: 'liveRootDom' },
+        childs: [
+          {
+            type: TAG_TYPE,
+            childs: []
+          },
+          {
+            type: CLASS_TYPE,
+            class: App1,
+          }
+        ],
+      }
+    ]
+
+    const newLiveNodes = createLiveTree([], templateNodes, {})
+
+
+    const targetNode = (
+      newLiveNodes[0].childs[1].childs[0].childs[1].childs[1].childs[3]
+    )
+
+    const parentNodes = getParentNodes(targetNode)
+
+    expect(
+      parentNodes.map(node => node.offset)
+    ).toEqual([undefined, 1,2,3])
+
+  })
+
+})
+
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const humanizeNodes = __webpack_require__(47)
+
+const {
+  TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
+} = __webpack_require__(0)
+
+describe('Humanize virtual tree', () => {
+
+  it('valid string', () => {
+
+    class App {
+
+      constructor(props) {
+        this.props = props
+        this.state = { active: true }
+      }
+
+    }
+
+    const virtualTree = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: { id: 1 },
+        childs: [
+          {
+            type: TEXT_TYPE,
+            text: 'Hello world!',
+          },
+          {
+            type: TAG_TYPE,
+            tag: 'div',
+            props: { id: 2 },
+            childs: [],
+          },
+          {
+            type: CLASS_TYPE,
+            class: App,
+            props: { id: 3 },
+            childs: [],
+          },
+          {
+            type: INSTANCE_TYPE,
+            instance: new App({ id: 4 }),
+            childs: [],
+          },
+        ]
+      },
+    ]
+
+    expect(
+      humanizeNodes(virtualTree)
+    ).toBe(
+      'div({"id":1})\n' +
+      '  Hello world!\n' +
+      '  div({"id":2})\n' +
+      '  App({"id":3})\n' +
+      '  app({"id":4}) {"active":true}\n'
+    )
+
+  })
+
+
+})
+
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const {
+  TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
+} = __webpack_require__(0)
+
+const isNodeForUnmount = __webpack_require__(48)
+
+describe('Is node for unmount for', () => {
+
+  it('return false for unknow node type', () => {
+    expect(
+      isNodeForUnmount(
+        {
+          type: 123,
+        },
+        {
+          type: TEXT_TYPE
+        }
+      )
+    ).toBe(false)
+  })
+
+  describe('live text', () => {
+
+    it('template text with same text', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TEXT_TYPE,
+            text: 'example',
+          },
+          {
+            type: TEXT_TYPE,
+            text: 'example',
+          }
+        )
+      ).toBe(false)
+    })
+
+    it('template text with different text', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TEXT_TYPE,
+            text: 'example',
+          },
+          {
+            type: TEXT_TYPE,
+            text: 'example 2',
+          }
+        )
+      ).toBe(true)
+    })
+
+    it('template tag', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TEXT_TYPE,
+          },
+          {
+            type: TAG_TYPE,
+          }
+        )
+      ).toBe(true)
+    })
+
+    it('template class', () => {
+
+      class App {}
+
+      expect(
+        isNodeForUnmount(
+          {
+            type: TEXT_TYPE,
+          },
+          {
+            type: CLASS_TYPE,
+            class: App,
+          }
+        )
+      ).toBe(true)
+    })
+
+  })
+
+  describe('live tag', () => {
+
+    it('template text', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TAG_TYPE,
+          },
+          {
+            type: TEXT_TYPE,
+          }
+        )
+      ).toBe(true)
+    })
+
+    it('template same tag', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TAG_TYPE,
+            tag: 'p',
+          },
+          {
+            type: TAG_TYPE,
+            tag: 'p',
+          }
+        )
+      ).toBe(false)
+    })
+
+    it('template different tag', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TAG_TYPE,
+            tag: 'p',
+          },
+          {
+            type: TAG_TYPE,
+            tag: 'div',
+          }
+        )
+      ).toBe(true)
+    })
+
+    it('template class', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: TAG_TYPE,
+          },
+          {
+            type: CLASS_TYPE,
+          }
+        )
+      ).toBe(true)
+    })
+
+  })
+
+  describe('live instance', () => {
+
+    it('template text', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: INSTANCE_TYPE,
+          },
+          {
+            type: TEXT_TYPE,
+          }
+        )
+      ).toBe(true)
+    })
+
+    it('template tag', () => {
+      expect(
+        isNodeForUnmount(
+          {
+            type: INSTANCE_TYPE,
+          },
+          {
+            type: TAG_TYPE,
+          }
+        )
+      ).toBe(true)
+    })
+
+    it('template same class', () => {
+
+      class App {}
+
+      expect(
+        isNodeForUnmount(
+          {
+            type: INSTANCE_TYPE,
+            instance: new App,
+          },
+          {
+            type: CLASS_TYPE,
+            class: App,
+          }
+        )
+      ).toBe(false)
+    })
+
+    it('template different class', () => {
+
+      class App {}
+      class App2 {}
+
+      expect(
+        isNodeForUnmount(
+          {
+            type: INSTANCE_TYPE,
+            instance: new App,
+          },
+          {
+            type: CLASS_TYPE,
+            class: App2,
+          }
+        )
+      ).toBe(true)
+    })
+
+  })
+
+})
+
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const mapNodes = __webpack_require__(49)
+
+describe('Map nodes', () => {
+
+  it('return new tree of nodes', () => {
+
+    const nodes = [
+      {
+        id: 1,
+        childs: [
+          {
+            id: 2,
+            childs: [],
+          },
+          'some text',
+          {
+            id: 3,
+            childs: [],
+          },
+        ]
+      }
+    ]
+
+    const newNodes = mapNodes(nodes, (node) => {
+
+      return Object.assign({}, node, { id: node.id * 2 })
+
+    })
+
+    expect(newNodes).toEqual([
+      {
+        id: 2,
+        childs: [
+          {
+            id: 4,
+            childs: [],
+          },
+          'some text',
+          {
+            id: 6,
+            childs: [],
+          },
+        ]
+      }
+    ])
+
+  })
+
+})
+
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { addRef, removeRef } = __webpack_require__(19)
+
+describe('Ref', () => {
+
+  it('add', () => {
+
+    let instance = {
+      refs: {}
+    }
+
+    const node = {
+      ref: {
+        name: 'test',
+        instance,
+      }
+    }
+
+    addRef(node, { name: 'test', instance: node.ref.instance })
+
+    expect(instance.refs.test).toBeTruthy()
+
+  })
+
+  it('remove', () => {
+
+    let instance = {
+      refs: {
+        test: true
+      }
+    }
+
+    const node = {
+      ref: {
+        name: 'test',
+        instance,
+      }
+    }
+
+    removeRef(node)
+
+    expect(instance.refs.test).toBeUndefined()
+  })
+
+})
+
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const {
+  isKeyedNode,
+  getLivePairForTemplate,
+  wrapNodesWithTheirKeys,
+  sortUsedLiveNodes,
+  sortUnusedLiveNodes,
+  sortLiveNodes,
+  sortTemplateNodes,
+  separateLiveNodes,
+} = __webpack_require__(20)
+
+describe('Sort nodes:', () => {
+
+  describe('sort live nodes', () => {
+
+    it('by empty template nodes', () => {
+
+      const liveNodes = [
+        { text: 'hello' },
+        { tag: 'div', key: 1 },
+        { tag: 'div', key: 3 },
+      ]
+
+      const templateNodes = []
+
+      expect(
+        sortLiveNodes(liveNodes, templateNodes)
+      ).toEqual([
+        { text: 'hello' },
+        { tag: 'div', key: 1 },
+        { tag: 'div', key: 3 },
+      ])
+
+    })
+
+    it('by template nodes', () => {
+
+      const liveNodes = [
+        { text: 'hello',      order: 0 },
+        { tag: 'div', key: 1, order: 1 },
+        { tag: 'div', key: 3, order: 2 },
+      ]
+
+      const templateNodes = [
+        { text: 'hola' },
+        { text: 'bonjour' },
+        { tag: 'div', key: 2 },
+        { tag: 'div', key: 1 },
+        { text: 'hello world'},
+      ]
+
+      expect(
+        sortLiveNodes(liveNodes, templateNodes)
+      ).toEqual([
+        { text: 'hello', order: 0 },
+        null,
+        null,
+        { tag: 'div', key: 1, order: 1 },
+        null,
+        { tag: 'div', key: 3, order: 2 },
+      ])
+
+    })
+
+  })
+
+  describe('sort template nodes', () => {
+
+    it('flatten and remove null values from array', () => {
+      expect(
+        sortTemplateNodes([
+          null,
+          [
+            { text: 'hello' },
+            [null],
+          ],
+          { text: 'world' }
+        ])
+      ).toEqual([
+        { text: 'hello' },
+        { text: 'world' }
+      ])
+    })
+
+  })
+
+  describe('sort live nodes', () => {
+
+    describe('sort used live nodes', () => {
+
+      it('when used exists', () => {
+
+        const liveNodes = [
+          { tag: 'div' },
+          { tag: 'div', key: 1 },
+          'text',
+          { tag: 'div', key: 2 },
+        ]
+        const templateNodes = [
+          'text',
+          { tag: 'div' },
+          { tag: 'div', key: 2 },
+          'text',
+          { tag: 'div', key: 1 },
+        ]
+        const keyedLiveNodes = wrapNodesWithTheirKeys(liveNodes)
+
+        expect(
+          sortUsedLiveNodes({ liveNodes, templateNodes, keyedLiveNodes })
+        ).toEqual([
+          { tag: 'div' },
+          null,
+          { tag: 'div', key: 2 },
+          null,
+          { tag: 'div', key: 1 },
+        ])
+      })
+
+    })
+
+    describe('sort unused live nodes', () => {
+
+      it('when unused exists', () => {
+
+        const liveNodes = [
+          { tag: 'div', key: 1, order: 1 },
+          { tag: 'div', key: 2, order: 2 },
+          { tag: 'div', key: 3, order: 3 },
+          { tag: 'div', key: 4, order: 4 },
+        ]
+
+        const usedOrderIndexes = [1,3]
+
+        expect(
+          sortUnusedLiveNodes({
+            liveNodes, usedOrderIndexes
+          })
+        ).toEqual([
+          { tag: 'div', key: 2, order: 2 },
+          { tag: 'div', key: 4, order: 4 },
+        ])
+
+      })
+
+    })
+
+  })
+
+  describe('find live pair for template', () => {
+
+    it('when ', () => {
+
+      const liveNode = { tag: 'p' }
+      const templateNode = null
+      const keyedLiveNodes = {}
+
+      expect(
+        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
+      ).toBe(null)
+
+    })
+
+    it('when template node doesn\'t keyed and live is keyed', () => {
+      const liveNode = { tag: 'p', key: 1 }
+      const templateNode = { tag: 'div' }
+      const keyedLiveNodes = {}
+
+      expect(
+        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
+      ).toEqual(
+        null
+      )
+    })
+
+    it('when live keyed node exists', () => {
+
+      const liveNode = { tag: 'p' }
+      const templateNode = { tag: 'div', key: 1 }
+      const keyedLiveNodes = { 1: { tag: 'div', key: 1 } }
+
+      expect(
+        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
+      ).toEqual(
+        { tag: 'div', key: 1 }
+      )
+    })
+
+    it('when live keyed node doesn\'t exists', () => {
+
+      const liveNode = { tag: 'p' }
+      const templateNode = { tag: 'div', key: 1 }
+      const keyedLiveNodes = { 2: { tag: 'div', key: 1 } }
+
+      expect(
+        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
+      ).toEqual(
+        null
+      )
+    })
+
+    it('when template node is not keyed ', () => {
+
+      const liveNode = { tag: 'p' }
+      const templateNode = { tag: 'div' }
+      const keyedLiveNodes = {}
+
+      expect(
+        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
+      ).toEqual(
+        { tag: 'p' }
+      )
+    })
+
+  })
+
+  describe('is keyed node', () => {
+
+    it('for element with key props', () => {
+      expect(
+        isKeyedNode(
+          { tag: 'div', key: 1 }
+        )
+      ).toBe(true)
+    })
+
+    it('for element without key props', () => {
+      expect(
+        isKeyedNode(
+          { tag: 'div' }
+        )
+      ).toBe(false)
+    })
+
+    it('for element without key props', () => {
+      expect(
+        isKeyedNode(
+          null
+        )
+      ).toBe(false)
+    })
+
+  })
+
+  describe('wrap nodes with keys', () => {
+
+    it('when keyed nodes exists', () => {
+      expect(
+        wrapNodesWithTheirKeys([
+          null,
+          { tag: 'span',        },
+          { tag: 'div',  key: 1 },
+          'text',
+          { tag: 'p',    key: 2 }
+        ])
+      ).toEqual({
+        1: { tag: 'div',  key: 1 },
+        2: { tag: 'p',    key: 2 }
+      })
+    })
+
+    it('when keyed nodes doesn\'t exists', () => {
+      expect(
+        wrapNodesWithTheirKeys([
+          null,
+          'text',
+        ])
+      ).toEqual({})
+    })
+
+
+  })
+
+})
+
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports) {
+
+const loop = ({ liveNodes, domNodes }) => {
+
+  liveNodes.forEach((liveNode, index) => {
+
+    liveNode.dom = domNodes[index]
+
+    if (liveNode.childs) {
+
+      loop({
+        liveNodes: liveNode.childs,
+        domNodes: domNodes[index].childNodes
+      })
+
+    }
+
+  })
+
+}
+
+module.exports = loop
+
+
+/***/ }),
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -5200,38 +6537,6 @@ describe('Create instance node', () => {
 
   })
 
-  it('assign ref.name and ref.instance to childs', () => {
-
-    class App extends Component {
-
-      render() {
-
-        return {
-          type: TAG_TYPE,
-          props: {},
-          tag: 'div',
-          childs: [],
-          ref: 'div'
-        }
-
-      }
-
-    }
-
-    const templateNode = {
-      nodeType: CLASS_TYPE,
-      props: {},
-      class: App,
-      childs: [],
-    }
-
-    const node = createInstanceNode({ templateNode })
-
-    expect(node.childs[0].ref.name).toBe('div')
-    expect(node.childs[0].ref.instance instanceof App).toBe(true)
-
-  })
-
   it('clone ref from template node', () => {
 
     let instance = { id: 1 }
@@ -5266,7 +6571,7 @@ describe('Create instance node', () => {
 
 
 /***/ }),
-/* 84 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -5293,7 +6598,7 @@ describe('Create root node', () => {
 
 
 /***/ }),
-/* 85 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -5325,7 +6630,7 @@ describe('Create tag node', () => {
 
 
 /***/ }),
-/* 86 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -5351,7 +6656,7 @@ describe('Create text node', () => {
 
 
 /***/ }),
-/* 87 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createNode = __webpack_require__(38)
@@ -5552,7 +6857,7 @@ describe('Create node', () => {
 
 
 /***/ }),
-/* 88 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -5641,95 +6946,7 @@ describe('Update instance with next params: props, state, context', () => {
 
 
 /***/ }),
-/* 89 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const createNodesWithRefs = __webpack_require__(8)
-
-describe('Create nodes with refs', () => {
-
-  it('return new array ob ojects with asigned instance and ref name', () => {
-
-    expect(
-      createNodesWithRefs([{ ref: 'test' }], 'instance')
-    ).toEqual([
-      {
-        ref: {
-          name: 'test',
-          instance: 'instance'
-        },
-      }
-    ])
-
-  })
-
-})
-
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const createTextNodes = __webpack_require__(40)
-const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
-
-describe('Create child nodes', () => {
-
-  it('return one level nesting array with tag and text nodes', () => {
-
-    const newNodes =
-      createTextNodes([
-        'test',
-        {
-          type: TAG_TYPE,
-          tag: 'div',
-          props: {},
-          childs: []
-        },
-        false,
-        true,
-        123,
-        undefined
-      ])
-
-    expect(newNodes).toEqual([
-      {
-        type: TEXT_TYPE,
-        text: 'test',
-        childs: []
-      },
-      {
-        type: TAG_TYPE,
-        tag: 'div',
-        props: {},
-        childs: []
-      },
-      {
-        type: TEXT_TYPE,
-        text: '',
-        childs: []
-      },
-      {
-        type: TEXT_TYPE,
-        text: true,
-        childs: []
-      },
-      {
-        type: TEXT_TYPE,
-        text: 123,
-        childs: []
-      },
-      null
-      ,
-    ])
-
-  })
-
-})
-
-
-/***/ }),
-/* 91 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -5759,6 +6976,7 @@ describe('Create tree, create callback:', () => {
       newLiveNode: null,
       isNeedChilds: false,
       newContext: {},
+      newLiveParentInstanceNode: null,
     })
 
   })
@@ -5929,13 +7147,15 @@ describe('Create tree, create callback:', () => {
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.instance instanceof App).toBe(true)
       expect(newLiveNode.instance.props).toEqual({ id: 1 })
       expect(newContext).toEqual({ id: 1 })
+      expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
     })
 
@@ -5979,12 +7199,14 @@ describe('Create tree, create callback:', () => {
         isNeedChilds,
         newLiveNode,
         newContext,
-        liveParentNode
+        liveParentNode,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.childs).toEqual([ null ])
       expect(newContext).toEqual({ id: 2 })
+      expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
     })
 
@@ -6027,7 +7249,8 @@ describe('Create tree, create callback:', () => {
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(isNeedChilds).toBe(false)
@@ -6035,6 +7258,7 @@ describe('Create tree, create callback:', () => {
       expect(newLiveNode.instance.nextProps).toEqual({})
       expect(newLiveNode.instance.nextContext).toEqual({})
       expect(newContext).toEqual({ id: 2 })
+      expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
     })
 
@@ -6052,18 +7276,22 @@ describe('Create tree, create callback:', () => {
         createCallback({
           templateNode,
           liveNode: null,
-          context: true
+          context: true,
+          liveParentInstanceNode: null,
         })
 
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(newLiveNode).toEqual(templateNode)
       expect(isNeedChilds).toBe(true)
       expect(newContext).toBe(true)
+      expect(newLiveParentInstanceNode).toBe(null)
+
 
     })
 
@@ -6078,18 +7306,21 @@ describe('Create tree, create callback:', () => {
         createCallback({
           templateNode,
           liveNode: null,
-          context: true
+          context: true,
+          liveParentInstanceNode: null,
         })
 
       const {
         isNeedChilds,
         newLiveNode,
-        newContext
+        newContext,
+        newLiveParentInstanceNode
       } = newLiveNodeParams
 
       expect(templateNode).toEqual(newLiveNode)
       expect(newContext).toBe(true)
       expect(isNeedChilds).toBe(false)
+      expect(newLiveParentInstanceNode).toBe(null)
 
     })
 
@@ -6099,7 +7330,7 @@ describe('Create tree, create callback:', () => {
 
 
 /***/ }),
-/* 92 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createNodes = __webpack_require__(42)
@@ -6273,6 +7504,28 @@ describe('Create nodes:', () => {
 
   })
 
+  it('filter nodes with liveParentInstanceNode param', () => {
+
+    const nodes =
+      createNodes({
+        liveNodes: [1, 2],
+        templateNodes: [1, 2],
+        liveParentInstanceNode: {},
+        createNode: ({ liveNode, templateNode }, callback) => {
+          return { newLiveNode: [ liveNode, templateNode ] }
+        },
+        filterNodes: (liveNodes, templateNodes, liveParentInstanceNode) => {
+          return {
+            filteredLiveNodes: [liveParentInstanceNode],
+            filteredTemplateNodes: [liveParentInstanceNode],
+          }
+        }
+      })
+
+    expect(nodes).toEqual([[{}, {}]])
+
+  })
+
   it('pass context to childrens', () => {
 
     const templateNodes = [
@@ -6437,7 +7690,7 @@ describe('Create nodes:', () => {
 
 
 /***/ }),
-/* 93 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -6553,502 +7806,7 @@ describe('Create tree', () => {
 
 
 /***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const decorateNodes = __webpack_require__(18)
-const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
-
-describe('Decorate live nodes', () => {
-
-  it('decorate with order with startFrom param', () => {
-
-    const liveNodes = [{}, {}]
-
-    const decoratedNodes =
-      decorateNodes(liveNodes, { order: { startFrom: 2 } })
-
-    expect(
-      decoratedNodes[0].order
-    ).toBe(2)
-
-    expect(
-      decoratedNodes[1].order
-    ).toBe(3)
-
-  })
-
-  it('decorate with order', () => {
-
-    const liveNodes = [{}, {}]
-
-    const decoratedNodes = decorateNodes(liveNodes, { order: true })
-
-    expect(
-      decoratedNodes[0].order
-    ).toBe(0)
-
-    expect(
-      decoratedNodes[1].order
-    ).toBe(1)
-
-
-  })
-
-  it('decorate with dom node', () => {
-
-    const liveNodes = [
-      {
-        type: TAG_TYPE,
-        tag: 'div',
-      },
-      {
-        type: TEXT_TYPE,
-        text: 'text',
-      }
-    ]
-
-    const textNode = document.createTextNode('text')
-    const tagNode = document.createElement('div')
-
-    const domNodes = [ tagNode, textNode ]
-
-    const decoratedNodes = decorateNodes(liveNodes, { dom: domNodes })
-
-    expect(
-      decoratedNodes[0].dom.isSameNode(tagNode)
-    ).toBe(true)
-
-    expect(
-      decoratedNodes[1].dom.isSameNode(textNode)
-    ).toBe(true)
-
-  })
-
-})
-
-
-/***/ }),
-/* 95 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const eachNodes = __webpack_require__(10)
-
-describe('Virtual tree iterate', () => {
-
-  it('call function at each iteration', () => {
-
-    const virtualTree = {
-      name: 'div',
-      props: {},
-      childs: [
-        'example',
-        {
-          name: new Object,
-          props: {},
-          childs: [
-            {
-              name: Object,
-              props: {},
-              childs: []
-            },
-          ]
-        },
-        'example',
-      ]
-    }
-
-    const assertions = [
-      (element, level) => {
-        return level == 0 && element.name == 'div'
-      },
-      (element, level) => {
-        return level == 1 && element == 'example'
-      },
-      (element, level) => {
-        return level == 1 && element.name instanceof Object
-      },
-      (element, level) => {
-        return level == 2 && element.name == Object
-      },
-      (element, level) => {
-        return level == 1 && element == 'example'
-      },
-
-    ]
-
-    eachNodes(virtualTree, (virtualElement, level, index) => {
-
-      expect(
-        assertions[index](virtualElement, level)
-      ).toBe(true)
-
-    })
-
-  })
-
-})
-
-
-/***/ }),
-/* 96 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const filterDomNodes = __webpack_require__(19)
-const {
-  ROOT_TYPE, TEXT_TYPE, TAG_TYPE, INSTANCE_TYPE, CLASS_TYPE
-} = __webpack_require__(0)
-
-describe('Get virtual DOM elements:', () => {
-
-  it('pass parent instance to all nodes', () => {
-
-    const nodes = [
-      {
-        type: INSTANCE_TYPE,
-        instance: { id: 1 },
-        childs: [
-          {
-            type: TAG_TYPE,
-            id: 1,
-            childs: [
-              {
-                type: INSTANCE_TYPE,
-                instance: { id: 2 },
-                childs: [
-                  {
-                    id: 2,
-                    type: TAG_TYPE,
-                    childs: [
-                      {
-                        id: 3,
-                        type: TEXT_TYPE,
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-
-    const domNodes = filterDomNodes(nodes)
-
-    expect(domNodes[0].instance).toEqual({ id: 1 })
-    expect(domNodes[0].childs[0].instance).toEqual({ id: 2 })
-    expect(domNodes[0].childs[0].childs[0].instance).toEqual({ id: 2 })
-
-  })
-
-  it('by array', () => {
-
-    const nodes = [
-      {
-        type: ROOT_TYPE,
-        childs: [
-          {
-            type: INSTANCE_TYPE,
-            childs: [
-              {
-                type: TAG_TYPE,
-                tag: 'div',
-                childs: [
-                  {
-                    type: INSTANCE_TYPE,
-                    childs: [
-                      {
-                        type: TEXT_TYPE,
-                        text: 'text',
-                      },
-                    ]
-                  }
-                ]
-              },
-            ]
-          },
-          {
-            type: TAG_TYPE,
-            text: 'div',
-            childs: []
-          },
-        ]
-      }
-    ]
-
-    const willBe = [
-      {
-        type: TAG_TYPE,
-        tag: 'div',
-        instance: null,
-        childs: [
-          {
-            type: TEXT_TYPE,
-            instance: null,
-            text: 'text',
-          },        ]
-      },
-      {
-        type: TAG_TYPE,
-        instance: null,
-        text: 'div',
-        childs: []
-      },
-    ]
-
-    expect(
-      filterDomNodes(nodes)
-    ).toEqual(willBe)
-  })
-
-})
-
-
-/***/ }),
-/* 97 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const filterNodesOffsets = __webpack_require__(43)
-
-describe('Filter nodes offsets', () => {
-
-  it('return array of numbers', () => {
-    expect(
-      filterNodesOffsets([
-        {},
-        { offset: 0 },
-        { offset: 1 },
-        { offset: 2 },
-      ])
-    ).toEqual([0,1,2])
-
-  })
-
-})
-
-
-/***/ }),
-/* 98 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const getCreateAction = __webpack_require__(44)
-
-const {
-  CREATE_ROOT, CREATE_TAG, CREATE_TEXT,
-  CREATE_INSTANCE, UPDATE_INSTANCE, RESUME_INSTANCE
-} = __webpack_require__(4)
-
-const {
-  ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
-} = __webpack_require__(0)
-
-describe('Get create action:', () => {
-
-  it('create root', () => {
-
-    expect(
-      getCreateAction(null, { type: ROOT_TYPE, childs: [] })
-    ).toBe(CREATE_ROOT)
-
-  })
-
-  it('create text', () => {
-
-    expect(
-      getCreateAction(null, { type: TEXT_TYPE, text: 'some text' })
-    ).toBe(CREATE_TEXT)
-
-  })
-
-  it('create tag', () => {
-
-    expect(
-      getCreateAction(null, { type: TAG_TYPE, tag: 'div' })
-    ).toBe(CREATE_TAG)
-
-  })
-
-  it('create instance with existed live node', () => {
-
-    expect(
-      getCreateAction(
-        { type: INSTANCE_TYPE, instance: new Date },
-        { type: CLASS_TYPE, class: Array }
-      )
-    ).toBe(CREATE_INSTANCE)
-
-  })
-
-  it('create instance with null live node', () => {
-
-    expect(
-      getCreateAction(
-        null,
-        { type: CLASS_TYPE, class: Array }
-      )
-    ).toBe(CREATE_INSTANCE)
-
-  })
-
-  it('update instance', () => {
-
-    expect(
-      getCreateAction(
-        { type: INSTANCE_TYPE, instance: { isNeedUpdate: () => true } },
-        { type: CLASS_TYPE, class: Object }
-      )
-    ).toBe(UPDATE_INSTANCE)
-
-  })
-
-  it('resume instance', () => {
-
-    expect(
-      getCreateAction(
-        { type: INSTANCE_TYPE, instance: { isNeedUpdate: () => false } },
-        { type: CLASS_TYPE, class: Object }
-      )
-    ).toBe(RESUME_INSTANCE)
-
-  })
-
-
-
-})
-
-
-/***/ }),
-/* 99 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const {
-  ROOT_TYPE, TEXT_TYPE, TAG_TYPE, INSTANCE_TYPE, CLASS_TYPE
-} = __webpack_require__(0)
-
-const Component = __webpack_require__(2)
-
-const createLiveTree = __webpack_require__(9)
-
-const getParentNodes = __webpack_require__(45)
-
-describe('Get instance update info', () => {
-
-  it('array of numbers', () => {
-
-    class App3 extends Component {
-
-      render() {
-        return null
-      }
-
-    }
-
-    class App2 extends Component {
-
-      render() {
-        return [
-          {
-            type: TAG_TYPE,
-            childs: []
-          },
-          // 2
-          {
-            type: TAG_TYPE,
-            childs: [
-              {
-                type: TAG_TYPE,
-                childs: []
-              },
-              {
-                type: TAG_TYPE,
-                childs: []
-              },
-              {
-                type: TAG_TYPE,
-                childs: []
-              },
-              // 3
-              {
-                type: CLASS_TYPE,
-                class: App3,
-                childs: []
-              },
-            ]
-          },
-        ]
-      }
-
-    }
-
-    class App1 extends Component {
-
-      render() {
-        return [
-          // 1
-          {
-            type: TAG_TYPE,
-            childs: [
-              {
-                type: TAG_TYPE,
-                childs: []
-              },
-              {
-                type: CLASS_TYPE,
-                class: App2,
-              },
-              {
-                type: TAG_TYPE,
-                childs: []
-              },
-            ]
-          },
-          {
-            type: TAG_TYPE,
-            childs: []
-          },
-        ]
-      }
-
-    }
-
-    const templateNodes = [
-      {
-        type: ROOT_TYPE,
-        liveRootDom: { name: 'liveRootDom' },
-        childs: [
-          {
-            type: TAG_TYPE,
-            childs: []
-          },
-          {
-            type: CLASS_TYPE,
-            class: App1,
-          }
-        ],
-      }
-    ]
-
-    const newLiveNodes = createLiveTree([], templateNodes, {})
-
-
-    const targetNode = (
-      newLiveNodes[0].childs[1].childs[0].childs[1].childs[1].childs[3]
-    )
-
-    const parentNodes = getParentNodes(targetNode)
-
-    expect(
-      parentNodes.map(node => node.offset)
-    ).toEqual([undefined, 1,2,3])
-
-  })
-
-})
-
-
-/***/ }),
-/* 100 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -7138,7 +7896,7 @@ describe('Instance hooks', () => {
 
 
 /***/ }),
-/* 101 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -7449,11 +8207,11 @@ describe('Hook node', () => {
 
 
 /***/ }),
-/* 102 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
-const html = __webpack_require__(109)
+const html = __webpack_require__(110)
 
 describe('Html helpers', () => {
 
@@ -7497,710 +8255,11 @@ describe('Html helpers', () => {
 
 
 /***/ }),
-/* 103 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const humanizeNodes = __webpack_require__(47)
-
-const {
-  TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
-} = __webpack_require__(0)
-
-describe('Humanize virtual tree', () => {
-
-  it('valid string', () => {
-
-    class App {
-
-      constructor(props) {
-        this.props = props
-        this.state = { active: true }
-      }
-
-    }
-
-    const virtualTree = [
-      {
-        type: TAG_TYPE,
-        tag: 'div',
-        props: { id: 1 },
-        childs: [
-          {
-            type: TEXT_TYPE,
-            text: 'Hello world!',
-          },
-          {
-            type: TAG_TYPE,
-            tag: 'div',
-            props: { id: 2 },
-            childs: [],
-          },
-          {
-            type: CLASS_TYPE,
-            class: App,
-            props: { id: 3 },
-            childs: [],
-          },
-          {
-            type: INSTANCE_TYPE,
-            instance: new App({ id: 4 }),
-            childs: [],
-          },
-        ]
-      },
-    ]
-
-    expect(
-      humanizeNodes(virtualTree)
-    ).toBe(
-      'div({"id":1})\n' +
-      '  Hello world!\n' +
-      '  div({"id":2})\n' +
-      '  App({"id":3})\n' +
-      '  app({"id":4}) {"active":true}\n'
-    )
-
-  })
-
-
-})
-
-
-/***/ }),
-/* 104 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const {
-  TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
-} = __webpack_require__(0)
-
-const isNodeForUnmount = __webpack_require__(48)
-
-describe('Is node for unmount for', () => {
-
-  it('return false for unknow node type', () => {
-    expect(
-      isNodeForUnmount(
-        {
-          type: 123,
-        },
-        {
-          type: TEXT_TYPE
-        }
-      )
-    ).toBe(false)
-  })
-
-  describe('live text', () => {
-
-    it('template text with same text', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TEXT_TYPE,
-            text: 'example',
-          },
-          {
-            type: TEXT_TYPE,
-            text: 'example',
-          }
-        )
-      ).toBe(false)
-    })
-
-    it('template text with different text', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TEXT_TYPE,
-            text: 'example',
-          },
-          {
-            type: TEXT_TYPE,
-            text: 'example 2',
-          }
-        )
-      ).toBe(true)
-    })
-
-    it('template tag', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TEXT_TYPE,
-          },
-          {
-            type: TAG_TYPE,
-          }
-        )
-      ).toBe(true)
-    })
-
-    it('template class', () => {
-
-      class App {}
-
-      expect(
-        isNodeForUnmount(
-          {
-            type: TEXT_TYPE,
-          },
-          {
-            type: CLASS_TYPE,
-            class: App,
-          }
-        )
-      ).toBe(true)
-    })
-
-  })
-
-  describe('live tag', () => {
-
-    it('template text', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TAG_TYPE,
-          },
-          {
-            type: TEXT_TYPE,
-          }
-        )
-      ).toBe(true)
-    })
-
-    it('template same tag', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TAG_TYPE,
-            tag: 'p',
-          },
-          {
-            type: TAG_TYPE,
-            tag: 'p',
-          }
-        )
-      ).toBe(false)
-    })
-
-    it('template different tag', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TAG_TYPE,
-            tag: 'p',
-          },
-          {
-            type: TAG_TYPE,
-            tag: 'div',
-          }
-        )
-      ).toBe(true)
-    })
-
-    it('template class', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: TAG_TYPE,
-          },
-          {
-            type: CLASS_TYPE,
-          }
-        )
-      ).toBe(true)
-    })
-
-  })
-
-  describe('live instance', () => {
-
-    it('template text', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: INSTANCE_TYPE,
-          },
-          {
-            type: TEXT_TYPE,
-          }
-        )
-      ).toBe(true)
-    })
-
-    it('template tag', () => {
-      expect(
-        isNodeForUnmount(
-          {
-            type: INSTANCE_TYPE,
-          },
-          {
-            type: TAG_TYPE,
-          }
-        )
-      ).toBe(true)
-    })
-
-    it('template same class', () => {
-
-      class App {}
-
-      expect(
-        isNodeForUnmount(
-          {
-            type: INSTANCE_TYPE,
-            instance: new App,
-          },
-          {
-            type: CLASS_TYPE,
-            class: App,
-          }
-        )
-      ).toBe(false)
-    })
-
-    it('template different class', () => {
-
-      class App {}
-      class App2 {}
-
-      expect(
-        isNodeForUnmount(
-          {
-            type: INSTANCE_TYPE,
-            instance: new App,
-          },
-          {
-            type: CLASS_TYPE,
-            class: App2,
-          }
-        )
-      ).toBe(true)
-    })
-
-  })
-
-})
-
-
-/***/ }),
-/* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const mapNodes = __webpack_require__(49)
-
-describe('Map nodes', () => {
-
-  it('return new tree of nodes', () => {
-
-    const nodes = [
-      {
-        id: 1,
-        childs: [
-          {
-            id: 2,
-            childs: [],
-          },
-          'some text',
-          {
-            id: 3,
-            childs: [],
-          },
-        ]
-      }
-    ]
-
-    const newNodes = mapNodes(nodes, (node) => {
-
-      return Object.assign({}, node, { id: node.id * 2 })
-
-    })
-
-    expect(newNodes).toEqual([
-      {
-        id: 2,
-        childs: [
-          {
-            id: 4,
-            childs: [],
-          },
-          'some text',
-          {
-            id: 6,
-            childs: [],
-          },
-        ]
-      }
-    ])
-
-  })
-
-})
-
-
-/***/ }),
-/* 106 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const { addRef, removeRef } = __webpack_require__(20)
-
-describe('Ref', () => {
-
-  it('add', () => {
-
-    let instance = {
-      refs: {}
-    }
-
-    const node = {
-      ref: {
-        name: 'test',
-        instance,
-      }
-    }
-
-    addRef(node, { name: 'test', instance: node.ref.instance })
-
-    expect(instance.refs.test).toBeTruthy()
-
-  })
-
-  it('remove', () => {
-
-    let instance = {
-      refs: {
-        test: true
-      }
-    }
-
-    const node = {
-      ref: {
-        name: 'test',
-        instance,
-      }
-    }
-
-    removeRef(node)
-
-    expect(instance.refs.test).toBeUndefined()
-  })
-
-})
-
-
-/***/ }),
-/* 107 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const {
-  isKeyedNode,
-  getLivePairForTemplate,
-  wrapNodesWithTheirKeys,
-  sortUsedLiveNodes,
-  sortUnusedLiveNodes,
-  sortLiveNodes,
-  sortTemplateNodes,
-  separateLiveNodes,
-} = __webpack_require__(21)
-
-describe('Sort nodes:', () => {
-
-  describe('sort live nodes', () => {
-
-    it('by empty template nodes', () => {
-
-      const liveNodes = [
-        { text: 'hello' },
-        { tag: 'div', key: 1 },
-        { tag: 'div', key: 3 },
-      ]
-
-      const templateNodes = []
-
-      expect(
-        sortLiveNodes(liveNodes, templateNodes)
-      ).toEqual([
-        { text: 'hello' },
-        { tag: 'div', key: 1 },
-        { tag: 'div', key: 3 },
-      ])
-
-    })
-
-    it('by template nodes', () => {
-
-      const liveNodes = [
-        { text: 'hello',      order: 0 },
-        { tag: 'div', key: 1, order: 1 },
-        { tag: 'div', key: 3, order: 2 },
-      ]
-
-      const templateNodes = [
-        { text: 'hola' },
-        { text: 'bonjour' },
-        { tag: 'div', key: 2 },
-        { tag: 'div', key: 1 },
-        { text: 'hello world'},
-      ]
-
-      expect(
-        sortLiveNodes(liveNodes, templateNodes)
-      ).toEqual([
-        { text: 'hello', order: 0 },
-        null,
-        null,
-        { tag: 'div', key: 1, order: 1 },
-        null,
-        { tag: 'div', key: 3, order: 2 },
-      ])
-
-    })
-
-  })
-
-  describe('sort template nodes', () => {
-
-    it('flatten and remove null values from array', () => {
-      expect(
-        sortTemplateNodes([
-          null,
-          [
-            { text: 'hello' },
-            [null],
-          ],
-          { text: 'world' }
-        ])
-      ).toEqual([
-        { text: 'hello' },
-        { text: 'world' }
-      ])
-    })
-
-  })
-
-  describe('sort live nodes', () => {
-
-    describe('sort used live nodes', () => {
-
-      it('when used exists', () => {
-
-        const liveNodes = [
-          { tag: 'div' },
-          { tag: 'div', key: 1 },
-          'text',
-          { tag: 'div', key: 2 },
-        ]
-        const templateNodes = [
-          'text',
-          { tag: 'div' },
-          { tag: 'div', key: 2 },
-          'text',
-          { tag: 'div', key: 1 },
-        ]
-        const keyedLiveNodes = wrapNodesWithTheirKeys(liveNodes)
-
-        expect(
-          sortUsedLiveNodes({ liveNodes, templateNodes, keyedLiveNodes })
-        ).toEqual([
-          { tag: 'div' },
-          null,
-          { tag: 'div', key: 2 },
-          null,
-          { tag: 'div', key: 1 },
-        ])
-      })
-
-    })
-
-    describe('sort unused live nodes', () => {
-
-      it('when unused exists', () => {
-
-        const liveNodes = [
-          { tag: 'div', key: 1, order: 1 },
-          { tag: 'div', key: 2, order: 2 },
-          { tag: 'div', key: 3, order: 3 },
-          { tag: 'div', key: 4, order: 4 },
-        ]
-
-        const usedOrderIndexes = [1,3]
-
-        expect(
-          sortUnusedLiveNodes({
-            liveNodes, usedOrderIndexes
-          })
-        ).toEqual([
-          { tag: 'div', key: 2, order: 2 },
-          { tag: 'div', key: 4, order: 4 },
-        ])
-
-      })
-
-    })
-
-  })
-
-  describe('find live pair for template', () => {
-
-    it('when ', () => {
-
-      const liveNode = { tag: 'p' }
-      const templateNode = null
-      const keyedLiveNodes = {}
-
-      expect(
-        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
-      ).toBe(null)
-
-    })
-
-    it('when template node doesn\'t keyed and live is keyed', () => {
-      const liveNode = { tag: 'p', key: 1 }
-      const templateNode = { tag: 'div' }
-      const keyedLiveNodes = {}
-
-      expect(
-        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
-      ).toEqual(
-        null
-      )
-    })
-
-    it('when live keyed node exists', () => {
-
-      const liveNode = { tag: 'p' }
-      const templateNode = { tag: 'div', key: 1 }
-      const keyedLiveNodes = { 1: { tag: 'div', key: 1 } }
-
-      expect(
-        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
-      ).toEqual(
-        { tag: 'div', key: 1 }
-      )
-    })
-
-    it('when live keyed node doesn\'t exists', () => {
-
-      const liveNode = { tag: 'p' }
-      const templateNode = { tag: 'div', key: 1 }
-      const keyedLiveNodes = { 2: { tag: 'div', key: 1 } }
-
-      expect(
-        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
-      ).toEqual(
-        null
-      )
-    })
-
-    it('when template node is not keyed ', () => {
-
-      const liveNode = { tag: 'p' }
-      const templateNode = { tag: 'div' }
-      const keyedLiveNodes = {}
-
-      expect(
-        getLivePairForTemplate(liveNode, templateNode, keyedLiveNodes)
-      ).toEqual(
-        { tag: 'p' }
-      )
-    })
-
-  })
-
-  describe('is keyed node', () => {
-
-    it('for element with key props', () => {
-      expect(
-        isKeyedNode(
-          { tag: 'div', key: 1 }
-        )
-      ).toBe(true)
-    })
-
-    it('for element without key props', () => {
-      expect(
-        isKeyedNode(
-          { tag: 'div' }
-        )
-      ).toBe(false)
-    })
-
-    it('for element without key props', () => {
-      expect(
-        isKeyedNode(
-          null
-        )
-      ).toBe(false)
-    })
-
-  })
-
-  describe('wrap nodes with keys', () => {
-
-    it('when keyed nodes exists', () => {
-      expect(
-        wrapNodesWithTheirKeys([
-          null,
-          { tag: 'span',        },
-          { tag: 'div',  key: 1 },
-          'text',
-          { tag: 'p',    key: 2 }
-        ])
-      ).toEqual({
-        1: { tag: 'div',  key: 1 },
-        2: { tag: 'p',    key: 2 }
-      })
-    })
-
-    it('when keyed nodes doesn\'t exists', () => {
-      expect(
-        wrapNodesWithTheirKeys([
-          null,
-          'text',
-        ])
-      ).toEqual({})
-    })
-
-
-  })
-
-})
-
-
-/***/ }),
-/* 108 */
-/***/ (function(module, exports) {
-
-const loop = ({ liveNodes, domNodes }) => {
-
-  liveNodes.forEach((liveNode, index) => {
-
-    liveNode.dom = domNodes[index]
-
-    if (liveNode.childs) {
-
-      loop({
-        liveNodes: liveNode.childs,
-        domNodes: domNodes[index].childNodes
-      })
-
-    }
-
-  })
-
-}
-
-module.exports = loop
-
-
-/***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
-const tags = __webpack_require__(110)
+const tags = __webpack_require__(111)
 const { flatten, include, omit } = __webpack_require__(1)
 
 const h = (tag, props = {}, childs) => {
@@ -8241,7 +8300,7 @@ tags.forEach((tag) => {
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -8362,43 +8421,6 @@ module.exports = [
 	"video",
 	"wbr"
 ]
-
-
-/***/ }),
-/* 111 */
-/***/ (function(module, exports) {
-
-const OPEN_QUOTE_SPECIAL = '&lt;'
-const CLOSE_QUOTE_SPECIAL = '&gt;'
-
-const OPEN_QUOTE_SIMPLE = '<'
-const CLOSE_QUOTE_SIMPLE = '>'
-
-const SPECIAL_TO_SIMPLE = {
-  [OPEN_QUOTE_SPECIAL]:  OPEN_QUOTE_SIMPLE,
-  [CLOSE_QUOTE_SPECIAL]: CLOSE_QUOTE_SIMPLE
-}
-
-const SIMPLE_TO_SPECIAL = {
-  [OPEN_QUOTE_SIMPLE]:  OPEN_QUOTE_SPECIAL,
-  [CLOSE_QUOTE_SIMPLE]: CLOSE_QUOTE_SPECIAL
-}
-
-const SIMPLE_QUOTES =
-  new RegExp(OPEN_QUOTE_SIMPLE + '|' + CLOSE_QUOTE_SIMPLE, 'g')
-
-const SPECIAL_QUOTES =
-  new RegExp(OPEN_QUOTE_SPECIAL + '|' + CLOSE_QUOTE_SPECIAL, 'g')
-
-const encode = (string) => (
-  string.replace(SIMPLE_QUOTES, match => SIMPLE_TO_SPECIAL[match])
-)
-
-const decode = (string) => (
-  string.replace(SPECIAL_QUOTES, match => SPECIAL_TO_SIMPLE[match])
-)
-
-module.exports = { encode, decode }
 
 
 /***/ })

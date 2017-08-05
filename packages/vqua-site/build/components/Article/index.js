@@ -4,13 +4,6 @@ const Error404 = require('../Error404')
 
 class Article extends Component {
 
-  static injectContext() {
-
-    return ['locale']
-
-  }
-
-
   render() {
 
     return this.props.article

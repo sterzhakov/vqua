@@ -5,6 +5,12 @@ module.exports = ({ templateNode }) => {
       ? { ref: templateNode.ref }
       : {}
 
+    if (templateNode.tag == 'code') {
+
+      // console.log(templateNode)
+
+    }
+
   const newTagNode = {
     type: templateNode.type,
     tag: templateNode.tag,

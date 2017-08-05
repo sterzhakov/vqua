@@ -7,7 +7,8 @@ const createNodes = ({
   createOptions = {},
   createContext = {},
   liveParentNode = null,
-  filterNodes = (liveNodes, templateNodes) => {
+  liveParentInstanceNode = null,
+  filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
     return {
       filteredLiveNodes: liveNodes,
       filteredTemplateNodes: templateNodes
@@ -20,7 +21,7 @@ const createNodes = ({
   const {
     filteredLiveNodes,
     filteredTemplateNodes
-  } = filterNodes(liveNodes, templateNodes)
+  } = filterNodes(liveNodes, templateNodes, liveParentInstanceNode)
 
   return filteredLiveNodes.reduce((newLiveNodes, liveNode, index) => {
 
@@ -32,12 +33,14 @@ const createNodes = ({
       liveChilds,
       templateChilds,
       newContext,
+      newLiveParentInstanceNode,
     } = createNode({
       index,
       liveNode,
       templateNode,
       options: createOptions,
       context: createContext,
+      liveParentInstanceNode,
     })
 
     if (!newLiveNode) return newLiveNodes
@@ -47,6 +50,7 @@ const createNodes = ({
     const childs =
       createNodes({
         liveParentNode: newLiveNode,
+        liveParentInstanceNode: newLiveParentInstanceNode,
         liveNodes: liveChilds || [],
         templateNodes: templateChilds || [],
         createNode,

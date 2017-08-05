@@ -169,6 +169,28 @@ describe('Create nodes:', () => {
 
   })
 
+  it('filter nodes with liveParentInstanceNode param', () => {
+
+    const nodes =
+      createNodes({
+        liveNodes: [1, 2],
+        templateNodes: [1, 2],
+        liveParentInstanceNode: {},
+        createNode: ({ liveNode, templateNode }, callback) => {
+          return { newLiveNode: [ liveNode, templateNode ] }
+        },
+        filterNodes: (liveNodes, templateNodes, liveParentInstanceNode) => {
+          return {
+            filteredLiveNodes: [liveParentInstanceNode],
+            filteredTemplateNodes: [liveParentInstanceNode],
+          }
+        }
+      })
+
+    expect(nodes).toEqual([[{}, {}]])
+
+  })
+
   it('pass context to childrens', () => {
 
     const templateNodes = [

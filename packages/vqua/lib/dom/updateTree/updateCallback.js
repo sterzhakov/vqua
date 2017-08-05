@@ -1,6 +1,5 @@
 const { addRef, removeRef } = require('../../virtual/refs')
 const { createElement, insertAt, updateProps } = require('../domActions')
-const diffProps = require('../diffProps')
 const sortProps = require('../sortProps')
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
@@ -45,17 +44,13 @@ module.exports = ({
 
         } else {
 
-          const {
-            addProps, removeProps
-          } = diffProps(liveNode.props, templateNode.props)
-
           updateProps(liveNode.dom, liveNode.props, templateNode.props)
 
           if (templateNode.ref) {
 
             addRef(templateNode, liveNode.dom)
 
-          }          
+          }
 
         }
 

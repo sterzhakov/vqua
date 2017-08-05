@@ -41,6 +41,7 @@ class Base {
     }
 
     return Object.assign({}, baseParams, refParams, keyParams)
+
   }
 
   constructor(props, context) {
@@ -91,7 +92,7 @@ class Base {
 
     const liveNodes = this.node.childs
 
-    const templateNodes = this.render()
+    const templateNodes = flatten([ this.render() ])
 
     const newLiveNodes =
       createLiveTree(liveNodes, templateNodes, {
@@ -101,15 +102,16 @@ class Base {
         index: true,
         context: clone(contextWithPassed),
         liveParentNode: this.node,
+        liveParentInstanceNode: this.node,
       })
 
     this.node.childs = newLiveNodes
 
     this.node.childDomNodesCount = countDomNodes(newLiveNodes)
 
-    const filteredLiveNodes = filterDomNodes(liveNodes)
+    const filteredLiveNodes = filterDomNodes(liveNodes, this)
 
-    const filteredTemplateNodes = filterDomNodes(newLiveNodes)
+    const filteredTemplateNodes = filterDomNodes(newLiveNodes, this)
 
     const parentNodes = getParentNodes(filteredLiveNodes[0])
 
@@ -123,7 +125,7 @@ class Base {
 
     const domRootChildNodes =
       Array.from(domRootNode.childNodes)
-        .slice(offset, filteredLiveNodes.length)
+        .slice(offset, offset + filteredLiveNodes.length)
 
     const patchNodes =
       createPatchTree({

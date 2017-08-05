@@ -22,13 +22,11 @@ module.exports = ({ liveNode, templateNode, context }) => {
 
   const childs = flatten([liveInstance.render() || null])
 
-  const childsWithRefs = createNodesWithRefs(childs, liveInstance)
-
   const newInstanceNode = {
     context,
     type: liveType,
     instance: liveInstance,
-    childs: childsWithRefs,
+    childs,
   }
 
   liveInstance.node = newInstanceNode

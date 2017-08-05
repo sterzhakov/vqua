@@ -1,4 +1,3 @@
-
 const createNode = require('../createNode')
 const hookNode = require('../hookNode')
 const getCreateAction = require('../getCreateAction')
@@ -17,6 +16,7 @@ module.exports = ({
   index,
   liveNode,
   templateNode,
+  liveParentInstanceNode,
   options = {
     hooks: false
   },
@@ -51,6 +51,7 @@ module.exports = ({
         newContext: context,
         templateChilds: newLiveNode ? newLiveNode.childs : [],
         liveChilds: liveNode ? liveNode.childs : [],
+        newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
     }
@@ -87,6 +88,7 @@ module.exports = ({
         newContext,
         liveChilds: liveNode ? liveNode.childs : [],
         templateChilds: newLiveNode ? newLiveNode.childs : [],
+        newLiveParentInstanceNode: newLiveNode,
       }
 
     }
@@ -122,6 +124,7 @@ module.exports = ({
         newContext,
         liveChilds: liveNode && liveNode.childs || [],
         templateChilds: newLiveNode.childs,
+        newLiveParentInstanceNode: newLiveNode,
       }
 
     }
@@ -138,7 +141,8 @@ module.exports = ({
       return {
         newLiveNode,
         isNeedChilds: false,
-        newContext: context
+        newContext: context,
+        newLiveParentInstanceNode: newLiveNode,
       }
 
     }
@@ -158,6 +162,7 @@ module.exports = ({
         isNeedChilds: true,
         liveChilds: liveNode ? liveNode.childs : [],
         templateChilds: templateNode ? templateNode.childs : [],
+        newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
     }
@@ -174,7 +179,8 @@ module.exports = ({
       return {
         newLiveNode,
         isNeedChilds: false,
-        newContext: context
+        newContext: context,
+        newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
       break
@@ -185,7 +191,8 @@ module.exports = ({
       return {
         newLiveNode: null,
         isNeedChilds: false,
-        newContext: context
+        newContext: context,
+        newLiveParentInstanceNode: null,
       }
 
     }

@@ -16,10 +16,15 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
         const decoratedLiveNodes =
-          decorateNodes(liveNodes, { order: true, dom: domNodes })
+          decorateNodes(liveNodes, {
+            order: { startFrom: offset },
+            dom: domNodes
+          })
 
         const decoratedTemplateNodes =
-          decorateNodes(templateNodes, { order: { startFrom: offset } })
+          decorateNodes(templateNodes, {
+            order: { startFrom: offset }
+          })
 
         return {
           filteredLiveNodes: sortLiveNodes(decoratedLiveNodes, templateNodes),
