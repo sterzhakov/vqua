@@ -42,8 +42,6 @@ class Code extends Component {
       locale: this.props.locale
     }).then((examples) => {
 
-      console.log('----'.repeat(10))
-
       this.setState({ examples })
 
     })

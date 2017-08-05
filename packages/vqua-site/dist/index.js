@@ -419,17 +419,20 @@ module.exports = (nodes) => {
 
 const mapNodes = __webpack_require__(142)
 
-module.exports = (nodes, instance) => {
+module.exports = (nodes, parentNode) => {
 
   if (!nodes) return []
 
   return mapNodes(nodes, (node) => {
 
-    if (node && node.ref) {
+    const isNodeRefExist = node && typeof node.ref == 'string'
+    const isParentNodeHasInstance = parentNode && parentNode.instance
+
+    if (isNodeRefExist && isParentNodeHasInstance) {
 
       return Object.assign({}, node, {
         ref: {
-          instance,
+          instance: parentNode.instance,
           name: node.ref,
         }
       })
@@ -921,7 +924,6 @@ module.exports = (liveNodes, templateNodes, options) => {
     const refsTemplateNodes =
       createNodesWithRefs(textTemplateNodes, liveParentInstanceNode)
 
-
     const sortedTemplateNodes =
       sortTemplateNodes(refsTemplateNodes)
 
@@ -929,11 +931,8 @@ module.exports = (liveNodes, templateNodes, options) => {
     const decoratedLiveNodes =
       decorateNodes(flatten([liveNodes]), { order: true })
 
-    const refsLiveNodes =
-      createNodesWithRefs(decoratedLiveNodes, liveParentInstanceNode)
-
     const sortedLiveNodes =
-      sortLiveNodes(refsLiveNodes, sortedTemplateNodes)
+      sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
 
     return {
       filteredLiveNodes: sortedLiveNodes,
@@ -2499,8 +2498,6 @@ class Code extends Component {
       humanId: this.props.humanId,
       locale: this.props.locale
     }).then((examples) => {
-
-      console.log('----'.repeat(10))
 
       this.setState({ examples })
 
