@@ -3072,8 +3072,8 @@ var map = {
 	"./patch/__tests/createTree/createCallback.spec.js": 78,
 	"./patch/__tests/createTree/createNodes.spec.js": 79,
 	"./patch/__tests/createTree/index.spec.js": 80,
+	"./virtual/Statistic/__tests/Statistic.spec.js": 121,
 	"./virtual/__tests/Component.spec.js": 81,
-	"./virtual/__tests/Statistic.spec.js": 116,
 	"./virtual/__tests/assignDomNodes.spec.js": 82,
 	"./virtual/__tests/countDomNodes.spec.js": 83,
 	"./virtual/__tests/createNodesWithRefs.spec.js": 84,
@@ -3648,6 +3648,7 @@ describe('Get node actions', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const diffProps = __webpack_require__(24)
+const isPropsEqual = __webpack_require__(28)
 
 describe('Get props diff for', () => {
 
@@ -3664,7 +3665,8 @@ describe('Get props diff for', () => {
           a: 'b',
           b: 2,
           c: false,
-        }
+        },
+        isPropsEqual
       )
     ).toEqual({
       addProps: [
@@ -3685,7 +3687,8 @@ describe('Get props diff for', () => {
       },
       {
         a: () => false
-      }
+      },
+      isPropsEqual
     )
 
     expect(
@@ -3705,7 +3708,8 @@ describe('Get props diff for', () => {
           b: 1,
           c: true,
         },
-        {}
+        {},
+        isPropsEqual
       )
     ).toEqual({
       addProps: [],
@@ -3720,12 +3724,14 @@ describe('Get props diff for', () => {
 
   it('delete props for function', () => {
 
-    const propsDiff = diffProps(
-      {
-        a: () => true
-      },
-      {}
-    )
+    const propsDiff =
+      diffProps(
+        {
+          a: () => true
+        },
+        {},
+        isPropsEqual
+      )
 
     expect(
       propsDiff.removeProps[0].value.toString()
@@ -3745,6 +3751,7 @@ describe('Get props diff for', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
+const isPropsEqual = __webpack_require__(28)
 
 const {
   updateProps,
@@ -3815,7 +3822,8 @@ describe('Dom actions', () => {
     updateElementProps(
       domNode,
       { id: 0, class: 'test' },
-      { id: 1, class: false, selected: true }
+      { id: 1, class: false, selected: true },
+      isPropsEqual
     )
 
     expect(domNode.id).toBe('1')
@@ -3834,54 +3842,13 @@ describe('Dom actions', () => {
     updateEventProps(
       domNode,
       { onClick: () => { id = -1 } },
-      { onClick: () => { id = 1 } }
+      { onClick: () => { id = 1 } },
+      isPropsEqual
     )
 
     domNode.click()
 
     expect(id).toBe(1)
-
-  })
-
-  it('Update only event props', () => {
-
-    let id = 0
-
-    const domNode = document.createElement('div')
-    domNode.id = '0'
-
-    updateProps(
-      domNode,
-      { id: 0 },
-      { id: 1, onClick: () => { id = 1 } },
-      { event: true, element: false }
-    )
-
-    domNode.click()
-
-    expect(id).toBe(1)
-    expect(domNode.id).toBe('0')
-
-  })
-
-  it('Update only element props', () => {
-
-    let id = 0
-
-    const domNode = document.createElement('div')
-    domNode.id = '0'
-
-    updateProps(
-      domNode,
-      { id: 0 },
-      { id: 1, onClick: () => { id = 1 } },
-      { event: false, element: true }
-    )
-
-    domNode.click()
-
-    expect(id).toBe(0)
-    expect(domNode.id).toBe('1')
 
   })
 
@@ -8654,47 +8621,8 @@ module.exports = loop
 
 
 /***/ }),
-/* 116 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Statistic = __webpack_require__(117)
-
-describe('Statistic', () => {
-
-  it('default last id is 0', () => {
-
-    const statistic = new Statistic
-
-    expect(
-      statistic.getLastInstanceId()
-    ).toBe(0)
-
-  })
-
-  it('increase last id 3 times', () => {
-
-    const statistic = new Statistic
-
-    statistic.increaseLastInstanceId()
-    statistic.increaseLastInstanceId()
-    statistic.increaseLastInstanceId()
-
-    expect(
-      statistic.getLastInstanceId()
-    ).toBe(3)
-
-  })
-
-})
-
-
-/***/ }),
-/* 117 */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/sterjakov/projects/vqua/packages/vqua/lib/virtual/Statistic.js'");
-
-/***/ }),
+/* 116 */,
+/* 117 */,
 /* 118 */
 /***/ (function(module, exports) {
 
@@ -8726,6 +8654,42 @@ module.exports = Statistic
 const Statistic = __webpack_require__(118)
 
 module.exports = new Statistic
+
+
+/***/ }),
+/* 120 */,
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Statistic = __webpack_require__(118)
+
+describe('Statistic', () => {
+
+  it('default last id is 0', () => {
+
+    const statistic = new Statistic
+
+    expect(
+      statistic.getLastInstanceId()
+    ).toBe(0)
+
+  })
+
+  it('increase last id 3 times', () => {
+
+    const statistic = new Statistic
+
+    statistic.increaseLastInstanceId()
+    statistic.increaseLastInstanceId()
+    statistic.increaseLastInstanceId()
+
+    expect(
+      statistic.getLastInstanceId()
+    ).toBe(3)
+
+  })
+
+})
 
 
 /***/ })

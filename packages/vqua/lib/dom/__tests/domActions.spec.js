@@ -1,4 +1,5 @@
 const { TEXT_TYPE, TAG_TYPE } = require('../../constants/nodeTypes')
+const isPropsEqual = require('../isPropsEqual')
 
 const {
   updateProps,
@@ -69,7 +70,8 @@ describe('Dom actions', () => {
     updateElementProps(
       domNode,
       { id: 0, class: 'test' },
-      { id: 1, class: false, selected: true }
+      { id: 1, class: false, selected: true },
+      isPropsEqual
     )
 
     expect(domNode.id).toBe('1')
@@ -88,54 +90,13 @@ describe('Dom actions', () => {
     updateEventProps(
       domNode,
       { onClick: () => { id = -1 } },
-      { onClick: () => { id = 1 } }
+      { onClick: () => { id = 1 } },
+      isPropsEqual
     )
 
     domNode.click()
 
     expect(id).toBe(1)
-
-  })
-
-  it('Update only event props', () => {
-
-    let id = 0
-
-    const domNode = document.createElement('div')
-    domNode.id = '0'
-
-    updateProps(
-      domNode,
-      { id: 0 },
-      { id: 1, onClick: () => { id = 1 } },
-      { event: true, element: false }
-    )
-
-    domNode.click()
-
-    expect(id).toBe(1)
-    expect(domNode.id).toBe('0')
-
-  })
-
-  it('Update only element props', () => {
-
-    let id = 0
-
-    const domNode = document.createElement('div')
-    domNode.id = '0'
-
-    updateProps(
-      domNode,
-      { id: 0 },
-      { id: 1, onClick: () => { id = 1 } },
-      { event: false, element: true }
-    )
-
-    domNode.click()
-
-    expect(id).toBe(0)
-    expect(domNode.id).toBe('1')
 
   })
 

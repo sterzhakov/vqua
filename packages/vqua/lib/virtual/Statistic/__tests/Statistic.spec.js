@@ -1,4 +1,4 @@
-const Statistic = require('../Statistic')
+const Statistic = require('../index')
 
 describe('Statistic', () => {
 

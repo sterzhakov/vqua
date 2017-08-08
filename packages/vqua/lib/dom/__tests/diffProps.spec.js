@@ -1,4 +1,5 @@
 const diffProps = require('../diffProps')
+const isPropsEqual = require('../isPropsEqual')
 
 describe('Get props diff for', () => {
 
@@ -15,7 +16,8 @@ describe('Get props diff for', () => {
           a: 'b',
           b: 2,
           c: false,
-        }
+        },
+        isPropsEqual
       )
     ).toEqual({
       addProps: [
@@ -36,7 +38,8 @@ describe('Get props diff for', () => {
       },
       {
         a: () => false
-      }
+      },
+      isPropsEqual
     )
 
     expect(
@@ -56,7 +59,8 @@ describe('Get props diff for', () => {
           b: 1,
           c: true,
         },
-        {}
+        {},
+        isPropsEqual
       )
     ).toEqual({
       addProps: [],
@@ -71,12 +75,14 @@ describe('Get props diff for', () => {
 
   it('delete props for function', () => {
 
-    const propsDiff = diffProps(
-      {
-        a: () => true
-      },
-      {}
-    )
+    const propsDiff =
+      diffProps(
+        {
+          a: () => true
+        },
+        {},
+        isPropsEqual
+      )
 
     expect(
       propsDiff.removeProps[0].value.toString()
