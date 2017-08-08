@@ -13,7 +13,8 @@ module.exports = (node) => {
   return {
     type: TAG_TYPE,
     props,
-    tag: node.tagName.toLowerCase()
+    tag: node.tagName.toLowerCase(),
+    dom: node,
   }
 
 }

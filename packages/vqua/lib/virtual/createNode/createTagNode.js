@@ -1,15 +1,13 @@
-module.exports = ({ templateNode }) => {
+module.exports = ({ templateNode, statistic }) => {
 
   const refParams =
     templateNode.ref
       ? { ref: templateNode.ref }
       : {}
 
-    if (templateNode.tag == 'code') {
-
-      // console.log(templateNode)
-
-    }
+  const statisticParams = statistic
+    ? { statistic }
+    : {}
 
   const newTagNode = {
     type: templateNode.type,
@@ -18,6 +16,6 @@ module.exports = ({ templateNode }) => {
     childs: templateNode.childs,
   }
 
-  return Object.assign({}, newTagNode, refParams)
+  return Object.assign({}, newTagNode, refParams, statisticParams)
 
 }

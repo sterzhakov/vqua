@@ -1,7 +1,6 @@
 const { union } = require('vqua-utils')
-const isPropsEqual = require('./isPropsEqual')
 
-module.exports = (leftProps = {}, rightProps = {}) => {
+module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
   const keys = union(
     Object.keys(leftProps),
@@ -34,18 +33,58 @@ module.exports = (leftProps = {}, rightProps = {}) => {
 
     } else {
 
-      const addProps = (
-        isPropsEqual(leftProps[key], rightProps[key])
-          ? sortedProps.addProps
-          : [
-              ...sortedProps.addProps,
-              { key, value: rightProps[key] }
-            ]
+      const isFunctions = (
+        typeof leftProps[key] == 'function' &&
+        typeof rightProps[key] == 'function'
       )
 
-      return {
-        addProps,
-        removeProps: sortedProps.removeProps,
+      const isEqual =
+        isPropsEqual(
+          leftProps[key],
+          rightProps[key],
+          isFunctions
+        )
+
+      if (!isEqual && isFunctions) {
+
+        const addProps = [
+          ...sortedProps.addProps,
+          {
+            key,
+            value: rightProps[key]
+          }
+        ]
+
+        const removeProps = [
+          ...sortedProps.removeProps,
+          {
+            key,
+            value: leftProps[key]
+          }
+        ]
+
+        return { addProps, removeProps }
+
+      } else
+
+      if (!isEqual && !isFunctions) {
+
+        const addProps = [
+          ...sortedProps.addProps,
+          {
+            key,
+            value: rightProps[key]
+          }
+        ]
+
+        const removeProps = sortedProps.removeProps
+
+        return { addProps, removeProps }
+
+      } else {
+
+        return sortedProps
+
       }
 
     }

@@ -30,6 +30,7 @@ class Base {
         ? { ref: props.ref }
         : {}
 
+
     const keyParams = props.key
       ? { key: props.key }
       : {}
@@ -88,7 +89,7 @@ class Base {
 
     this.state = newState
 
-    const contextWithPassed = Object.assign(newContext, this.passContext())
+    const passedContext = Object.assign(newContext, this.passContext())
 
     const liveNodes = this.node.childs
 
@@ -100,7 +101,7 @@ class Base {
         linkParent: true,
         childDomNodesCount: true,
         index: true,
-        context: clone(contextWithPassed),
+        context: clone(passedContext),
         liveParentNode: this.node,
         liveParentInstanceNode: this.node,
       })

@@ -8,6 +8,7 @@ const createNodes = ({
   createContext = {},
   liveParentNode = null,
   liveParentInstanceNode = null,
+  statistic = null,
   filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
     return {
       filteredLiveNodes: liveNodes,
@@ -41,6 +42,7 @@ const createNodes = ({
       options: createOptions,
       context: createContext,
       liveParentInstanceNode,
+      statistic
     })
 
     if (!newLiveNode) return newLiveNodes
@@ -57,7 +59,8 @@ const createNodes = ({
         createOptions,
         createContext: newContext,
         filterNodes,
-        index
+        index,
+        statistic
       })
 
     const nodeIndex =

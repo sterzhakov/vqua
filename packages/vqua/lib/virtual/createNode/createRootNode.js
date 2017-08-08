@@ -1,4 +1,8 @@
-module.exports = ({ templateNode }) => {
+module.exports = ({ templateNode, statistic }) => {
+
+  const statisticParams = statistic
+    ? { statistic }
+    : {}
 
   const newRootNode = {
     type: templateNode.type,
@@ -6,6 +10,6 @@ module.exports = ({ templateNode }) => {
     childs: templateNode.childs,
   }
 
-  return newRootNode
+  return Object.assign({}, newRootNode, statisticParams)
 
 }

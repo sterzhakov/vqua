@@ -1,7 +1,7 @@
 const { flatten, pick } = require('vqua-utils')
 const createNodesWithRefs = require('../createNodesWithRefs')
 
-module.exports = ({ liveNode, templateNode, context }) => {
+module.exports = ({ liveNode, templateNode, context, statistic }) => {
 
   const liveType = liveNode.type
   const liveInstance = liveNode.instance
@@ -22,12 +22,20 @@ module.exports = ({ liveNode, templateNode, context }) => {
 
   const childs = flatten([liveInstance.render() || null])
 
-  const newInstanceNode = {
-    context,
-    type: liveType,
-    instance: liveInstance,
-    childs,
-  }
+  const statisticParams = statistic
+    ? {
+        statistic,
+        instanceId: statistic.getLastInstanceId(),
+      }
+    : {}
+
+  const newInstanceNode =
+    Object.assign({}, {
+      context,
+      type: liveType,
+      instance: liveInstance,
+      childs,
+    }, statisticParams)
 
   liveInstance.node = newInstanceNode
 

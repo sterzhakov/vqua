@@ -16,6 +16,7 @@ module.exports = ({
   templateNode = null,
   context = null,
   beforeRender = null,
+  statistic = null,
 }, callback) => {
 
   switch (type) {
@@ -35,6 +36,7 @@ module.exports = ({
           templateNode,
           context,
           beforeRender,
+          statistic,
         })
 
       if (templateNode.ref) {
@@ -56,7 +58,8 @@ module.exports = ({
         updateInstanceNode({
           liveNode,
           templateNode,
-          context
+          context,
+          statistic
         })
 
       return newLiveNode
@@ -71,7 +74,7 @@ module.exports = ({
 
     case CREATE_TAG: {
 
-      const newTagNode = createTagNode({ templateNode })
+      const newTagNode = createTagNode({ templateNode, statistic })
 
       return newTagNode
 
@@ -79,7 +82,7 @@ module.exports = ({
 
     case CREATE_TEXT: {
 
-      const newTextNode = createTextNode({ templateNode })
+      const newTextNode = createTextNode({ templateNode, statistic })
 
       return newTextNode
 

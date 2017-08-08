@@ -7,6 +7,8 @@ const hookNode = require('../virtual/hookNode')
 const { AFTER_DOM_CREATE } = require('../constants/hookTypes')
 const createPatchTree = require('../patch/createTree')
 const updateDomTree = require('../dom/updateTree')
+const dom2vqua = require('dom2vqua')
+const humanizeNodes = require('../virtual/humanizeNodes')
 
 module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 
@@ -28,23 +30,21 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
       }
     )
 
-  const templateDomNodes =
-    filterDomNodes(newLiveNodes)
+  const templateDomNodes = filterDomNodes(newLiveNodes)
+
+  const liveDomNodes = liveNodes.length == 0
+    ? dom2vqua(parentDomNode.childNodes)
+    : filterDomNodes(liveNodes)
 
   const patchNodes =
     createPatchTree({
       offset: 0,
-      liveNodes: [],
+      liveNodes: liveDomNodes,
       templateNodes: templateDomNodes,
-      domNodes: [],
+      domNodes: Array.from(parentDomNode.childNodes),
     })
 
-  parentDomNode.innerHTML = ''
-
-  updateDomTree({
-    patchNodes,
-    parentDomNode
-  })
+  updateDomTree({ patchNodes, parentDomNode })
 
   eachNodes(newLiveNodes, (liveNode) => {
 

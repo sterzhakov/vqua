@@ -18,9 +18,10 @@ module.exports = ({
   templateNode,
   liveParentInstanceNode,
   options = {
-    hooks: false
+    hooks: false,
   },
-  context = {}
+  context = {},
+  statistic = null,
 }) => {
 
   if (options.hooks) {
@@ -43,6 +44,7 @@ module.exports = ({
           type: CREATE_ROOT,
           liveNode,
           templateNode,
+          statistic,
         })
 
       return {
@@ -64,6 +66,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          statistic,
           beforeRender: (instance) => {
 
             if (options.hooks) {
@@ -110,6 +113,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          statistic,
         })
 
       const newContext =
@@ -136,6 +140,7 @@ module.exports = ({
           type: RESUME_INSTANCE,
           liveNode,
           templateNode,
+          statistic,
         })
 
       return {
@@ -154,6 +159,7 @@ module.exports = ({
           type: CREATE_TAG,
           liveNode,
           templateNode,
+          statistic,
         })
 
       return {
@@ -174,6 +180,7 @@ module.exports = ({
           type: CREATE_TEXT,
           liveNode,
           templateNode,
+          statistic
         })
 
       return {

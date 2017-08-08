@@ -461,6 +461,7 @@ const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(16)
 const decorateNodes = __webpack_require__(17)
 const createNodesWithRefs = __webpack_require__(9)
 const createTextNodes = __webpack_require__(67)
+const statistic = __webpack_require__(91)
 
 module.exports = (liveNodes, templateNodes, options) => {
 
@@ -498,12 +499,13 @@ module.exports = (liveNodes, templateNodes, options) => {
         hooks: true,
         linkParent: true,
         childDomNodesCount: true,
-        index: true
+        index: true,
       },
       liveParentNode: options.liveParentNode || null,
       liveParentInstanceNode: options.liveParentInstanceNode || null,
       createContext: options.context || {},
       filterNodes,
+      statistic
     })
 
   return nodes
@@ -1309,6 +1311,7 @@ class Base {
         ? { ref: props.ref }
         : {}
 
+
     const keyParams = props.key
       ? { key: props.key }
       : {}
@@ -1367,7 +1370,7 @@ class Base {
 
     this.state = newState
 
-    const contextWithPassed = Object.assign(newContext, this.passContext())
+    const passedContext = Object.assign(newContext, this.passContext())
 
     const liveNodes = this.node.childs
 
@@ -1379,7 +1382,7 @@ class Base {
         linkParent: true,
         childDomNodesCount: true,
         index: true,
-        context: clone(contextWithPassed),
+        context: clone(passedContext),
         liveParentNode: this.node,
         liveParentInstanceNode: this.node,
       })
@@ -1920,6 +1923,7 @@ const createNodes = ({
   createContext = {},
   liveParentNode = null,
   liveParentInstanceNode = null,
+  statistic = null,
   filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
     return {
       filteredLiveNodes: liveNodes,
@@ -1953,6 +1957,7 @@ const createNodes = ({
       options: createOptions,
       context: createContext,
       liveParentInstanceNode,
+      statistic
     })
 
     if (!newLiveNode) return newLiveNodes
@@ -1969,7 +1974,8 @@ const createNodes = ({
         createOptions,
         createContext: newContext,
         filterNodes,
-        index
+        index,
+        statistic
       })
 
     const nodeIndex =
@@ -2031,9 +2037,10 @@ module.exports = ({
   templateNode,
   liveParentInstanceNode,
   options = {
-    hooks: false
+    hooks: false,
   },
-  context = {}
+  context = {},
+  statistic = null,
 }) => {
 
   if (options.hooks) {
@@ -2056,6 +2063,7 @@ module.exports = ({
           type: CREATE_ROOT,
           liveNode,
           templateNode,
+          statistic,
         })
 
       return {
@@ -2077,6 +2085,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          statistic,
           beforeRender: (instance) => {
 
             if (options.hooks) {
@@ -2123,6 +2132,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          statistic,
         })
 
       const newContext =
@@ -2149,6 +2159,7 @@ module.exports = ({
           type: RESUME_INSTANCE,
           liveNode,
           templateNode,
+          statistic,
         })
 
       return {
@@ -2167,6 +2178,7 @@ module.exports = ({
           type: CREATE_TAG,
           liveNode,
           templateNode,
+          statistic,
         })
 
       return {
@@ -2187,6 +2199,7 @@ module.exports = ({
           type: CREATE_TEXT,
           liveNode,
           templateNode,
+          statistic
         })
 
       return {
@@ -2238,6 +2251,7 @@ module.exports = ({
   templateNode = null,
   context = null,
   beforeRender = null,
+  statistic = null,
 }, callback) => {
 
   switch (type) {
@@ -2257,6 +2271,7 @@ module.exports = ({
           templateNode,
           context,
           beforeRender,
+          statistic,
         })
 
       if (templateNode.ref) {
@@ -2278,7 +2293,8 @@ module.exports = ({
         updateInstanceNode({
           liveNode,
           templateNode,
-          context
+          context,
+          statistic
         })
 
       return newLiveNode
@@ -2293,7 +2309,7 @@ module.exports = ({
 
     case CREATE_TAG: {
 
-      const newTagNode = createTagNode({ templateNode })
+      const newTagNode = createTagNode({ templateNode, statistic })
 
       return newTagNode
 
@@ -2301,7 +2317,7 @@ module.exports = ({
 
     case CREATE_TEXT: {
 
-      const newTextNode = createTextNode({ templateNode })
+      const newTextNode = createTextNode({ templateNode, statistic })
 
       return newTextNode
 
@@ -2323,7 +2339,11 @@ module.exports = ({
 /* 58 */
 /***/ (function(module, exports) {
 
-module.exports = ({ templateNode }) => {
+module.exports = ({ templateNode, statistic }) => {
+
+  const statisticParams = statistic
+    ? { statistic }
+    : {}
 
   const newRootNode = {
     type: templateNode.type,
@@ -2331,7 +2351,7 @@ module.exports = ({ templateNode }) => {
     childs: templateNode.childs,
   }
 
-  return newRootNode
+  return Object.assign({}, newRootNode, statisticParams)
 
 }
 
@@ -2349,7 +2369,8 @@ module.exports = ({
   templateNode,
   context,
   afterRender,
-  beforeRender
+  beforeRender,
+  statistic
 } = {}) => {
 
   const injectedContext = templateNode.class.injectContext
@@ -2370,6 +2391,17 @@ module.exports = ({
     ? { ref: templateNode.ref }
     : {}
 
+  const keyParams = templateNode.key
+    ? { key: templateNode.key }
+    : {}
+
+  const statisticParams = statistic
+    ? {
+        instanceId: statistic.increaseLastInstanceId(),
+        statistic,
+      }
+    : {}
+
   const newInstanceNode =
     Object.assign({}, {
       context,
@@ -2377,7 +2409,11 @@ module.exports = ({
       type: INSTANCE_TYPE,
       ref: templateNode.ref,
       childs,
-    }, refParams)
+    },
+      refParams,
+      keyParams,
+      statisticParams
+    )
 
   instance.node = newInstanceNode
 
@@ -2589,7 +2625,7 @@ module.exports = loop
 const { flatten, pick } = __webpack_require__(0)
 const createNodesWithRefs = __webpack_require__(9)
 
-module.exports = ({ liveNode, templateNode, context }) => {
+module.exports = ({ liveNode, templateNode, context, statistic }) => {
 
   const liveType = liveNode.type
   const liveInstance = liveNode.instance
@@ -2610,12 +2646,20 @@ module.exports = ({ liveNode, templateNode, context }) => {
 
   const childs = flatten([liveInstance.render() || null])
 
-  const newInstanceNode = {
-    context,
-    type: liveType,
-    instance: liveInstance,
-    childs,
-  }
+  const statisticParams = statistic
+    ? {
+        statistic,
+        instanceId: statistic.getLastInstanceId(),
+      }
+    : {}
+
+  const newInstanceNode =
+    Object.assign({}, {
+      context,
+      type: liveType,
+      instance: liveInstance,
+      childs,
+    }, statisticParams)
 
   liveInstance.node = newInstanceNode
 
@@ -2628,18 +2672,16 @@ module.exports = ({ liveNode, templateNode, context }) => {
 /* 64 */
 /***/ (function(module, exports) {
 
-module.exports = ({ templateNode }) => {
+module.exports = ({ templateNode, statistic }) => {
 
   const refParams =
     templateNode.ref
       ? { ref: templateNode.ref }
       : {}
 
-    if (templateNode.tag == 'code') {
-
-      // console.log(templateNode)
-
-    }
+  const statisticParams = statistic
+    ? { statistic }
+    : {}
 
   const newTagNode = {
     type: templateNode.type,
@@ -2648,7 +2690,7 @@ module.exports = ({ templateNode }) => {
     childs: templateNode.childs,
   }
 
-  return Object.assign({}, newTagNode, refParams)
+  return Object.assign({}, newTagNode, refParams, statisticParams)
 
 }
 
@@ -2657,14 +2699,18 @@ module.exports = ({ templateNode }) => {
 /* 65 */
 /***/ (function(module, exports) {
 
-module.exports = ({ templateNode }) => {
+module.exports = ({ templateNode, statistic }) => {
+
+  const statisticParams = statistic
+    ? { statistic }
+    : {}
 
   const newTagNode = {
     type: templateNode.type,
     text: templateNode.text,
   }
 
-  return newTagNode
+  return Object.assign({}, newTagNode, statisticParams)
 
 }
 
@@ -3128,6 +3174,7 @@ module.exports = loop
 const { addRef, removeRef } = __webpack_require__(14)
 const { createElement, insertAt, updateProps } = __webpack_require__(76)
 const sortProps = __webpack_require__(21)
+const isPropsEqual = __webpack_require__(78)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(4)
@@ -3171,7 +3218,31 @@ module.exports = ({
 
         } else {
 
-          updateProps(liveNode.dom, liveNode.props, templateNode.props)
+          const liveInstanceId = (
+            liveNode &&
+            liveNode.instance &&
+            liveNode.instance.node.instanceId
+          )
+
+          const templateInstanceId = (
+            templateNode &&
+            templateNode.instance &&
+            templateNode.instance.node.instanceId
+          )
+
+
+          updateProps(
+            liveNode.dom,
+            liveNode.props,
+            templateNode.props,
+            (leftValue, rightValue, isFunctions) => {
+
+              return (isFunctions && liveInstanceId != templateInstanceId)
+                ? false
+                : isPropsEqual(leftValue, rightValue)
+
+            }
+          )
 
           if (templateNode.ref) {
 
@@ -3202,11 +3273,6 @@ module.exports = ({
       }
 
       case REPLACE_NODE: {
-
-        updateProps(liveNode.dom, {}, liveNode.props || {}, {
-          element: false,
-          event: true
-        })
 
         const newDom = createElement(templateNode)
 
@@ -3262,47 +3328,49 @@ const sortProps = __webpack_require__(21)
 const events = __webpack_require__(22)
 const diffProps = __webpack_require__(77)
 
-const updateProps = (
-  domNode, liveProps, templateProps, { event = true, element = true } = {}
-) => {
+const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
   const sortedLiveProps = sortProps(liveProps)
   const sortedTemplateProps = sortProps(templateProps)
 
-  if (element) {
+  updateElementProps(
+    domNode,
+    sortedLiveProps.elementProps,
+    sortedTemplateProps.elementProps,
+    isPropsEqual
+  )
 
-    updateElementProps(
-      domNode,
-      sortedLiveProps.elementProps,
-      sortedTemplateProps.elementProps
-    )
-
-  }
-
-  if (event) {
-
-    updateEventProps(
-      domNode,
-      sortedLiveProps.eventProps,
-      sortedTemplateProps.eventProps
-    )
-
-  }
+  updateEventProps(
+    domNode,
+    sortedLiveProps.eventProps,
+    sortedTemplateProps.eventProps,
+    isPropsEqual
+  )
 
 }
 
-const updateEventProps = (domNode, liveProps, templateProps) => {
+const updateEventProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
-  const { addProps, removeProps } = diffProps(liveProps, templateProps)
+  const { addProps, removeProps } =
+    diffProps(
+      liveProps,
+      templateProps,
+      isPropsEqual
+    )
 
-  addProps.forEach(prop => addEventProp(domNode, prop))
   removeProps.forEach(prop => removeEventProp(domNode, prop))
+  addProps.forEach(prop => addEventProp(domNode, prop))
 
 }
 
-const updateElementProps = (domNode, liveProps, templateProps) => {
+const updateElementProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
-  const { addProps, removeProps } = diffProps(liveProps, templateProps)
+  const { addProps, removeProps } =
+    diffProps(
+      liveProps,
+      templateProps,
+      isPropsEqual
+    )
 
   addProps.forEach((prop) => {
 
@@ -3415,9 +3483,8 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 const { union } = __webpack_require__(0)
-const isPropsEqual = __webpack_require__(78)
 
-module.exports = (leftProps = {}, rightProps = {}) => {
+module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
   const keys = union(
     Object.keys(leftProps),
@@ -3450,18 +3517,58 @@ module.exports = (leftProps = {}, rightProps = {}) => {
 
     } else {
 
-      const addProps = (
-        isPropsEqual(leftProps[key], rightProps[key])
-          ? sortedProps.addProps
-          : [
-              ...sortedProps.addProps,
-              { key, value: rightProps[key] }
-            ]
+      const isFunctions = (
+        typeof leftProps[key] == 'function' &&
+        typeof rightProps[key] == 'function'
       )
 
-      return {
-        addProps,
-        removeProps: sortedProps.removeProps,
+      const isEqual =
+        isPropsEqual(
+          leftProps[key],
+          rightProps[key],
+          isFunctions
+        )
+
+      if (!isEqual && isFunctions) {
+
+        const addProps = [
+          ...sortedProps.addProps,
+          {
+            key,
+            value: rightProps[key]
+          }
+        ]
+
+        const removeProps = [
+          ...sortedProps.removeProps,
+          {
+            key,
+            value: leftProps[key]
+          }
+        ]
+
+        return { addProps, removeProps }
+
+      } else
+
+      if (!isEqual && !isFunctions) {
+
+        const addProps = [
+          ...sortedProps.addProps,
+          {
+            key,
+            value: rightProps[key]
+          }
+        ]
+
+        const removeProps = sortedProps.removeProps
+
+        return { addProps, removeProps }
+
+      } else {
+
+        return sortedProps
+
       }
 
     }
@@ -3731,6 +3838,8 @@ const hookNode = __webpack_require__(2)
 const { AFTER_DOM_CREATE } = __webpack_require__(3)
 const createPatchTree = __webpack_require__(19)
 const updateDomTree = __webpack_require__(20)
+const dom2vqua = __webpack_require__(85)
+const humanizeNodes = __webpack_require__(40)
 
 module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 
@@ -3752,23 +3861,21 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
       }
     )
 
-  const templateDomNodes =
-    filterDomNodes(newLiveNodes)
+  const templateDomNodes = filterDomNodes(newLiveNodes)
+
+  const liveDomNodes = liveNodes.length == 0
+    ? dom2vqua(parentDomNode.childNodes)
+    : filterDomNodes(liveNodes)
 
   const patchNodes =
     createPatchTree({
       offset: 0,
-      liveNodes: [],
+      liveNodes: liveDomNodes,
       templateNodes: templateDomNodes,
-      domNodes: [],
+      domNodes: Array.from(parentDomNode.childNodes),
     })
 
-  parentDomNode.innerHTML = ''
-
-  updateDomTree({
-    patchNodes,
-    parentDomNode
-  })
+  updateDomTree({ patchNodes, parentDomNode })
 
   eachNodes(newLiveNodes, (liveNode) => {
 
@@ -3841,6 +3948,164 @@ class Counter extends Component {
 // cut after
 
 module.exports = Counter
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const convertTag = __webpack_require__(86)
+const convertText = __webpack_require__(87)
+const mapNodes = __webpack_require__(88)
+
+module.exports = (nodes) => {
+
+  const TAG_TYPE = 1
+  const TEXT_TYPE = 3
+
+  return mapNodes(nodes, (node) => {
+
+    if (node.nodeType == TAG_TYPE) {
+
+      return convertTag(node)
+
+    } else
+
+    if (node.nodeType == TEXT_TYPE) {
+
+      return convertText(node)
+
+    } else {
+
+      return null
+
+    }
+
+  })
+
+}
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { TAG_TYPE } = __webpack_require__(1)
+
+module.exports = (node) => {
+
+  const props = Array.from(node.attributes).reduce((props, attribute) => {
+
+    return Object.assign({}, props, {
+      [attribute.nodeName]: node.getAttribute(attribute.nodeName)
+    })
+
+  }, {})
+
+  return {
+    type: TAG_TYPE,
+    props,
+    tag: node.tagName.toLowerCase(),
+    dom: node,
+  }
+
+}
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { TEXT_TYPE } = __webpack_require__(1)
+
+module.exports = (node) => {
+
+  return {
+    type: TEXT_TYPE,
+    text: node.textContent,
+    dom: node,
+  }
+
+}
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports) {
+
+const loop = (node, createNode) => {
+
+  if (node.nodeType == undefined) {
+
+    return Array.from(node).map((node) => {
+
+      return loop(node, createNode)
+
+    })
+
+  } else {
+
+    const newNode = createNode(node)
+
+    if (typeof newNode == 'object') {
+
+      const childs = loop(node.childNodes, createNode)
+
+      return Object.assign({}, newNode, { childs })
+
+    } else
+
+    if (typeof newNode == 'string') {
+
+      return newNode
+
+    } else {
+
+      return null
+
+    }
+
+  }
+
+}
+
+
+module.exports = loop
+
+
+/***/ }),
+/* 89 */,
+/* 90 */
+/***/ (function(module, exports) {
+
+class Statistic {
+
+  constructor() {
+
+    this.lastInstanceId = 0
+
+  }
+
+  getLastInstanceId() {
+    return this.lastInstanceId
+  }
+
+  increaseLastInstanceId() {
+    return this.lastInstanceId = this.lastInstanceId + 1
+  }
+
+}
+
+module.exports = Statistic
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Statistic = __webpack_require__(90)
+
+module.exports = new Statistic
 
 
 /***/ })

@@ -9,6 +9,14 @@ const extension2language = {
 
 module.exports = ({ vquaArticle, locale, examples, rawExamples, humanId }) => {
 
+  const keyedExamples = examples.reduce((keyedExamples, example) => {
+
+    return Object.assign({}, keyedExamples, {
+      [example.variableName]: example
+    })
+
+  }, {})
+
   return rawExamples.reduce((articleVars, rawExample, index) => {
 
     const language = extension2language[rawExample.fileExtension]
@@ -20,11 +28,14 @@ module.exports = ({ vquaArticle, locale, examples, rawExamples, humanId }) => {
       })
 
     const codeParams = {
+      key: Date.now(),
+      hello: 'world',
       locale,
       code,
       language,
       humanId,
-      key: rawExample.name,
+      variableName: rawExample.variableName,
+      example: keyedExamples[rawExample.variableName]
     }
 
     return Object.assign({}, articleVars, {

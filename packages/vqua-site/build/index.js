@@ -1,12 +1,11 @@
 const { render } = require('vqua')
 const { matchRoutes } = require('vqua-router')
 const { htmlQuotes } = require('vqua-utils')
-const dom2vqua = require('dom2vqua')
 const routes = require('./config/routes')
 
 const $app = document.getElementById('app')
 
-let liveNodes = dom2vqua($app.childNodes)
+let liveNodes = []
 
 const navigate = (path) => {
 

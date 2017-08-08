@@ -3,54 +3,63 @@ const translations = require('../../translations')
 
 class CodePreview extends Component {
 
-  constructor(props, context) {
+  handleClick(event) {
 
-    super(props, context)
+    event.preventDefault()
+
+    console.log(this.refs.preview)
 
   }
 
   afterMount() {
 
-    // this.loadPreview()
+    this.loadPreview()
+
+  }
+
+  afterUpdate() {
+
+    this.loadPreview()
 
   }
 
   loadPreview() {
 
+    if (!this.props.example) return null
+
     this.refs.preview.innerHTML = ''
 
-    render(this.refs.preview, this.props.preview.v(), (error) => {
+    const Example = this.props.example.content
+
+    render(this.refs.preview, [], [Example.v()], (error) => {
 
       if (error) throw error
 
     })
+
   }
 
   render() {
 
-    
+    if (!this.props.example) return null
 
-    if (typeof window == 'undefined') return null
+    const { div, a } = html
 
-    // console.log(rawExamples)
-
-    // const { div, a } = html
-    //
-    // return [
-    //   div({ class: 'code__menu' },
-    //     div({ class: 'code__menu__line' }),
-    //     a({
-    //       class: 'code__menu__item',
-    //       href: '#refresh',
-    //       ref: 'refresh',
-    //       onClick: () => this.loadPreview()
-    //     },
-    //       translations[this.props.locale].Code.refresh
-    //     ),
-    //     div({ class: 'code__menu__line' })
-    //   ),
-    //   div({ class: 'code__preview', ref: 'preview' })
-    // ]
+    return [
+      div({ class: 'code__menu' },
+        div({ class: 'code__menu__line' }),
+        a({
+          class: 'code__menu__item',
+          href: '#refresh',
+          ref: 'refresh',
+          onClick: (event) => this.handleClick(event)
+        },
+          translations[this.props.locale].Code.refresh
+        ),
+        div({ class: 'code__menu__line' })
+      ),
+      div({ class: 'code__preview', ref: 'preview' })
+    ]
 
   }
 

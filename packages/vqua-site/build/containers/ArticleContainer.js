@@ -1,42 +1,44 @@
 const { Component } = require('vqua')
-const html2vqua = require('html2vqua')
-const vquaInterpolate = require('vqua-interpolate')
 const App = require('../components/App')
-const createArticleVars = require('../helpers/createArticleVars')
+const ExampleModel = require('../models/Example')
+const createArticle = require('../helpers/createArticle')
 
 class ArticleContainer extends Component {
 
-  render() {
+  constructor(props, context) {
 
-    const {
-      article,
-      rawExamples,
-      locale,
-      humanId,
-    } = this.props
+    super(props, context)
 
-    const vquaArticle = html2vqua(article)
-
-    const extension2language = {
-      '.js':   'javascript',
-      '.sh':   'shell',
-      '.html': 'xml'
+    this.state = {
+      examples: []
     }
 
-    const articleVars =
-      createArticleVars({
-        vquaArticle,
-        locale,
-        rawExamples,
-        humanId
-      })
+  }
 
-    const newArticle =
-      vquaInterpolate(vquaArticle, articleVars)
+  afterMount() {
+
+    ExampleModel.all({
+      humanId: this.props.humanId,
+      locale: this.props.locale
+    }).then((examples) => {
+
+      this.setState({ examples })
+
+    })
+
+  }
+
+  render() {
+
+    const articleParams = Object.assign({}, this.props, {
+      examples: this.state.examples
+    })
+
+    const article = createArticle(articleParams)
 
     return (
       App.v(this.props,
-        newArticle
+        article
       )
     )
 

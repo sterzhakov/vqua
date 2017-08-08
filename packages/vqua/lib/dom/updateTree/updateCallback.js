@@ -1,6 +1,7 @@
 const { addRef, removeRef } = require('../../virtual/refs')
 const { createElement, insertAt, updateProps } = require('../domActions')
 const sortProps = require('../sortProps')
+const isPropsEqual = require('../isPropsEqual')
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = require('../../constants/actionTypes')
@@ -44,7 +45,31 @@ module.exports = ({
 
         } else {
 
-          updateProps(liveNode.dom, liveNode.props, templateNode.props)
+          const liveInstanceId = (
+            liveNode &&
+            liveNode.instance &&
+            liveNode.instance.node.instanceId
+          )
+
+          const templateInstanceId = (
+            templateNode &&
+            templateNode.instance &&
+            templateNode.instance.node.instanceId
+          )
+
+
+          updateProps(
+            liveNode.dom,
+            liveNode.props,
+            templateNode.props,
+            (leftValue, rightValue, isFunctions) => {
+
+              return (isFunctions && liveInstanceId != templateInstanceId)
+                ? false
+                : isPropsEqual(leftValue, rightValue)
+
+            }
+          )
 
           if (templateNode.ref) {
 
@@ -75,11 +100,6 @@ module.exports = ({
       }
 
       case REPLACE_NODE: {
-
-        updateProps(liveNode.dom, {}, liveNode.props || {}, {
-          element: false,
-          event: true
-        })
 
         const newDom = createElement(templateNode)
 

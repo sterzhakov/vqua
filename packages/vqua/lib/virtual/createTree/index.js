@@ -5,6 +5,7 @@ const { sortLiveNodes, sortTemplateNodes } = require('../sortNodes')
 const decorateNodes = require('../decorateNodes')
 const createNodesWithRefs = require('../createNodesWithRefs')
 const createTextNodes = require('../createTextNodes')
+const statistic = require('../Statistic/singleton')
 
 module.exports = (liveNodes, templateNodes, options) => {
 
@@ -42,12 +43,13 @@ module.exports = (liveNodes, templateNodes, options) => {
         hooks: true,
         linkParent: true,
         childDomNodesCount: true,
-        index: true
+        index: true,
       },
       liveParentNode: options.liveParentNode || null,
       liveParentInstanceNode: options.liveParentInstanceNode || null,
       createContext: options.context || {},
       filterNodes,
+      statistic
     })
 
   return nodes

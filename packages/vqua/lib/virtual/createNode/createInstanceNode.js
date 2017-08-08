@@ -7,7 +7,8 @@ module.exports = ({
   templateNode,
   context,
   afterRender,
-  beforeRender
+  beforeRender,
+  statistic
 } = {}) => {
 
   const injectedContext = templateNode.class.injectContext
@@ -28,6 +29,17 @@ module.exports = ({
     ? { ref: templateNode.ref }
     : {}
 
+  const keyParams = templateNode.key
+    ? { key: templateNode.key }
+    : {}
+
+  const statisticParams = statistic
+    ? {
+        instanceId: statistic.increaseLastInstanceId(),
+        statistic,
+      }
+    : {}
+
   const newInstanceNode =
     Object.assign({}, {
       context,
@@ -35,7 +47,11 @@ module.exports = ({
       type: INSTANCE_TYPE,
       ref: templateNode.ref,
       childs,
-    }, refParams)
+    },
+      refParams,
+      keyParams,
+      statisticParams
+    )
 
   instance.node = newInstanceNode
 

@@ -3,47 +3,49 @@ const sortProps = require('./sortProps')
 const events = require('./events')
 const diffProps = require('./diffProps')
 
-const updateProps = (
-  domNode, liveProps, templateProps, { event = true, element = true } = {}
-) => {
+const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
   const sortedLiveProps = sortProps(liveProps)
   const sortedTemplateProps = sortProps(templateProps)
 
-  if (element) {
+  updateElementProps(
+    domNode,
+    sortedLiveProps.elementProps,
+    sortedTemplateProps.elementProps,
+    isPropsEqual
+  )
 
-    updateElementProps(
-      domNode,
-      sortedLiveProps.elementProps,
-      sortedTemplateProps.elementProps
-    )
-
-  }
-
-  if (event) {
-
-    updateEventProps(
-      domNode,
-      sortedLiveProps.eventProps,
-      sortedTemplateProps.eventProps
-    )
-
-  }
+  updateEventProps(
+    domNode,
+    sortedLiveProps.eventProps,
+    sortedTemplateProps.eventProps,
+    isPropsEqual
+  )
 
 }
 
-const updateEventProps = (domNode, liveProps, templateProps) => {
+const updateEventProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
-  const { addProps, removeProps } = diffProps(liveProps, templateProps)
+  const { addProps, removeProps } =
+    diffProps(
+      liveProps,
+      templateProps,
+      isPropsEqual
+    )
 
-  addProps.forEach(prop => addEventProp(domNode, prop))
   removeProps.forEach(prop => removeEventProp(domNode, prop))
+  addProps.forEach(prop => addEventProp(domNode, prop))
 
 }
 
-const updateElementProps = (domNode, liveProps, templateProps) => {
+const updateElementProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
-  const { addProps, removeProps } = diffProps(liveProps, templateProps)
+  const { addProps, removeProps } =
+    diffProps(
+      liveProps,
+      templateProps,
+      isPropsEqual
+    )
 
   addProps.forEach((prop) => {
 
