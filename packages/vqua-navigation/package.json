@@ -1,0 +1,22 @@
+{
+  "name": "vqua-navigation",
+  "version": "1.0.0",
+  "description": "Navigation for vqua.",
+  "main": "lib/index.js",
+  "dependencies": {
+    "vqua": "^1.0.0",
+    "vqua-utils": "^1.0.0",
+    "vqua-router": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "vqua",
+    "navigation",
+    "vqua navigation"
+  ],
+  "author": "Igor Sterjakov",
+  "license": "ISC"
+}
