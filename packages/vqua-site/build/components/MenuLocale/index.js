@@ -5,13 +5,14 @@ const MenuItems = require('..//MenuItems')
 const replacePathLocale = (pathname, locale) => {
 
   return pathname.replace(/(^\/)[A-z]+/, '$1' + locale)
+
 }
 
 class MenuLocale extends Component {
 
   static injectContext() {
 
-    return ['locale', 'url', 'navigate']
+    return ['locale', 'path', 'navigate']
 
   }
 
@@ -39,7 +40,7 @@ class MenuLocale extends Component {
 
     event.preventDefault()
 
-    const { locale, navigate} = this.context
+    const { locale, navigate } = this.context
 
     if (locale != item.locale) {
 
@@ -47,12 +48,11 @@ class MenuLocale extends Component {
 
     }
 
-
   }
 
   render() {
 
-    const { locale, url } = this.context
+    const { locale, path } = this.context
 
     const { div, a, p } = html
 
@@ -74,8 +74,8 @@ class MenuLocale extends Component {
             } else {
 
               const href = item.locale == locale
-                ? url
-                : replacePathLocale(url, item.locale)
+                ? path
+                : replacePathLocale(path, item.locale)
 
               const aProps = {
                 href,

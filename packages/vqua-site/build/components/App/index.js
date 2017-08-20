@@ -9,7 +9,7 @@ class App extends Component {
   passContext() {
 
     return {
-      url: this.props.url,
+      path: this.props.path,
       locale: this.props.locale,
       segments: this.props.segments,
       humanId: this.props.humanId,

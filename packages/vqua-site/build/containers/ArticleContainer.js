@@ -30,9 +30,10 @@ class ArticleContainer extends Component {
 
   render() {
 
-    const articleParams = Object.assign({}, this.props, {
-      examples: this.state.examples
-    })
+    const articleParams =
+      Object.assign({}, this.props, {
+        examples: this.state.examples
+      })
 
     const article = createArticle(articleParams)
 

@@ -7,11 +7,25 @@ module.exports = {
 
     if (typeof __webpack_require__ == 'function') {
 
-      const file = require(
-        'raw-loader!../../articles/' + humanId + '.' + locale + '.html'
-      )
+      try {
 
-      resolve(file)
+        const file =
+          require(
+            'raw-loader!../../articles/' +
+            humanId +
+            '.' +
+            locale +
+            '.html'
+          )
+
+        resolve(file)
+
+      } catch (error) {
+
+        resolve(error.message)
+
+      }
+
 
     } else {
 

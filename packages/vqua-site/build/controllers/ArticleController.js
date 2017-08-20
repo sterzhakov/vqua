@@ -14,7 +14,7 @@ class ArticleController {
     const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
 
     res.send('ArticleContainer', {
-      url: req.url,
+      path: req.url,
       segments: req.segments,
       humanId,
       locale,

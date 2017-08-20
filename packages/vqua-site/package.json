@@ -35,6 +35,7 @@
     "vqua-router": "1.0.0",
     "vqua-server": "1.0.0",
     "vqua-utils": "1.0.0",
+    "vqua-navigation": "1.0.0",
     "vqua2string": "1.0.0"
   }
 }
