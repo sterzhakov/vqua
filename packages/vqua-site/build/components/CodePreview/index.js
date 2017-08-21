@@ -7,8 +7,6 @@ class CodePreview extends Component {
 
     event.preventDefault()
 
-    console.log(this.refs.preview)
-
   }
 
   afterMount() {
@@ -31,11 +29,7 @@ class CodePreview extends Component {
 
     const Example = this.props.example.content
 
-    render(this.refs.preview, [], [Example.v()], (error) => {
-
-      if (error) throw error
-
-    })
+    render(this.refs.preview, [], [Example.v()])
 
   }
 

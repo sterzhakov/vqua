@@ -28,7 +28,7 @@ module.exports = ({ vquaArticle, locale, examples, rawExamples, humanId }) => {
       })
 
     const codeParams = {
-      key: Date.now(),
+      key: Math.random(),
       hello: 'world',
       locale,
       code,

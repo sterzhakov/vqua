@@ -14,7 +14,9 @@ class Counter extends Component {
 
   }
 
-  handleClick() {
+  handleClick(event) {
+
+    event.preventDefault()
 
     this.setState({ counter: this.state.counter + 1 })
 
@@ -29,7 +31,7 @@ class Counter extends Component {
         p({}, this.state.counter),
         a({
           href: '#click',
-          onClick: (event) => this.handleClick()
+          onClick: event => this.handleClick(event)
         },
           'Click me!'
         )

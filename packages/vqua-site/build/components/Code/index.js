@@ -18,12 +18,11 @@ class Code extends Component {
 
     const { code } = this.refs
 
-    code.textContent = htmlQuotes.decode(code.textContent)
+    code.textContent = this.props.code
 
     highlightjs.highlightBlock(code)
 
   }
-
 
   render() {
 

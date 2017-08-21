@@ -2639,12 +2639,11 @@ class Code extends Component {
 
     const { code } = this.refs
 
-    code.textContent = htmlQuotes.decode(code.textContent)
+    code.textContent = this.props.code
 
     highlightjs.highlightBlock(code)
 
   }
-
 
   render() {
 
@@ -2686,8 +2685,6 @@ class CodePreview extends Component {
 
     event.preventDefault()
 
-    console.log(this.refs.preview)
-
   }
 
   afterMount() {
@@ -2710,11 +2707,7 @@ class CodePreview extends Component {
 
     const Example = this.props.example.content
 
-    render(this.refs.preview, [], [Example.v()], (error) => {
-
-      if (error) throw error
-
-    })
+    render(this.refs.preview, [], [Example.v()])
 
   }
 
@@ -3330,7 +3323,9 @@ class Counter extends Component {
 
   }
 
-  handleClick() {
+  handleClick(event) {
+
+    event.preventDefault()
 
     this.setState({ counter: this.state.counter + 1 })
 
@@ -3345,7 +3340,7 @@ class Counter extends Component {
         p({}, this.state.counter),
         a({
           href: '#click',
-          onClick: (event) => this.handleClick()
+          onClick: event => this.handleClick(event)
         },
           'Click me!'
         )
@@ -3427,7 +3422,7 @@ module.exports = ({ vquaArticle, locale, examples, rawExamples, humanId }) => {
       })
 
     const codeParams = {
-      key: Date.now(),
+      key: Math.random(),
       hello: 'world',
       locale,
       code,
@@ -5116,7 +5111,7 @@ module.exports = "module.exports = 'sample'\n"
 /* 97 */
 /***/ (function(module, exports) {
 
-module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Counter extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      counter: 0\n    }\n\n  }\n\n  handleClick() {\n\n    this.setState({ counter: this.state.counter + 1 })\n\n  }\n\n  render() {\n\n    const { div, a, p } = html\n\n    return (\n      div({},\n        p({}, this.state.counter),\n        a({\n          href: '#click',\n          onClick: (event) => this.handleClick()\n        },\n          'Click me!'\n        )\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Counter\n"
+module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Counter extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      counter: 0\n    }\n\n  }\n\n  handleClick(event) {\n\n    event.preventDefault()\n\n    this.setState({ counter: this.state.counter + 1 })\n\n  }\n\n  render() {\n\n    const { div, a, p } = html\n\n    return (\n      div({},\n        p({}, this.state.counter),\n        a({\n          href: '#click',\n          onClick: event => this.handleClick(event)\n        },\n          'Click me!'\n        )\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Counter\n"
 
 /***/ }),
 /* 98 */
