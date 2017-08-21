@@ -3,8 +3,32 @@ const createInstanceNode = require('../../createNode/createInstanceNode')
 const {
   TAG_TYPE, TEXT_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = require('../../../constants/nodeTypes')
+const Statistic = require('../../Statistic')
 
 describe('Create instance node', () => {
+
+  it('create node with statistic param', () => {
+
+    class App extends Component {}
+
+    const templateNode = {
+      type: CLASS_TYPE,
+      class: App,
+      props: {},
+      childs: [],
+    }
+
+    const newNode =
+      createInstanceNode({
+        templateNode,
+        statistic: new Statistic,
+        context: {},
+      })
+
+    expect(newNode.statistic instanceof Statistic).toBe(true)
+    expect(newNode.instanceId).toBe(1)
+
+  })
 
   it('merge default props with template props', () => {
 

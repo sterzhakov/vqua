@@ -6,6 +6,42 @@ const {
 
 describe('Create nodes:', () => {
 
+  it('pass statistic', () => {
+
+    const templateNodes = [
+      {
+        tag: 'div',
+        childs: [
+          {
+            tag: 'div',
+            childs: []
+          },
+        ]
+      }
+    ]
+
+    const statistic = 'statistic'
+
+    const nodes =
+      createNodes({
+        statistic,
+        liveNodes: templateNodes,
+        templateNodes,
+        createNode: ({ templateNode, statistic }, callback) => {
+          return {
+            newLiveNode: { tag: templateNode.tag, statistic },
+            isNeedChilds: true,
+            liveChilds: templateNode.childs,
+            templateChilds: templateNode.childs,
+          }
+        }
+      })
+
+    expect(nodes[0].statistic).toBe(statistic)
+    expect(nodes[0].childs[0].statistic).toBe(statistic)
+
+  })
+
   it('link parent nodes', () => {
 
     const templateNodes = [
@@ -256,7 +292,6 @@ describe('Create nodes:', () => {
 
   })
 
-
   it('create array of numbers', () => {
 
     const nodes =
@@ -271,7 +306,6 @@ describe('Create nodes:', () => {
     expect(nodes).toEqual([4, 4, 4])
 
   })
-
 
   it('array of objects without childs', () => {
 
@@ -300,7 +334,6 @@ describe('Create nodes:', () => {
     expect(nodes).toEqual([{ tag: 'div' }])
 
   })
-
 
   it('array of objects with childs', () => {
 
@@ -336,7 +369,6 @@ describe('Create nodes:', () => {
     expect(nodes).toEqual(templateNodes)
 
   })
-
 
   it('empty array', () => {
 

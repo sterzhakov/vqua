@@ -1,5 +1,6 @@
 const createNode = require('../../createNode/index')
 const Component = require('../../Component')
+const Statistic = require('../../Statistic')
 
 const {
   ROOT_TYPE, CLASS_TYPE, INSTANCE_TYPE, TAG_TYPE, TEXT_TYPE
@@ -34,12 +35,14 @@ describe('Create node', () => {
       createNode({
         type: CREATE_INSTANCE,
         templateNode,
-        context: {}
+        context: {},
+        statistic: new Statistic,
       })
 
     expect(node.childs).toEqual([])
     expect(node.type).toEqual(INSTANCE_TYPE)
     expect(node.instance instanceof templateNode.class).toBe(true)
+    expect(node.statistic).toBeDefined()
 
   })
 
@@ -108,9 +111,11 @@ describe('Create node', () => {
         type: UPDATE_INSTANCE,
         liveNode,
         templateNode,
-        context
+        context,
+        statistic: new Statistic,
       })
 
+    expect(node.statistic).toBeDefined()
     expect(node.type).toEqual(INSTANCE_TYPE)
     expect(node.instance instanceof templateNode.class).toBe(true)
 
@@ -121,16 +126,18 @@ describe('Create node', () => {
     const liveNode = {
       type: INSTANCE_TYPE,
       instance: {},
-      childs: []
+      childs: [],
+      statistic: new Statistic,
     }
 
     const node =
       createNode({
         type: RESUME_INSTANCE,
         liveNode,
-        context: {}
+        context: {},
       })
 
+    expect(node.statistic).toBeDefined()
     expect(node).toEqual(liveNode)
 
   })
@@ -148,10 +155,15 @@ describe('Create node', () => {
       createNode({
         type: CREATE_TAG,
         templateNode,
-        context: {}
+        context: {},
+        statistic: new Statistic,
       })
 
-    expect(node).toEqual(templateNode)
+    expect(node.statistic).toBeDefined()
+    expect(node.type).toEqual(templateNode.type)
+    expect(node.tag).toEqual(templateNode.tag)
+    expect(node.props).toEqual(templateNode.props)
+    expect(node.childs).toEqual(templateNode.childs)
 
   })
 
@@ -166,10 +178,13 @@ describe('Create node', () => {
       createNode({
         type: CREATE_TEXT,
         templateNode,
-        context: {}
+        context: {},
+        statistic: new Statistic,
       })
 
-    expect(node).toEqual(templateNode)
+    expect(node.statistic).toBeDefined()
+    expect(node.type).toEqual(templateNode.type)
+    expect(node.text).toEqual(templateNode.text)
 
   })
 
@@ -185,10 +200,14 @@ describe('Create node', () => {
       createNode({
         type: CREATE_ROOT,
         templateNode,
-        context: {}
+        context: {},
+        statistic: new Statistic,
       })
 
-    expect(node).toEqual(templateNode)
+    expect(node.statistic).toBeDefined()
+    expect(node.type).toEqual(templateNode.type)
+    expect(node.dom).toEqual(templateNode.dom)
+    expect(node.childs).toEqual(templateNode.childs)
 
   })
 

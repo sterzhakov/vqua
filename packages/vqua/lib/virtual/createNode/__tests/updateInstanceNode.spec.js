@@ -1,6 +1,7 @@
 const Component = require('../../Component')
 const updateInstanceNode = require('../../createNode/updateInstanceNode')
 const { CLASS_TYPE } = require('../../../constants/nodeTypes')
+const Statistic = require('../../Statistic')
 
 describe('Update instance with next params: props, state, context', () => {
 
@@ -24,6 +25,32 @@ describe('Update instance with next params: props, state, context', () => {
     }
 
   }
+
+  it('create node with statistic param', () => {
+
+    const templateNode = {
+      type: CLASS_TYPE,
+      props: {},
+      childs: [],
+    }
+
+    const liveNode = {
+      type: CLASS_TYPE,
+      instance: new App,
+    }
+
+    const newNode =
+      updateInstanceNode({
+        liveNode,
+        templateNode,
+        statistic: new Statistic,
+        context: {},
+      })
+
+    expect(newNode.statistic instanceof Statistic).toBe(true)
+    expect(newNode.instanceId).toBe(0)
+
+  })
 
   it('create node with new instance params', () => {
 
@@ -55,7 +82,7 @@ describe('Update instance with next params: props, state, context', () => {
 
   })
 
-  it('after update childs is from template node ', () => {
+  it('create node with new instance arams with childs ', () => {
 
     const liveNode = {
       type: CLASS_TYPE,

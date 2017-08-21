@@ -1,4 +1,5 @@
 const Component = require('../../Component')
+const Statistic = require('../../Statistic')
 
 const createCallback = require('../../createTree/createCallback')
 
@@ -190,7 +191,10 @@ describe('Create tree, create callback:', () => {
 
       const newLiveNodeParams =
         createCallback({
-          liveNode, templateNode, context
+          liveNode,
+          templateNode,
+          context,
+          statistic: new Statistic
         })
 
       const {
@@ -200,6 +204,7 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
+      expect(newLiveNode.statistic).toBeDefined()
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.instance instanceof App).toBe(true)
       expect(newLiveNode.instance.props).toEqual({ id: 1 })
@@ -242,6 +247,7 @@ describe('Create tree, create callback:', () => {
           liveNode,
           templateNode,
           context,
+          statistic: new Statistic
         })
 
       const {
@@ -252,6 +258,7 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
+      expect(newLiveNode.statistic).toBeDefined()
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.childs).toEqual([ null ])
       expect(newContext).toEqual({ id: 2 })
@@ -277,6 +284,7 @@ describe('Create tree, create callback:', () => {
         type: INSTANCE_TYPE,
         instance: new App({ id: 1 }, { id: 1 }),
         childs: [],
+        statistic: new Statistic
       }
 
       const templateNode = {
@@ -302,6 +310,7 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
+      expect(newLiveNode.statistic).toBeDefined()
       expect(isNeedChilds).toBe(false)
       expect(newLiveNode.childs).toEqual([])
       expect(newLiveNode.instance.nextProps).toEqual({})
@@ -311,14 +320,13 @@ describe('Create tree, create callback:', () => {
 
     })
 
-
     it('create tag', () => {
 
       const templateNode = {
         type: TAG_TYPE,
         tag: 'div',
         props: { id: 1 },
-        childs: []
+        childs: [],
       }
 
       const newLiveNodeParams =
@@ -327,6 +335,7 @@ describe('Create tree, create callback:', () => {
           liveNode: null,
           context: true,
           liveParentInstanceNode: null,
+          statistic: new Statistic
         })
 
       const {
@@ -336,7 +345,11 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
-      expect(newLiveNode).toEqual(templateNode)
+      expect(newLiveNode.statistic).toBeDefined()
+      expect(newLiveNode.type).toEqual(templateNode.type)
+      expect(newLiveNode.tag).toEqual(templateNode.tag)
+      expect(newLiveNode.props).toEqual(templateNode.props)
+      expect(newLiveNode.childs).toEqual(templateNode.childs)
       expect(isNeedChilds).toBe(true)
       expect(newContext).toBe(true)
       expect(newLiveParentInstanceNode).toBe(null)

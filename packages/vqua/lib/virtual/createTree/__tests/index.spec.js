@@ -1,6 +1,6 @@
 const Component = require('../../Component')
-
 const createTree = require('../../createTree')
+const Statistic = require('../../Statistic')
 
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
@@ -83,15 +83,20 @@ describe('Create tree', () => {
       createTree(
         liveNodes,
         templateNodes,
-        { context: { id: 'context' }
-      })
+        {
+          context: { id: 'context' },
+          statistic: new Statistic,
+        }
+      )
 
     expect(newLiveNodes[0].type).toBe(ROOT_TYPE)
     expect(newLiveNodes[0].childs.length).toBe(1)
+    expect(newLiveNodes[0].statistic).toBeDefined()
 
     expect(newLiveNodes[0].childs[0].type).toBe(INSTANCE_TYPE)
     expect(newLiveNodes[0].childs[0].instance instanceof App).toBe(true)
     expect(newLiveNodes[0].childs[0].instance.props).toEqual({ id: 2 })
+    expect(newLiveNodes[0].childs[0].statistic).toBeDefined()
     expect(
       newLiveNodes[0].childs[0].instance.context
     ).toEqual({ id: 'context' })
@@ -101,9 +106,13 @@ describe('Create tree', () => {
     expect(newLiveNodes[0].childs[0].childs[0].tag).toBe('div')
     expect(newLiveNodes[0].childs[0].childs[0].props).toEqual({ id: 2 })
     expect(newLiveNodes[0].childs[0].childs[0].childs.length).toBe(1)
+    expect(newLiveNodes[0].childs[0].childs[0].statistic).toBeDefined()
 
     expect(newLiveNodes[0].childs[0].childs[0].childs[0].type).toBe(TEXT_TYPE)
     expect(newLiveNodes[0].childs[0].childs[0].childs[0].text).toBe('Hello')
+    expect(
+      newLiveNodes[0].childs[0].childs[0].childs[0].statistic
+    ).toBeDefined()
 
   })
 

@@ -23,7 +23,7 @@ module.exports = ({
 
     case CREATE_ROOT: {
 
-      const newRootNode = createRootNode({ templateNode })
+      const newRootNode = createRootNode({ templateNode, statistic })
 
       return newRootNode
 
