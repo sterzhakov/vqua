@@ -1,5 +1,5 @@
 const div = require('./__data/div')
-const { TAG_TYPE } = require('vqua/lib/constants/nodeTypes')
+const { TAG_TYPE, TEXT_TYPE } = require('vqua/lib/constants/nodeTypes')
 const dom2vqua = require('../index')
 
 describe('Convert dom to vqua', () => {
@@ -12,9 +12,16 @@ describe('Convert dom to vqua', () => {
       type: TAG_TYPE,
       tag: 'div',
       props: {},
+      dom: div,
       childs: [
-        'text 1',
         {
+          dom: div.childNodes[0],
+          type: TEXT_TYPE,
+          text: 'text 1',
+          childs: [],
+        },
+        {
+          dom: div.childNodes[1],
           type: TAG_TYPE,
           tag: 'span',
           props: {
@@ -22,10 +29,20 @@ describe('Convert dom to vqua', () => {
             class: 'class',
           },
           childs: [
-            'text 2'
+            {
+              dom: div.childNodes[1].childNodes[0],
+              type: TEXT_TYPE,
+              text: 'text 2',
+              childs: [],
+            }
           ]
         },
-        'text 3',
+        {
+          dom: div.childNodes[2],
+          type: TEXT_TYPE,
+          text: 'text 3',
+          childs: [],
+        }
       ]
     })
 

@@ -1,4 +1,5 @@
 const convertText = require('../convertText')
+const { TEXT_TYPE } = require('vqua/lib/constants/nodeTypes')
 
 describe('Convert text', () => {
 
@@ -8,7 +9,11 @@ describe('Convert text', () => {
 
     const newNode = convertText(text)
 
-    expect(newNode).toEqual('some text')
+    expect(newNode).toEqual({
+      type: TEXT_TYPE,
+      text: 'some text',
+      dom: text,
+    })
 
   })
 

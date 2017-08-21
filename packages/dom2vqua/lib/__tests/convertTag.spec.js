@@ -12,6 +12,7 @@ describe('Convert tag', () => {
     const newNode = convertTag(tag)
 
     expect(newNode).toEqual({
+      dom: tag,
       type: TAG_TYPE,
       tag: 'div',
       props: {

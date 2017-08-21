@@ -95,7 +95,8 @@ module.exports = (node) => {
   return {
     type: TAG_TYPE,
     props,
-    tag: node.tagName.toLowerCase()
+    tag: node.tagName.toLowerCase(),
+    dom: node,
   }
 
 }
@@ -103,11 +104,17 @@ module.exports = (node) => {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const { TEXT_TYPE } = __webpack_require__(0)
 
 module.exports = (node) => {
 
-  return node.textContent
+  return {
+    type: TEXT_TYPE,
+    text: node.textContent,
+    dom: node,
+  }
 
 }
 
@@ -233,6 +240,7 @@ describe('Convert tag', () => {
     const newNode = convertTag(tag)
 
     expect(newNode).toEqual({
+      dom: tag,
       type: TAG_TYPE,
       tag: 'div',
       props: {
@@ -251,6 +259,7 @@ describe('Convert tag', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const convertText = __webpack_require__(2)
+const { TEXT_TYPE } = __webpack_require__(0)
 
 describe('Convert text', () => {
 
@@ -260,7 +269,11 @@ describe('Convert text', () => {
 
     const newNode = convertText(text)
 
-    expect(newNode).toEqual('some text')
+    expect(newNode).toEqual({
+      type: TEXT_TYPE,
+      text: 'some text',
+      dom: text,
+    })
 
   })
 
@@ -272,7 +285,7 @@ describe('Convert text', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const div = __webpack_require__(3)
-const { TAG_TYPE } = __webpack_require__(0)
+const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
 const dom2vqua = __webpack_require__(10)
 
 describe('Convert dom to vqua', () => {
@@ -285,9 +298,16 @@ describe('Convert dom to vqua', () => {
       type: TAG_TYPE,
       tag: 'div',
       props: {},
+      dom: div,
       childs: [
-        'text 1',
         {
+          dom: div.childNodes[0],
+          type: TEXT_TYPE,
+          text: 'text 1',
+          childs: [],
+        },
+        {
+          dom: div.childNodes[1],
           type: TAG_TYPE,
           tag: 'span',
           props: {
@@ -295,10 +315,20 @@ describe('Convert dom to vqua', () => {
             class: 'class',
           },
           childs: [
-            'text 2'
+            {
+              dom: div.childNodes[1].childNodes[0],
+              type: TEXT_TYPE,
+              text: 'text 2',
+              childs: [],
+            }
           ]
         },
-        'text 3',
+        {
+          dom: div.childNodes[2],
+          type: TEXT_TYPE,
+          text: 'text 3',
+          childs: [],
+        }
       ]
     })
 
