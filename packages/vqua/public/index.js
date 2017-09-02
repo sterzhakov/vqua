@@ -226,6 +226,8 @@ class Base {
 
     const parentNodes = getParentNodes(filteredLiveNodes[0])
 
+    console.log(filteredLiveNodes[0].parent)
+
     const parentOffsets = filterNodesOffsets(parentNodes)
 
     const offset = parentOffsets[parentOffsets.length - 1]
@@ -2685,11 +2687,28 @@ const createNodes = ({
 
     if (!newLiveNode) return newLiveNodes
 
-    if (!isNeedChilds) return [ ...newLiveNodes, newLiveNode ]
+    const nodeIndex =
+      createOptions.index
+        ? { index }
+        : {}
+
+    const parentNode =
+      createOptions.linkParent
+        ? { parent: liveParentNode }
+        : {}
+
+    const newLiveNodeWithInfo =
+      Object.assign(
+        newLiveNode,
+        nodeIndex,
+        parentNode,
+      )
+
+    if (!isNeedChilds) return [ ...newLiveNodes, newLiveNodeWithInfo ]
 
     const childs =
       createNodes({
-        liveParentNode: newLiveNode,
+        liveParentNode: newLiveNodeWithInfo,
         liveParentInstanceNode: newLiveParentInstanceNode,
         liveNodes: liveChilds || [],
         templateNodes: templateChilds || [],
@@ -2701,11 +2720,6 @@ const createNodes = ({
         statistic
       })
 
-    const nodeIndex =
-      createOptions.index
-        ? { index }
-        : {}
-
     const childDomNodesCount  =
       createOptions.childDomNodesCount
         ? { childDomNodesCount: countDomNodes(childs) }
@@ -2713,21 +2727,14 @@ const createNodes = ({
 
     const childNodes = { childs }
 
-    const parentNode =
-      createOptions.linkParent
-        ? { parent: liveParentNode }
-        : {}
-
-    const extendedLiveNode =
+    const liveNodeWithChilds =
       Object.assign(
-        newLiveNode,
-        parentNode,
+        newLiveNodeWithInfo,
         childNodes,
         childDomNodesCount,
-        nodeIndex
       )
 
-    return [ ...newLiveNodes, extendedLiveNode ]
+    return [ ...newLiveNodes, liveNodeWithChilds ]
 
   }, [])
 
