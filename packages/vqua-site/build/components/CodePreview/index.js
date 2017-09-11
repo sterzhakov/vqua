@@ -7,6 +7,8 @@ class CodePreview extends Component {
 
     event.preventDefault()
 
+    this.loadPreview()
+
   }
 
   afterMount() {

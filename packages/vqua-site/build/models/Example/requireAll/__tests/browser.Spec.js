@@ -6,7 +6,7 @@ describe('Examples', () => {
 
     const examples =
       requireAllExamples({
-        humanId: 'sample'
+        humanId: 'sample',
       })
 
     expect(examples.length).toBe(1)
@@ -17,7 +17,6 @@ describe('Examples', () => {
     expect(examples[0].isPreview).toBe(true)
 
     expect(examples[0].content).toBe('sample')
-
   })
 
   it('require all raw by browser', () => {

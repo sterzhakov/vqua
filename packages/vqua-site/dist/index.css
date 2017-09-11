@@ -212,7 +212,6 @@ input[type=button] {
 .clearfix {
   zoom: 1; }
 
-
 /**
  * GitHub Gist Theme
  * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
@@ -301,6 +300,7 @@ input[type=button] {
   display: flex; }
 
 
+
 .content {
   padding: 0px 30px 30px 30px;
   margin-bottom: 30px;
@@ -362,28 +362,6 @@ input[type=button] {
 .menu-guide .menu-items__item:hover {
   text-decoration: none; }
 
-.locale-items {
-  display: flex;
-  flex-direction: row;
-  margin: 25px 30px; }
-
-.locale-items__item,
-.locale-items__separator {
-  font-family: 'Myriad Pro Regular';
-  color: #a6a6a6;
-  font-size: 15px;
-  margin: 0px 2px; }
-
-.locale-items__item {
-  text-decoration: underline;
-  cursor: pointer; }
-
-.locale-items__item:hover {
-  text-decoration: none; }
-
-.locale-items__item--selected {
-  color: #565656; }
-
 .menu-site.menu-items {
   margin-left: 30px;
   display: flex;
@@ -412,3 +390,34 @@ input[type=button] {
 
 .sidebar__item:last-child {
   margin-bottom: 15px; }
+
+.sidebar__linebreak {
+  display: block;
+  height: 1px;
+  border: 0;
+  background-color: #e6e6e6;
+  margin: 0px 0px 20px 0px;
+  padding: 0;
+  width: calc(100% - 10px); }
+
+.locale-items {
+  display: flex;
+  flex-direction: row;
+  margin: 25px 30px; }
+
+.locale-items__item,
+.locale-items__separator {
+  font-family: 'Myriad Pro Regular';
+  color: #a6a6a6;
+  font-size: 15px;
+  margin: 0px 2px; }
+
+.locale-items__item {
+  text-decoration: underline;
+  cursor: pointer; }
+
+.locale-items__item:hover {
+  text-decoration: none; }
+
+.locale-items__item--selected {
+  color: #565656; }

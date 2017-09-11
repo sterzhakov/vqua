@@ -1,8 +1,24 @@
 const { Component, html } = require('vqua')
 const MenuItems = require('..//MenuItems')
-const t = require('../../translations')
+const translations = require('../../translations')
 
-const items = [
+const decorateItems = ({ items, locale, segments, translations }) => {
+
+  return items.map((item) => {
+
+    const linkSegment = item.href.split('/')[2]
+
+    return Object.assign({}, item, {
+      name: translations[locale].MenuGuide[item.key],
+      href: item.href.replace(':locale', locale),
+      selected: segments[1] == linkSegment
+    })
+
+  })
+
+}
+
+const internalItems = [
   {
     href: '/:locale',
     key: 'introduction'
@@ -24,13 +40,16 @@ const items = [
     key: 'context'
   },
   {
-    href: '/:locale/lifecycle-hooks',
-    key: 'lifecycleHooks'
+    href: '/:locale/hooks',
+    key: 'hooks'
   },
   {
     href: '/:locale/references',
     key: 'references'
   },
+]
+
+const externalItems = [
   {
     href: '/:locale/server-prerender',
     key: 'serverRender'
@@ -65,26 +84,37 @@ class MenuGuide extends Component {
 
     const { locale, segments } = this.context
 
+    const { hr } = html
 
-    const decoratedItems = items.map((item) => {
-
-      const linkSegment = item.href.split('/')[2]
-
-      return Object.assign({}, item, {
-        name: t[locale].MenuGuide[item.key],
-        href: item.href.replace(':locale', locale),
-        selected: segments[1] == linkSegment
+    const decoratedInternalItems =
+      decorateItems({
+        items: internalItems,
+        locale,
+        segments,
+        translations,
       })
 
-    })
+    const decoratedExternalItems =
+      decorateItems({
+        items: externalItems,
+        locale,
+        segments,
+        translations,
+      })
 
-    return (
+    return [
       MenuItems.v({
-        items: decoratedItems,
+        items: decoratedInternalItems,
         matcher: itemsMatcher,
         divClass: 'menu-guide'
-      })
-    )
+      }),
+      hr({ class: 'sidebar__linebreak' }),
+      MenuItems.v({
+        items: decoratedExternalItems,
+        matcher: itemsMatcher,
+        divClass: 'menu-guide'
+      }),
+    ]
 
   }
 

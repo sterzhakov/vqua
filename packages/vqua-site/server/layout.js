@@ -10,7 +10,7 @@ module.exports = (html = '', data = '') => {
         '<div id="app">' +
           html +
         '</div>' +
-        '<script id="app-data" type="application/json">' +
+        '<script id="app-cache" type="application/json">' +
           data +
         '</script>' +
         '<script src="/index.js" type="text/javascript"></script>' +

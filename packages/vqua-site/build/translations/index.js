@@ -5,12 +5,11 @@ module.exports = {
     },
     MenuGuide: {
       introduction: 'Introduction',
-      
       fastStart: 'Fast start',
       state: 'State',
       props: 'Props',
       context: 'Context',
-      lifecycleHooks: 'Lifecycle hooks',
+      hooks: 'Hooks',
       references: 'References',
       serverRender: 'Server render',
       router: 'Router',
@@ -26,7 +25,7 @@ module.exports = {
       state: 'Состояние',
       props: 'Параметры',
       context: 'Контекст',
-      lifecycleHooks: 'Хуки',
+      hooks: 'Хуки',
       references: 'Ссылки',
       serverRender: 'Серверный рендер',
       router: 'Роутер',
