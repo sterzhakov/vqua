@@ -8,7 +8,7 @@ module.exports = (
   request,
   response,
   {
-    containerName,
+    name,
     props,
     context,
     layout
@@ -23,7 +23,7 @@ module.exports = (
     path.join(
       request.config.buildPath,
       'containers',
-      containerName
+      name
     )
 
   const container = require(containerPath)
@@ -38,7 +38,7 @@ module.exports = (
 
   const domNodes = filterDomNodes(liveNodes)
 
-  const data = JSON.stringify({ containerName, props, context })
+  const data = JSON.stringify({ name, props, context })
 
   const encodedData = htmlQuotes.encode(data)
 

@@ -3,13 +3,13 @@ const responseRedirect = require('./responseRedirect')
 
 module.exports = (request, response, callback) => {
 
-  response.send = (containerName, props = {}, params = {}) => {
+  response.send = (name, props = {}, params = {}) => {
 
     return (
       responseSend(
         request,
         response,
-        Object.assign({}, params, { containerName, props })
+        Object.assign({}, params, { name, props })
       )
     )
 

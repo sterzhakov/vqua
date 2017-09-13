@@ -1,50 +1,48 @@
-const NavigationStore = require('./NavigationStore')
+const Store = require('./Store')
 const navigate = require('./navigate')
 const { htmlQuotes } = require('vqua-utils')
 
-const getContainerData = (appDataDom) => {
+const createParams = (params) => {
 
-  const json = htmlQuotes.decode(appDataDom.innerHTML)
+  const cache = params.cache
+    ? htmlQuotes.decode(params.cache)
+    : null
 
-  const data = JSON.parse(json)
-
-  return data
+  return Object.assign({}, params, { cache })
 
 }
 
-const createNavigation = (params) => {
+const createNavigation = ({ routes, cache }, onNavigate) => {
 
-  const navigationStore = new NavigationStore
+  const store = new Store
 
   return {
 
     listen: () => {
 
-      const data = params.appDataDom
-        ? getContainerData(params.appDataDom)
-        : null
-
-      if (data) params.appDataDom.parentNode.removeChild(params.appDataDom)
-
-      const navigationParams =
-        Object.assign({}, params, {
+      const params =
+        createParams({
+          onNavigate,
+          routes,
           path: window.location.pathname,
-          store: navigationStore,
-          data,
+          store: store,
+          cache,
         })
 
-      navigate(navigationParams)
+      navigate(params)
 
       window.onpopstate = () => {
 
-        const navigationParams =
-          Object.assign({}, params, {
+        const params =
+          createParams({
+            onNavigate,
+            routes,
             path: window.location.pathname,
-            store: navigationStore,
-            data: null,
+            store: store,
+            cache: null,
           })
 
-        navigate(navigationParams)
+        navigate(params)
 
       }
 

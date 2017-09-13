@@ -116,8 +116,6 @@ class Base {
 
     const parentNodes = getParentNodes(filteredLiveNodes[0])
 
-    console.log(filteredLiveNodes[0].parent)
-
     const parentOffsets = filterNodesOffsets(parentNodes)
 
     const offset = parentOffsets[parentOffsets.length - 1]

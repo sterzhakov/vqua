@@ -1,20 +1,13 @@
 const { render } = require('vqua')
 const { matchRoutes } = require('vqua-router')
 
-const navigate = ({
-  appDom,
-  data,
-  path,
-  store,
-  getContainer,
-  routes,
-}) => {
+const navigate = ({ onNavigate, routes, path, store, cache }) => {
 
   new Promise((resolve, reject) => {
 
-    if (data) {
+    if (cache) {
 
-      resolve(data)
+      resolve(JSON.parse(cache))
 
     } else {
 
@@ -29,8 +22,8 @@ const navigate = ({
         )
 
       const response = {
-        send: (containerName, props = {}, params = {}) => {
-          resolve({ containerName, props, params })
+        send: (name, props = {}, params = {}) => {
+          resolve({ name, props, params })
         }
       }
 
@@ -40,40 +33,25 @@ const navigate = ({
 
   }).then((data) => {
 
-    const newContext = {
+    const params = {
+      liveNodes: store.get() || [],
+      component: {
+        name: data.name,
+        context: data.context,
+        props: data.props,
+      },
+      navigate: (path) => {
 
-      context: Object.assign({}, data.context, {
+        history.pushState({}, '', path)
 
-        navigate: (path) => {
+        navigate({ onNavigate, routes, path, store, cache: null })
 
-          history.pushState({}, '', path)
+      },
+      callback: data => store.set(data),
 
-          navigate({
-            appDom,
-            path,
-            store,
-            getContainer,
-            routes,
-          })
-
-        }
-
-      })
     }
 
-    return Object.assign({}, data, newContext)
-
-  }).then((data) => {
-
-    const Container = getContainer(data.containerName)
-
-    const templateNodes = [Container.v(data.props)]
-
-    const liveNodes = store.getLiveNodes()
-
-    const newLiveNodes = render(appDom, liveNodes, templateNodes, data.context)
-
-    store.setLiveNodes(newLiveNodes)
+    onNavigate(params)
 
   })
 
