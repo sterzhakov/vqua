@@ -17,7 +17,7 @@ module.exports = async ({ humanId, raw } = {}) => {
 
       const content = raw
         ? fs.readFileSync(pathname).toString()
-        : pathInfo.isPreview ? require(pathname) : null
+        : pathInfo.isPreview ? require(`${pathname}`) : null
 
       const example = Object.assign({}, pathInfo, { content })
 
