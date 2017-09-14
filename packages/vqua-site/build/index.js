@@ -7,9 +7,6 @@ const $cache = document.getElementById('app-cache')
 
 const cache = $cache.innerHTML
 
-$cache.parentNode.removeChild($cache)
-
-
 const navigation = createNavigation({ routes, cache }, (params) => {
 
   const { liveNodes, component, navigate, callback } = params

@@ -4,14 +4,14 @@ describe('Get file info', () => {
 
   it('by pathname with preview', () => {
 
-    const pathname = './sample_test.preview.js'
+    const pathname = './sample/examples/test.preview.js'
 
     expect(
       getPathInfo(pathname)
     ).toEqual({
       articleName: 'sample',
       variableName: 'test',
-      fileName: 'sample_test.preview.js',
+      fileName: 'test.preview.js',
       fileExtension: '.js',
       isPreview: true,
     })
@@ -20,14 +20,14 @@ describe('Get file info', () => {
 
   it('by pathname without preview', () => {
 
-    const pathname = './sample_test.js'
+    const pathname = './sample/examples/test.js'
 
     expect(
       getPathInfo(pathname)
     ).toEqual({
       articleName: 'sample',
       variableName: 'test',
-      fileName: 'sample_test.js',
+      fileName: 'test.js',
       fileExtension: '.js',
       isPreview: false,
     })

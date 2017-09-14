@@ -11,9 +11,9 @@ module.exports = {
 
         const file =
           require(
-            'raw-loader!../../articles/' +
+            'raw-loader!../../content/' +
             humanId +
-            '.' +
+            '/articles/' +
             locale +
             '.html'
           )
@@ -32,7 +32,7 @@ module.exports = {
       const filePath =
         path.join(
           __dirname,
-          '../../articles/' + humanId + '.' + locale + '.html'
+          '../../content/' + humanId + '/articles/' + locale + '.html'
         )
 
       fs.readFile(filePath, 'utf8', (error, file) => {

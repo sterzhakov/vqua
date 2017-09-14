@@ -1,22 +1,24 @@
+const { last } = require('vqua-utils')
+
 module.exports = (pathname) => {
 
-  const fileName = pathname.split(/[\\/]/).pop()
+  const pathSegments = pathname.split('/')
+  const articleName = pathSegments[pathSegments.length - 3]
+  const fileName = pathSegments[pathSegments.length - 1]
 
-  const anyExtension = /\.[^.]+$/
-
-  const fileExtension = fileName.match(anyExtension)[0]
-
-  const segments = fileName
-    .slice(0, -fileExtension.length)
-    .split(/_|\./)
+  const fileNameSegments = fileName.split('.')
+  const isPreview = fileNameSegments[fileNameSegments.length - 2] == 'preview'
+  const variableName = fileNameSegments[0]
+  const fileExtension = fileNameSegments.length > 1
+    ? '.' + last(fileNameSegments)
+    : undefined
 
   return {
-    articleName: segments[0],
-    variableName: segments[1],
-    fileName: fileName,
-    fileExtension: fileExtension,
-    isPreview: segments[2] == 'preview'
+    articleName,
+    variableName,
+    fileName,
+    fileExtension,
+    isPreview
   }
-
 
 }

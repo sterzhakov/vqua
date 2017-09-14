@@ -5,7 +5,7 @@ const getPathInfo = require('./getPathInfo')
 
 module.exports = async ({ humanId, raw } = {}) => {
 
-  const dir = path.join(__dirname, '../../../examples')
+  const dir = path.join(__dirname, '../../../content', humanId, 'examples')
 
   const files = await readDir(dir)
 

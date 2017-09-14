@@ -12,7 +12,7 @@ describe('Examples', () => {
     expect(examples.length).toBe(1)
     expect(examples[0].articleName).toBe('sample')
     expect(examples[0].variableName).toBe('test')
-    expect(examples[0].fileName).toBe('sample_test.preview.js')
+    expect(examples[0].fileName).toBe('test.preview.js')
     expect(examples[0].fileExtension).toBe('.js')
     expect(examples[0].isPreview).toBe(true)
 
@@ -30,7 +30,7 @@ describe('Examples', () => {
     expect(examples.length).toBe(1)
     expect(examples[0].articleName).toBe('sample')
     expect(examples[0].variableName).toBe('test')
-    expect(examples[0].fileName).toBe('sample_test.preview.js')
+    expect(examples[0].fileName).toBe('test.preview.js')
     expect(examples[0].fileExtension).toBe('.js')
     expect(examples[0].isPreview).toBe(true)
 

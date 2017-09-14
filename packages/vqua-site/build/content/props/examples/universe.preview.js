@@ -1,6 +1,6 @@
 const { Component } = require('vqua')
 
-const Hello = require('./props_hello.preview')
+const Hello = require('./hello.preview')
 
 // cut before
 

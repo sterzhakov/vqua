@@ -3,8 +3,16 @@ const getPathInfo = require('./getPathInfo')
 module.exports = ({ humanId, raw } = {}) => {
 
   const context = raw
-    ? require.context('!raw-loader!../../../examples/', true, /\.(js|sh|html)$/)
-    : require.context('../../../examples/', true, /\.preview\.js$/)
+    ? require.context(
+        '!raw-loader!../../../content/',
+        true,
+        /(.?)*\/examples\/(.?)*\.(js|sh|html)$/
+      )
+    : require.context(
+        '../../../content/',
+        true,
+        /(.?)*\/examples\/(.?)*\.preview\.js$/
+      )
 
   return context.keys().reduce((examples, pathname) => {
 
