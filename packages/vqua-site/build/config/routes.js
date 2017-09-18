@@ -1,10 +1,14 @@
-const { route } = require('vqua-router')
+const { route, separateRoutes } = require('vqua-router')
 const { Component, html } = require('vqua')
 const MainController = require('../controllers/MainController')
 const ArticleController = require('../controllers/ArticleController')
+const { localeMatcher } = require('./matchers')
 
-module.exports = [
+const routes = [
   route('/', MainController.index),
-  route('/:locale', ArticleController.show),
-  route('/:locale/:humanId', ArticleController.show)
+  route([localeMatcher], ArticleController.show, {},
+    route('/:humanId', ArticleController.show)
+  ),
 ]
+
+module.exports = separateRoutes(routes)

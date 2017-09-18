@@ -7,6 +7,7 @@ const $cache = document.getElementById('app-cache')
 
 const cache = $cache.innerHTML
 
+
 const navigation = createNavigation({ routes, cache }, (params) => {
 
   const { liveNodes, component, navigate, callback } = params
