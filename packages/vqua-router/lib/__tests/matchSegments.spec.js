@@ -60,12 +60,12 @@ describe('Match segments:', () => {
   it('match function', () => {
 
     const matcher = {
-      match: segments => segments[1] == '2'
+      match: id => id == '2'
     }
 
     expect(
       matchSegments(
-        matcher,
+        ['posts', matcher],
         ['posts', '2']
       )
     ).toBe(true)

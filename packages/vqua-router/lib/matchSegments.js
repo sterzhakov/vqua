@@ -1,11 +1,5 @@
 module.exports = (templateSegments, requestSegments) => {
 
-  if (!Array.isArray(templateSegments)) {
-
-    return templateSegments.match(requestSegments)
-
-  }
-
   if (
     templateSegments.length == 1 &&
     templateSegments[0] == '*'
@@ -16,6 +10,12 @@ module.exports = (templateSegments, requestSegments) => {
   return templateSegments.every((templateSegment, index) => {
 
     const requestSegment = requestSegments[index]
+
+    if (typeof templateSegment == 'object') {
+
+      return templateSegment.match(requestSegment)
+
+    } else
 
     if (templateSegment[0] == ':') {
 

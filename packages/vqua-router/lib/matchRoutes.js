@@ -14,10 +14,7 @@ module.exports = (routes, path) => {
 
   if (!route) return false
 
-  const params = Array.isArray(route.segments)
-    ? paramsFromSegments(route.segments, segments)
-    : route.segments.params(segments)
-
+  const params = paramsFromSegments(route.segments, segments)
 
   const request = {
     request: {

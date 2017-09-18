@@ -35,20 +35,19 @@ describe('Match route', () => {
 
     const path = '/posts/2'
 
-    const matcher = {
-      match: (segments) => {
-        return segments[1] == '2'
-      },
-      params: (segments) => {
-        return { id: segments[1] }
+    const matchers = [
+      'posts',
+      {
+        key: 'id',
+        match: id => id == '2',
       }
-    }
+    ]
 
     const routes = [
       createRoute('/users',     'users-all'),
       createRoute('/users/:id', 'users-show'),
       createRoute('/posts',     'posts-all'),
-      createRoute(matcher,      'posts-show'),
+      createRoute(matchers,     'posts-show'),
     ]
 
     const matchedRoute = matchRoutes(routes, path)
@@ -56,8 +55,8 @@ describe('Match route', () => {
     expect(matchedRoute).toEqual({
       props: {},
       childs: [],
-      path: matcher,
-      segments: matcher,
+      path: matchers,
+      segments: matchers,
       action: 'posts-show',
       request: {
         path: '/posts/2',
