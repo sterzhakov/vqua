@@ -10,6 +10,8 @@ describe('Create route', () => {
       segments: ['posts', ':id'],
       path: '/posts/:id',
       action: 'posts-show',
+      props: {},
+      childs: []
     })
 
   })

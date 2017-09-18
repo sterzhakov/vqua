@@ -11,8 +11,9 @@
     "router"
   ],
   "dependencies": {
-    "vqua": "1.0.0"
-  },  
+    "vqua": "1.0.0",
+    "vqua-utils": "1.0.0"
+  },
   "author": "Igor Sterjakov",
   "license": "ISC",
   "directories": {

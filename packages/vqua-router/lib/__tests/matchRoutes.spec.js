@@ -20,6 +20,8 @@ describe('Match route', () => {
       path: '/posts/:id',
       segments: ['posts', ':id'],
       action: 'posts-show',
+      props: {},
+      childs: [],
       request: {
         path: '/posts/2',
         segments: ['posts', '2'],
@@ -52,6 +54,8 @@ describe('Match route', () => {
     const matchedRoute = matchRoutes(routes, path)
 
     expect(matchedRoute).toEqual({
+      props: {},
+      childs: [],
       path: matcher,
       segments: matcher,
       action: 'posts-show',
