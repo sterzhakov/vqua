@@ -5,6 +5,8 @@ module.exports = (routes) => {
   const server = createServer({
     routes,
     publicPath: './lib/__tests/public',
+    buildPath: './lib/__tests/build',
+    containerPath: './lib/__tests/containers',
     layout: html => `<layout>${html}</layout>`
   })
 

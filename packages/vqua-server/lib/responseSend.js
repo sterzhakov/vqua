@@ -11,7 +11,8 @@ module.exports = (
     name,
     props,
     context,
-    layout
+    layout,
+    statusCode,
   } = {}
 ) => {
 
@@ -21,8 +22,7 @@ module.exports = (
 
   const containerPath =
     path.join(
-      request.config.buildPath,
-      'containers',
+      request.config.containerPath,
       name
     )
 
@@ -46,7 +46,8 @@ module.exports = (
 
   const result = params.layout(html, encodedData)
 
-  response.statusCode = 200
+  response.statusCode = statusCode
+
   response.end(result)
 
 }

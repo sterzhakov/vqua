@@ -1,4 +1,4 @@
-const { route } = require('vqua-router')
+const { route, separateRoutes } = require('vqua-router')
 const request = require('request')
 const initServer = require('./helpers/initServer')
 const App = require('./data/App')
@@ -14,7 +14,7 @@ describe('Handle send', () => {
     routes.push(
       route('/send', (request, response) => {
 
-        response.send(App)
+        response.send(200, 'AppContainer', {})
 
       })
     )
@@ -30,26 +30,29 @@ describe('Handle send', () => {
 
   })
 
-  it('GET /send/new-layout | 200 | [new layout with nodes to string]', (done) => {
+  it(
+    'GET /send/new-layout | 200 | [new layout with nodes to string]',
+    (done) => {
 
-    routes.push(
-      route('/send/new-layout', (request, response) => {
+      routes.push(
+        route('/send/new-layout', (request, response) => {
 
-        response.send(App, {}, { layout: html => `<l>${html}</l>` })
+          response.send(200, 'AppContainer', {}, { layout: html => `<l>${html}</l>` })
+
+        })
+      )
+
+      request('http://localhost:8888/send/new-layout', (error, response, body) => {
+
+        expect(response.statusCode).toBe(200)
+        expect(body).toBe('<l><p>Hello <span>world</span>!</p></l>')
+
+        done()
 
       })
-    )
 
-    request('http://localhost:8888/send/new-layout', (error, response, body) => {
-
-      expect(response.statusCode).toBe(200)
-      expect(body).toBe('<l><p>Hello <span>world</span>!</p></l>')
-
-      done()
-
-    })
-
-  })
+    }
+  )
 
 
 })
