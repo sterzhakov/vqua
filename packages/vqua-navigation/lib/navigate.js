@@ -22,8 +22,8 @@ const navigate = ({ onNavigate, routes, path, store, cache }) => {
         )
 
       const response = {
-        send: (name, props = {}, params = {}) => {
-          resolve({ name, props, params })
+        send: (statusCode, name, props = {}, params = {}) => {
+          resolve({ statusCode, name, props, params })
         }
       }
 
