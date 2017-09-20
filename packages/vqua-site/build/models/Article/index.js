@@ -22,7 +22,7 @@ module.exports = {
 
       } catch (error) {
 
-        resolve(error.message)
+        resolve(false)
 
       }
 
@@ -39,7 +39,7 @@ module.exports = {
 
         if (error) {
 
-          resolve(error.message)
+          resolve(false)
 
         } else {
 

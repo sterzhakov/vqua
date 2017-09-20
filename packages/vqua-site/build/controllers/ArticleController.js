@@ -1,5 +1,6 @@
 const ArticleModel = require('../models/Article')
 const ExampleModel = require('../models/Example')
+const ErrorController = require('./ErrorController')
 
 class ArticleController {
 
@@ -13,7 +14,9 @@ class ArticleController {
 
     const rawExamples = await ExampleModel.all({ humanId, locale, raw: true })
 
-    res.send('ArticleContainer', {
+    if (!article) ErrorController.notFound(req, res)
+
+    res.send(200, 'ArticleContainer', {
       path: req.url,
       segments: req.segments,
       humanId,

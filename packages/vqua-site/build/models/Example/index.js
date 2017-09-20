@@ -4,9 +4,18 @@ class Example {
 
   static async all(params) {
 
-    return (typeof __webpack_require__ == 'function')
-      ? require('./requireAll/browser')(params)
-      : await require('./requireAll/server')(params)
+    try {
+
+      return (typeof __webpack_require__ == 'function')
+        ? require('./requireAll/browser')(params)
+        : await require('./requireAll/server')(params)
+
+
+    } catch (error) {
+
+      return []
+
+    }
 
   }
 

@@ -2,15 +2,18 @@ const { Component, html } = require('vqua')
 
 const Sidebar = require('../Sidebar')
 const Content = require('../Content')
-const Locale = require('../Locale')
 
 class App extends Component {
 
   passContext() {
 
+    const locale = ['en','ru'].indexOf(this.props.locale) > -1
+      ? this.props.locale
+      : 'en'
+
     return {
+      locale,
       path: this.props.path,
-      locale: this.props.locale,
       segments: this.props.segments,
       humanId: this.props.humanId,
     }
@@ -18,11 +21,9 @@ class App extends Component {
 
   render() {
     return [
-      Locale.v({},
-        Sidebar.v(),
-        Content.v({},
-          this.props.childs
-        )
+      Sidebar.v(),
+      Content.v({},
+        this.props.childs
       )
     ]
   }

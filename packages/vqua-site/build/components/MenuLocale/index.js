@@ -4,7 +4,11 @@ const MenuItems = require('..//MenuItems')
 
 const replacePathLocale = (pathname, locale) => {
 
-  return pathname.replace(/(^\/)[A-z]+/, '$1' + locale)
+  const newPathname = pathname.replace(/^\/([^\/]+)(\/|$)/, '/' + locale + '/')
+
+  return newPathname.slice(-1) == '/'
+    ? newPathname.slice(0, newPathname.length - 1)
+    : newPathname
 
 }
 

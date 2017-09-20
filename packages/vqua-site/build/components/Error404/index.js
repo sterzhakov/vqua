@@ -1,14 +1,28 @@
 const { Component, html } = require('vqua')
+const translations = require('../../translations')
 
 class Error404 extends Component {
 
+  static injectContext() {
+
+    return ['locale']
+
+  }
+
   render() {
 
-    const { p } = html
+    const { h1, p } = html
 
-    return (
-      p({}, 'Error 404')
-    )
+    const { locale } = this.context
+
+    return [
+      h1({},
+        translations[locale].Error404.header
+      ),
+      p({},
+        translations[locale].Error404.content
+      ),
+    ]
 
   }
 

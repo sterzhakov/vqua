@@ -9,7 +9,7 @@
 
   a, p, h1, h2, h3, li {
     font-family: $base-font;
-    padding: 5px 5px;
+    padding: 5px 0px;
     color: $grey-dark;
   }
 
@@ -28,7 +28,6 @@
   }
 
   ul {
-
     list-style: disc;
 
   }
