@@ -1,6 +1,7 @@
 const Store = require('./Store')
 const navigate = require('./navigate')
 const { htmlQuotes } = require('vqua-utils')
+const { separateRoutes } = require('vqua-router')
 
 const createParams = (params) => {
 
@@ -8,7 +9,9 @@ const createParams = (params) => {
     ? htmlQuotes.decode(params.cache)
     : null
 
-  return Object.assign({}, params, { cache })
+  const routes = separateRoutes(params.routes)
+
+  return Object.assign({}, params, { cache, routes })
 
 }
 
