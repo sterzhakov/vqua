@@ -1,0 +1,25 @@
+{
+  "name": "vqua-boilerplate-ssr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "vqua": "^1.0.0",
+    "vqua-server": "^1.0.0",
+    "vqua-navigation": "^1.0.0",
+    "vqua-router": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^3.1.0",
+    "merge-stream": "^1.0.1",
+    "webpack": "^3.5.5"
+  },
+  "author": "",
+  "license": "ISC"
+}
