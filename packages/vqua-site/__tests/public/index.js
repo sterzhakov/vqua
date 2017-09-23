@@ -1403,9 +1403,9 @@ module.exports = function (target, src, safe) {
 
 
 module.exports = {
-  Component: __webpack_require__(399),
-  html: __webpack_require__(427),
-  render: __webpack_require__(429)
+  Component: __webpack_require__(400),
+  html: __webpack_require__(428),
+  render: __webpack_require__(430)
 };
 
 /***/ }),
@@ -1923,12 +1923,12 @@ var _require = __webpack_require__(140),
     removeRef = _require.removeRef;
 
 var eachNodes = __webpack_require__(99);
-var isNodeForUnmount = __webpack_require__(405);
+var isNodeForUnmount = __webpack_require__(406);
 
 var _require2 = __webpack_require__(11),
     INSTANCE_TYPE = _require2.INSTANCE_TYPE;
 
-var _require3 = __webpack_require__(406),
+var _require3 = __webpack_require__(407),
     callBeforeMount = _require3.callBeforeMount,
     callBeforeUnmount = _require3.callBeforeUnmount,
     callBeforeUpdate = _require3.callBeforeUpdate,
@@ -3090,7 +3090,7 @@ module.exports = loop;
 "use strict";
 
 
-var mapNodes = __webpack_require__(407);
+var mapNodes = __webpack_require__(408);
 
 module.exports = function (nodes, parentNode) {
 
@@ -4235,8 +4235,8 @@ module.exports = loop;
 var _require = __webpack_require__(10),
     flatten = _require.flatten;
 
-var createNodes = __webpack_require__(400);
-var createCallback = __webpack_require__(401);
+var createNodes = __webpack_require__(401);
+var createCallback = __webpack_require__(402);
 
 var _require2 = __webpack_require__(142),
     sortLiveNodes = _require2.sortLiveNodes,
@@ -4244,8 +4244,8 @@ var _require2 = __webpack_require__(142),
 
 var decorateNodes = __webpack_require__(143);
 var createNodesWithRefs = __webpack_require__(100);
-var createTextNodes = __webpack_require__(412);
-var statistic = __webpack_require__(413);
+var createTextNodes = __webpack_require__(413);
+var statistic = __webpack_require__(414);
 
 module.exports = function (liveNodes, templateNodes, options) {
 
@@ -4543,8 +4543,8 @@ var _require = __webpack_require__(142),
     sortLiveNodes = _require.sortLiveNodes;
 
 var decorateNodes = __webpack_require__(143);
-var createNodes = __webpack_require__(417);
-var createCallback = __webpack_require__(418);
+var createNodes = __webpack_require__(418);
+var createCallback = __webpack_require__(419);
 
 module.exports = function (_ref) {
   var offset = _ref.offset,
@@ -4590,8 +4590,8 @@ module.exports = function (_ref) {
 "use strict";
 
 
-var updateDomNode = __webpack_require__(422);
-var updateNodes = __webpack_require__(426);
+var updateDomNode = __webpack_require__(423);
+var updateNodes = __webpack_require__(427);
 
 module.exports = function (_ref) {
   var parentDomNode = _ref.parentDomNode,
@@ -10189,7 +10189,7 @@ module.exports = function () {
       humanId = _ref.humanId,
       raw = _ref.raw;
 
-  var context = raw ? __webpack_require__(374) : __webpack_require__(397);
+  var context = raw ? __webpack_require__(374) : __webpack_require__(398);
 
   return context.keys().reduce(function (examples, pathname) {
 
@@ -10667,7 +10667,10 @@ var map = {
 	"./references/examples/component.js": 393,
 	"./references/examples/dom.preview.js": 394,
 	"./sample/examples/test.preview.js": 395,
-	"./state/examples/counter.preview.js": 396
+	"./server-render/examples/browser-navigation.js": 443,
+	"./server-render/examples/controller.js": 442,
+	"./server-render/examples/create-server.js": 441,
+	"./state/examples/counter.preview.js": 397
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -10812,24 +10815,25 @@ module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n
 module.exports = "module.exports = 'sample'\n"
 
 /***/ }),
-/* 396 */
+/* 396 */,
+/* 397 */
 /***/ (function(module, exports) {
 
 module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Counter extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      counter: 0\n    }\n\n  }\n\n  handleClick(event) {\n\n    event.preventDefault()\n\n    this.setState({ counter: this.state.counter + 1 })\n\n  }\n\n  render() {\n\n    const { div, a, p } = html\n\n    return (\n      div({},\n        p({}, this.state.counter),\n        a({\n          href: '#click',\n          onClick: event => this.handleClick(event)\n        },\n          'Click me!'\n        )\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Counter\n"
 
 /***/ }),
-/* 397 */
+/* 398 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./context/examples/app.preview.js": 398,
-	"./props/examples/board.preview.js": 434,
+	"./context/examples/app.preview.js": 399,
+	"./props/examples/board.preview.js": 435,
 	"./props/examples/hello.preview.js": 102,
-	"./props/examples/keys-dom.preview.js": 435,
-	"./props/examples/universe.preview.js": 436,
-	"./references/examples/dom.preview.js": 437,
-	"./sample/examples/test.preview.js": 438,
-	"./state/examples/counter.preview.js": 439
+	"./props/examples/keys-dom.preview.js": 436,
+	"./props/examples/universe.preview.js": 437,
+	"./references/examples/dom.preview.js": 438,
+	"./sample/examples/test.preview.js": 439,
+	"./state/examples/counter.preview.js": 440
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -10845,10 +10849,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 397;
+webpackContext.id = 398;
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10926,7 +10930,7 @@ var App = function (_Component2) {
 module.exports = App;
 
 /***/ }),
-/* 399 */
+/* 400 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10946,10 +10950,10 @@ var _require = __webpack_require__(10),
 var countDomNodes = __webpack_require__(98);
 var createLiveTree = __webpack_require__(139);
 var filterDomNodes = __webpack_require__(144);
-var getParentNodes = __webpack_require__(415);
-var filterNodesOffsets = __webpack_require__(416);
+var getParentNodes = __webpack_require__(416);
+var filterNodesOffsets = __webpack_require__(417);
 var createPatchTree = __webpack_require__(145);
-var findDomNode = __webpack_require__(421);
+var findDomNode = __webpack_require__(422);
 var updateDomTree = __webpack_require__(146);
 var eachNodes = __webpack_require__(99);
 var hookNode = __webpack_require__(67);
@@ -11103,7 +11107,7 @@ var Base = function () {
 module.exports = Base;
 
 /***/ }),
-/* 400 */
+/* 401 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11200,15 +11204,15 @@ var createNodes = function createNodes(_ref) {
 module.exports = createNodes;
 
 /***/ }),
-/* 401 */
+/* 402 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createNode = __webpack_require__(402);
+var createNode = __webpack_require__(403);
 var hookNode = __webpack_require__(67);
-var getCreateAction = __webpack_require__(411);
+var getCreateAction = __webpack_require__(412);
 var handleError = __webpack_require__(141);
 
 var _require = __webpack_require__(68),
@@ -11396,7 +11400,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 402 */
+/* 403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11404,11 +11408,11 @@ module.exports = function (_ref) {
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var createRootNode = __webpack_require__(403);
-var createInstanceNode = __webpack_require__(404);
-var updateInstanceNode = __webpack_require__(408);
-var createTagNode = __webpack_require__(409);
-var createTextNode = __webpack_require__(410);
+var createRootNode = __webpack_require__(404);
+var createInstanceNode = __webpack_require__(405);
+var updateInstanceNode = __webpack_require__(409);
+var createTagNode = __webpack_require__(410);
+var createTextNode = __webpack_require__(411);
 var handleError = __webpack_require__(141);
 
 var _require = __webpack_require__(101),
@@ -11507,7 +11511,7 @@ module.exports = function (_ref, callback) {
 };
 
 /***/ }),
-/* 403 */
+/* 404 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11530,7 +11534,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 404 */
+/* 405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11592,7 +11596,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 405 */
+/* 406 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11667,7 +11671,7 @@ module.exports = function (liveNode, templateNode) {
 };
 
 /***/ }),
-/* 406 */
+/* 407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11726,7 +11730,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 407 */
+/* 408 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11761,7 +11765,7 @@ var loop = function loop(node, callback) {
 module.exports = loop;
 
 /***/ }),
-/* 408 */
+/* 409 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11816,7 +11820,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 409 */
+/* 410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11842,7 +11846,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 410 */
+/* 411 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11864,7 +11868,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 411 */
+/* 412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11926,7 +11930,7 @@ module.exports = function (liveNode, templateNode) {
 };
 
 /***/ }),
-/* 412 */
+/* 413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11961,18 +11965,18 @@ module.exports = function (childs) {
 };
 
 /***/ }),
-/* 413 */
+/* 414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Statistic = __webpack_require__(414);
+var Statistic = __webpack_require__(415);
 
 module.exports = new Statistic();
 
 /***/ }),
-/* 414 */
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12007,7 +12011,7 @@ var Statistic = function () {
 module.exports = Statistic;
 
 /***/ }),
-/* 415 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12047,7 +12051,7 @@ var loop = function loop(node) {
 module.exports = loop;
 
 /***/ }),
-/* 416 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12062,7 +12066,7 @@ module.exports = function (nodes) {
 };
 
 /***/ }),
-/* 417 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12140,7 +12144,7 @@ var createNodes = function createNodes(_ref) {
 module.exports = createNodes;
 
 /***/ }),
-/* 418 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12149,8 +12153,8 @@ module.exports = createNodes;
 var _require = __webpack_require__(10),
     intersect = _require.intersect;
 
-var countActionsScore = __webpack_require__(419);
-var getNodeActions = __webpack_require__(420);
+var countActionsScore = __webpack_require__(420);
+var getNodeActions = __webpack_require__(421);
 
 var _require2 = __webpack_require__(69),
     DELETE_NODE = _require2.DELETE_NODE,
@@ -12182,7 +12186,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 419 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12221,7 +12225,7 @@ module.exports = function (actions) {
 };
 
 /***/ }),
-/* 420 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12295,7 +12299,7 @@ module.exports = function (_ref6) {
 };
 
 /***/ }),
-/* 421 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12317,7 +12321,7 @@ var loop = function loop(node, offsets) {
 module.exports = loop;
 
 /***/ }),
-/* 422 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12329,13 +12333,13 @@ var _require = __webpack_require__(140),
     addRef = _require.addRef,
     removeRef = _require.removeRef;
 
-var _require2 = __webpack_require__(423),
+var _require2 = __webpack_require__(424),
     createElement = _require2.createElement,
     insertAt = _require2.insertAt,
     updateProps = _require2.updateProps;
 
 var sortProps = __webpack_require__(147);
-var isPropsEqual = __webpack_require__(425);
+var isPropsEqual = __webpack_require__(426);
 
 var _require3 = __webpack_require__(69),
     CREATE_NODE = _require3.CREATE_NODE,
@@ -12466,7 +12470,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 423 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12478,7 +12482,7 @@ var _require = __webpack_require__(11),
 
 var sortProps = __webpack_require__(147);
 var events = __webpack_require__(148);
-var diffProps = __webpack_require__(424);
+var diffProps = __webpack_require__(425);
 
 var updateProps = function updateProps(domNode, liveProps, templateProps, isPropsEqual) {
 
@@ -12601,7 +12605,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 424 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12672,7 +12676,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 425 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12719,7 +12723,7 @@ module.exports = function (leftProp, rightProp) {
 };
 
 /***/ }),
-/* 426 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12753,7 +12757,7 @@ var updateNodes = function updateNodes(_ref) {
 module.exports = updateNodes;
 
 /***/ }),
-/* 427 */
+/* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12763,7 +12767,7 @@ var _require = __webpack_require__(11),
     TAG_TYPE = _require.TAG_TYPE,
     TEXT_TYPE = _require.TEXT_TYPE;
 
-var tags = __webpack_require__(428);
+var tags = __webpack_require__(429);
 
 var _require2 = __webpack_require__(10),
     flatten = _require2.flatten,
@@ -12808,7 +12812,7 @@ tags.forEach(function (tag) {
 });
 
 /***/ }),
-/* 428 */
+/* 429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12817,7 +12821,7 @@ tags.forEach(function (tag) {
 module.exports = ["a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "blockquote", "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "main", "map", "mark", "math", "menu", "menuitem", "meta", "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture", "pre", "progress", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strong", "style", "sub", "summary", "sup", "svg", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", "wbr"];
 
 /***/ }),
-/* 429 */
+/* 430 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12840,7 +12844,7 @@ var _require3 = __webpack_require__(68),
 
 var createPatchTree = __webpack_require__(145);
 var updateDomTree = __webpack_require__(146);
-var dom2vqua = __webpack_require__(430);
+var dom2vqua = __webpack_require__(431);
 var humanizeNodes = __webpack_require__(138);
 
 module.exports = function (parentDomNode, liveNodes, templateNodes) {
@@ -12883,15 +12887,15 @@ module.exports = function (parentDomNode, liveNodes, templateNodes) {
 };
 
 /***/ }),
-/* 430 */
+/* 431 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var convertTag = __webpack_require__(431);
-var convertText = __webpack_require__(432);
-var mapNodes = __webpack_require__(433);
+var convertTag = __webpack_require__(432);
+var convertText = __webpack_require__(433);
+var mapNodes = __webpack_require__(434);
 
 module.exports = function (nodes) {
 
@@ -12914,7 +12918,7 @@ module.exports = function (nodes) {
 };
 
 /***/ }),
-/* 431 */
+/* 432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12941,7 +12945,7 @@ module.exports = function (node) {
 };
 
 /***/ }),
-/* 432 */
+/* 433 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12960,7 +12964,7 @@ module.exports = function (node) {
 };
 
 /***/ }),
-/* 433 */
+/* 434 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12998,7 +13002,7 @@ var loop = function loop(node, createNode) {
 module.exports = loop;
 
 /***/ }),
-/* 434 */
+/* 435 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13069,7 +13073,7 @@ var Wrapper = function (_Component2) {
 module.exports = Wrapper;
 
 /***/ }),
-/* 435 */
+/* 436 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13142,7 +13146,7 @@ var Toggler = function (_Component) {
 module.exports = Toggler;
 
 /***/ }),
-/* 436 */
+/* 437 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13188,7 +13192,7 @@ var Universe = function (_Component) {
 module.exports = Universe;
 
 /***/ }),
-/* 437 */
+/* 438 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13245,7 +13249,7 @@ var Hello = function (_Component) {
 module.exports = Hello;
 
 /***/ }),
-/* 438 */
+/* 439 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13254,7 +13258,7 @@ module.exports = Hello;
 module.exports = 'sample';
 
 /***/ }),
-/* 439 */
+/* 440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13322,6 +13326,24 @@ var Counter = function (_Component) {
 // cut after
 
 module.exports = Counter;
+
+/***/ }),
+/* 441 */
+/***/ (function(module, exports) {
+
+module.exports = "const createServer = require('vqua-server')\nconst layout = require('./layout')\nconst routes = require('../build/config/routes')\n\nconst app =\n  createServer({\n    routes,\n    layout,\n    publicPath: './dist',\n    buildPath: './build',\n    containerPath: './build/containers',\n  })\n\napp.listen(8080)\n"
+
+/***/ }),
+/* 442 */
+/***/ (function(module, exports) {
+
+module.exports = "class WelcomeController {\n\n  static index(req, res) {\n\n    res.send(200, 'WelcomeContainer', {})\n\n  }\n\n}\n\nmodule.exports = WelcomeController\n"
+
+/***/ }),
+/* 443 */
+/***/ (function(module, exports) {
+
+module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
 
 /***/ })
 /******/ ]);

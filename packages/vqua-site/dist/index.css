@@ -1,5 +1,4 @@
 
-
 @font-face {
   font-family: "Myriad Pro Regular";
   src: url("/myriad-pro-regular.otf"); }
@@ -212,7 +211,6 @@ input[type=button] {
 .clearfix {
   zoom: 1; }
 
-
 /**
  * GitHub Gist Theme
  * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
@@ -301,6 +299,7 @@ input[type=button] {
   display: flex; }
 
 
+
 .content {
   padding: 0px 30px 30px 30px;
   margin-bottom: 30px;
@@ -344,7 +343,7 @@ input[type=button] {
   flex-direction: column; }
 
 .menu-guide .menu-items__item {
-  margin-bottom: 2px;
+  margin-bottom: 5px;
   font-size: 18px;
   font-family: "Myriad Pro Regular";
   color: #a6a6a6;

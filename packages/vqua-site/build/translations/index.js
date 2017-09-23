@@ -19,6 +19,9 @@ module.exports = {
       references: 'References',
       serverRender: 'Server render',
       router: 'Router',
+      createServer: 'Create server',
+      browserNavigation: 'Browser navigation',
+      boilerplate: 'Boilerplate',
     }
   },
   ru: {
@@ -41,6 +44,9 @@ module.exports = {
       references: 'Ссылки',
       serverRender: 'Серверный рендер',
       router: 'Роутер',
+      createServer: 'Создание сервера',
+      browserNavigation: 'Браузерная навигация',
+      boilerplate: 'Готовый каркас',      
     }
   }
 }

@@ -1,4 +1,4 @@
-const { route, separateRoutes } = require('vqua-router')
+const { route } = require('vqua-router')
 const { Component, html } = require('vqua')
 const MainController = require('../controllers/MainController')
 const ArticleController = require('../controllers/ArticleController')
@@ -13,4 +13,4 @@ const routes = [
   route('*', ErrorController.notFound)
 ]
 
-module.exports = separateRoutes(routes)
+module.exports = routes

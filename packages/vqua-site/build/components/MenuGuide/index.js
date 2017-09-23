@@ -51,12 +51,24 @@ const internalItems = [
 
 const externalItems = [
   {
-    href: '/:locale/server-prerender',
+    href: '/:locale/server-render',
     key: 'serverRender'
+  },
+  {
+    href: '/:locale/createServer',
+    key: 'createServer'
+  },
+  {
+    href: '/:locale/browserNavigation',
+    key: 'browserNavigation'
   },
   {
     href: '/:locale/router',
     key: 'router'
+  },  
+  {
+    href: '/:locale/boilerplate',
+    key: 'boilerplate'
   },
 ]
 
