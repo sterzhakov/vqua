@@ -31,7 +31,7 @@ describe('Match route', () => {
 
   })
 
-  it('custom matcher', () => {
+  it('custom matchers', () => {
 
     const path = '/posts/2'
 
