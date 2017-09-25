@@ -7,7 +7,6 @@ const app =
     routes,
     layout,
     publicPath: './dist',
-    buildPath: './build',
     containerPath: './build/containers',
   })
 

@@ -1,0 +1,108 @@
+<h1>Создание сервера</h1>
+
+<h2>Как установить?</h2>
+
+{{ install }}
+
+<h2>Пример</h2>
+
+{{ create-server }}
+
+<h2>Описание</h2>
+
+<p>
+  Функция createServer возвращает экземпляр обычного
+  нодовского <a
+    target="_blank"
+    href="https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server"
+  >http сервера</a>.
+  <br>
+  <br>
+  Когда запрос поступает на сервер, строка пути разбирается и по ней находится первый подходящий vqua маршрут.
+  После чего управление передается функции action, указанной в маршруте роута.
+  <br>
+  <br>
+  Метод action принимает два аргумента request, response .
+  За одним исключением что к response добавляются два колбека это send и redirect,
+  которые будут отрабатывать как на сервере так и в браузере.
+  Конечно для браузера необходимо использовать
+  пакет <a href='/ru/browser-navigation' class='navigation_link'>vqua-browser</a>.
+  <br>
+  <br>
+  Чтобы посмотреть на то как все работает сразу и вместе,
+  воспользуйтесь <a href='http://localhost:8080/ru/boilerplate' class='navigation_link'>готовым каркасом</a>
+</p>
+
+<h2>Аргументы для createServer(<b>object</b>)</h2>
+
+<p>Все аргументы обязательны.</p>
+
+<p>
+  <b>routes</b> - массив роутов  (vqua-routes)
+</p>
+
+<p>
+  <b>layout</b> - функция callback(html, data)
+  <br>
+  <i>html</i> - компонент контроллера, преобразованный в html строку
+  <br>
+  <i>data</i> - отданные контроллером данные, преобразованные в JSON строку
+</p>
+
+<p>Пример layout:</p>
+
+{{ layout }}
+
+<p>
+  <b>publicPath</b> - строка пути к папке где хранятся статические файлы
+  <br/>
+
+</p>
+
+<p>
+  <b>containerPath</b> - строка пути к папке где хранятся контейнеры (vqua компоненты верхнего уровня)
+</p>
+
+<h2>Фунцкия action(request, response)</h2>
+
+<p>
+  <b>request</b>- помимо стандатных параметров <a
+    target="_blank"
+    href="https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_http_request_options_callback"
+  >http request</a> содержит:
+  <ul>
+    <li>
+      <b>params</b> - объект параметров роута
+    </li>
+    <li>
+      <b>segments</b> - массив сегментов роута
+    </li>
+  </ul>
+</p>
+
+<p>
+  <b>response</b>- помимо стандатных параметров <a
+    target="_blank"
+    href="https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_serverresponse"
+  >http response</a> содержит:
+  <ul>
+    <li>
+      <b>redirect(statusCode, url)</b>
+      <br>
+      <i>statusCode</i> - числовой код ответа сервера (300, 301 и т.д.)
+      <br>
+      <i>url</i> - строка пути редиректа
+    </li>
+    <li>
+      <b>send(statusCode, containerName, containerProps, containerContext)</b>
+      <br>
+      <i>statusCode</i> - числовой код ответа сервера (200, 500 и т.д.)
+      <br>
+      <i>containerName</i> - строковое название vqua компонента
+      <br>
+      <i>containerProps</i> - объект параметров vqua компонента
+      <br>
+      <i>containerContext</i> - объект контекста vqua компонента
+    </li>
+  </ul>
+</p>

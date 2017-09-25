@@ -10646,7 +10646,12 @@ module.exports = { encode: encode, decode: decode };
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./browser-navigation/examples/create-navigation.js": 450,
+	"./browser-navigation/examples/install.sh": 448,
 	"./context/examples/app.preview.js": 375,
+	"./create-server/examples/create-server.sh": 446,
+	"./create-server/examples/install.js": 445,
+	"./create-server/examples/layout.js": 447,
 	"./fast-start/examples/hello-world-html.html": 376,
 	"./fast-start/examples/hello-world-js.js": 377,
 	"./fast-start/examples/webpack-config.js": 378,
@@ -10666,6 +10671,9 @@ var map = {
 	"./props/examples/universe.preview.js": 392,
 	"./references/examples/component.js": 393,
 	"./references/examples/dom.preview.js": 394,
+	"./router/examples/install.sh": 451,
+	"./router/examples/match-routes.js": 453,
+	"./router/examples/matcher.js": 454,
 	"./sample/examples/test.preview.js": 395,
 	"./server-render/examples/browser-navigation.js": 443,
 	"./server-render/examples/controller.js": 442,
@@ -13344,6 +13352,57 @@ module.exports = "class WelcomeController {\n\n  static index(req, res) {\n\n   
 /***/ (function(module, exports) {
 
 module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
+
+/***/ }),
+/* 444 */,
+/* 445 */
+/***/ (function(module, exports) {
+
+module.exports = "npm i --save vqua-server\n"
+
+/***/ }),
+/* 446 */
+/***/ (function(module, exports) {
+
+module.exports = "const app =\n  createServer({\n    routes: [],\n    layout: (html, data) => '',\n    publicPath: './dist',\n    containerPath: './build/containers',\n  })\n\napp.listen(8080)\n"
+
+/***/ }),
+/* 447 */
+/***/ (function(module, exports) {
+
+module.exports = "const layout = (html = '', data = '') => {\n\n  return (\n    '<html>' +\n      '<head>' +\n        '<meta charset=\"utf-8\">' +\n        '<link rel=\"stylesheet\" type=\"text/css\" href=\"/index.css\">' +\n      '</head>' +\n      '<body>' +\n        '<div id=\"app\">' +\n          html +\n        '</div>' +\n        '<script id=\"app-cache\" type=\"application/json\">' +\n          data +\n        '</script>' +\n        '<script src=\"/index.js\" type=\"text/javascript\"></script>' +\n      '</body>' +\n    '</html>'\n  )\n}\n"
+
+/***/ }),
+/* 448 */
+/***/ (function(module, exports) {
+
+module.exports = "npm i --save vqua-navigation\n"
+
+/***/ }),
+/* 449 */,
+/* 450 */
+/***/ (function(module, exports) {
+
+module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
+
+/***/ }),
+/* 451 */
+/***/ (function(module, exports) {
+
+module.exports = "npm i --save vqua-router\n"
+
+/***/ }),
+/* 452 */,
+/* 453 */
+/***/ (function(module, exports) {
+
+module.exports = "const { route, matchRoutes, separateRoutes } = require('vqua-router')\n\nconst routes = [\n  route('/', 'main', {}, [\n    route('/posts', 'all posts'),\n    route('/posts/:id', 'post by id'),\n  ]),\n]\n\nconst separatedRoutes = separateRoutes(routes)\n\n// separatedRoutes:\n// [\n//   route('/', 'main'),\n//   route('/posts', 'all posts'),\n//   route('/posts/:id', 'post by id'),\n// ]\n\nconst matchedRoute = matchRoutes(separatedRoutes, '/posts/2')\n\n// matchedRoute:\n// {\n//   path: '/posts/:id',\n//   segments: ['posts', ':id'],\n//   action: 'post by id',\n//   props: {},\n//   childs: [],\n//   request: {\n//     path: '/posts/2',\n//     segments: ['posts', '2'],\n//     params: { id: '2' },\n//   }\n// }\n"
+
+/***/ }),
+/* 454 */
+/***/ (function(module, exports) {
+
+module.exports = "{\n  key: 'id',\n  matcher: id => id == '5'\n}\n"
 
 /***/ })
 /******/ ]);

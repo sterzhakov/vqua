@@ -55,17 +55,17 @@ const externalItems = [
     key: 'serverRender'
   },
   {
-    href: '/:locale/createServer',
+    href: '/:locale/create-server',
     key: 'createServer'
   },
   {
-    href: '/:locale/browserNavigation',
+    href: '/:locale/browser-navigation',
     key: 'browserNavigation'
   },
   {
     href: '/:locale/router',
     key: 'router'
-  },  
+  },
   {
     href: '/:locale/boilerplate',
     key: 'boilerplate'
