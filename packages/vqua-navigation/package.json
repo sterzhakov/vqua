@@ -1,11 +1,11 @@
 {
   "name": "vqua-navigation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Navigation for vqua.",
   "main": "lib/index.js",
   "dependencies": {
-    "vqua": "^1.0.0",
-    "vqua-router": "^1.0.0",
+    "vqua": "^1.0.1",
+    "vqua-router": "^1.0.1",
     "vqua-utils": "^0.0.1"
   },
   "scripts": {

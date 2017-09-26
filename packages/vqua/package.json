@@ -1,6 +1,6 @@
 {
   "name": "vqua",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Virtual DOM library with focus on server prerender.",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Sterjakov Igor",
   "license": "ISC",
   "dependencies": {
-    "dom2vqua": "^1.0.0",
+    "dom2vqua": "^1.0.1",
     "vqua-utils": "^0.0.1"
   },
   "devDependencies": {
