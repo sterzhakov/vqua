@@ -10646,6 +10646,9 @@ module.exports = { encode: encode, decode: decode };
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./boilerplate/examples/gulp.sh": 457,
+	"./boilerplate/examples/install.sh": 455,
+	"./boilerplate/examples/webpack.sh": 456,
 	"./browser-navigation/examples/create-navigation.js": 450,
 	"./browser-navigation/examples/install.sh": 448,
 	"./context/examples/app.preview.js": 375,
@@ -13403,6 +13406,24 @@ module.exports = "const { route, matchRoutes, separateRoutes } = require('vqua-r
 /***/ (function(module, exports) {
 
 module.exports = "{\n  key: 'id',\n  matcher: id => id == '5'\n}\n"
+
+/***/ }),
+/* 455 */
+/***/ (function(module, exports) {
+
+module.exports = "git clone git@github.com:sterjakovigor/vqua.git\ncp -R ./vqua/packages/vqua-boilerplate-ssr/ ./vqua-boilerplate-ssr\ncd vqua-boilerplate-ssr/\nnpm i\nnpm i -g nodemon\nnodemon server\n"
+
+/***/ }),
+/* 456 */
+/***/ (function(module, exports) {
+
+module.exports = "webpack -w\n"
+
+/***/ }),
+/* 457 */
+/***/ (function(module, exports) {
+
+module.exports = "gulp\n"
 
 /***/ })
 /******/ ]);
