@@ -4659,12 +4659,12 @@ var sortUsedLiveNodes = function sortUsedLiveNodes(_ref) {
 
 var sortUnusedLiveNodes = function sortUnusedLiveNodes(_ref2) {
   var liveNodes = _ref2.liveNodes,
-      usedOrderIndexes = _ref2.usedOrderIndexes;
+      usedLiveIds = _ref2.usedLiveIds;
 
 
-  return liveNodes.filter(function (liveNode) {
+  return liveNodes.filter(function (liveNode, index) {
 
-    return !include(usedOrderIndexes, liveNode.order);
+    return !include(usedLiveIds, liveNode.id);
   });
 };
 
@@ -4673,24 +4673,34 @@ var sortLiveNodes = function sortLiveNodes() {
   var templateNodes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
 
-  var keyedLiveNodes = wrapNodesWithTheirKeys(liveNodes);
+  var liveSortableNodes = liveNodes.map(function (node, index) {
+
+    return { id: index, key: node.key, node: node };
+  });
+
+  var keyedLiveNodes = wrapNodesWithTheirKeys(liveSortableNodes);
 
   var usedLiveNodes = sortUsedLiveNodes({
-    liveNodes: liveNodes,
+    liveNodes: liveSortableNodes,
     templateNodes: templateNodes,
     keyedLiveNodes: keyedLiveNodes
   });
 
-  var usedOrderIndexes = usedLiveNodes.reduce(function (indexes, usedLiveNode) {
-    return usedLiveNode ? [].concat(_toConsumableArray(indexes), [usedLiveNode.order]) : indexes;
+  var usedLiveIds = usedLiveNodes.reduce(function (ids, usedLiveNode, index) {
+    return Number.isInteger(usedLiveNode && usedLiveNode.id) ? [].concat(_toConsumableArray(ids), [usedLiveNode.id]) : ids;
   }, []);
 
   var unusedLiveNodes = sortUnusedLiveNodes({
-    liveNodes: liveNodes,
-    usedOrderIndexes: usedOrderIndexes
+    liveNodes: liveSortableNodes,
+    usedLiveIds: usedLiveIds
   });
 
-  return [].concat(_toConsumableArray(usedLiveNodes), _toConsumableArray(unusedLiveNodes));
+  var sortableLiveNodes = [].concat(_toConsumableArray(usedLiveNodes), _toConsumableArray(unusedLiveNodes));
+
+  return sortableLiveNodes.map(function (sortableNode) {
+
+    return sortableNode ? sortableNode.node : sortableNode;
+  });
 };
 
 var sortTemplateNodes = function sortTemplateNodes() {
@@ -4719,37 +4729,39 @@ module.exports = {
 "use strict";
 
 
-var decorateOrder = function decorateOrder(_ref) {
-  var startFrom = _ref.startFrom,
-      index = _ref.index;
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-  return { order: startFrom + index };
-};
-
-var decorateDom = function decorateDom(_ref2) {
-  var dom = _ref2.dom,
-      index = _ref2.index;
-
-  return { dom: dom[index] };
-};
-
-module.exports = function (nodes, _ref3) {
-  var _ref3$dom = _ref3.dom,
-      dom = _ref3$dom === undefined ? false : _ref3$dom,
-      _ref3$order = _ref3.order,
-      order = _ref3$order === undefined ? false : _ref3$order;
+module.exports = function (nodes, _ref) {
+  var _ref$dom = _ref.dom,
+      dom = _ref$dom === undefined ? false : _ref$dom,
+      _ref$order = _ref.order,
+      order = _ref$order === undefined ? false : _ref$order;
 
 
   if (!nodes) return [];
 
-  return nodes.map(function (liveNode, index) {
+  var info = nodes.reduce(function (info, node, index) {
 
-    var nodeOrder = order ? decorateOrder({ index: index, startFrom: order.startFrom || 0 }) : {};
+    if (!node) return {
+      nodes: [].concat(_toConsumableArray(info.nodes), [node]),
+      order: info.order
+    };
 
-    var nodeDom = dom ? decorateDom({ dom: dom, index: index }) : {};
+    var nodeDom = dom ? { dom: dom[info.order] } : {};
 
-    return Object.assign({}, liveNode, nodeDom, nodeOrder);
-  });
+    var startFrom = order.startFrom || 0;
+
+    var nodeOrder = order ? { order: index + startFrom } : {};
+
+    var newNode = Object.assign({}, node, nodeDom, nodeOrder);
+
+    return {
+      nodes: [].concat(_toConsumableArray(info.nodes), [newNode]),
+      order: info.order + 1
+    };
+  }, { nodes: [], order: 0 });
+
+  return info.nodes;
 };
 
 /***/ }),
@@ -4836,7 +4848,9 @@ module.exports = function (_ref) {
       var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
           domNodes = _ref2.domNodes;
 
-      var decoratedLiveNodes = decorateNodes(liveNodes, {
+      var sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes);
+
+      var decoratedLiveNodes = decorateNodes(sortedLiveNodes, {
         order: { startFrom: offset },
         dom: domNodes
       });
@@ -4846,7 +4860,7 @@ module.exports = function (_ref) {
       });
 
       return {
-        filteredLiveNodes: sortLiveNodes(decoratedLiveNodes, templateNodes),
+        filteredLiveNodes: decoratedLiveNodes,
         filteredTemplateNodes: decoratedTemplateNodes
       };
     }
@@ -12147,6 +12161,8 @@ module.exports = function (_ref) {
 
   var statisticParams = statistic ? { statistic: statistic } : {};
 
+  var keyParams = templateNode.key ? { key: templateNode.key } : {};
+
   var newTagNode = {
     type: templateNode.type,
     tag: templateNode.tag,
@@ -12154,7 +12170,7 @@ module.exports = function (_ref) {
     childs: templateNode.childs
   };
 
-  return Object.assign({}, newTagNode, refParams, statisticParams);
+  return Object.assign({}, newTagNode, refParams, statisticParams, keyParams);
 };
 
 /***/ }),
@@ -12442,8 +12458,8 @@ var createNodes = function createNodes(_ref) {
     var childs = createNodes({
       offset: 0,
       limit: liveChilds ? liveChilds.length : 0,
-      liveNodes: liveChilds,
-      templateNodes: templateChilds,
+      liveNodes: liveChilds || [],
+      templateNodes: templateChilds || [],
       createNode: createNode,
       filterNodes: filterNodes,
       domNodes: domChilds
@@ -12800,6 +12816,19 @@ var updateProps = function updateProps(domNode, liveProps, templateProps, isProp
 
   var sortedLiveProps = sortProps(liveProps);
   var sortedTemplateProps = sortProps(templateProps);
+
+  // TODO: delete comment
+
+  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
+  //
+  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
+  //   sortedTemplateProps.eventProps.onClick()
+  //
+  //   if (sortedLiveProps.eventProps.onClick) {
+  //     sortedLiveProps.eventProps.onClick()
+  //   }
+  //
+  //
 
   updateElementProps(domNode, sortedLiveProps.elementProps, sortedTemplateProps.elementProps, isPropsEqual);
 
@@ -13865,7 +13894,7 @@ webpackContext.id = 434;
 /* 435 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Готовый каркас</h1>\n\n<p>Готовый каркас позволит вам быстро приступить к созданию веб-интерфейса с серверным пререндерингом.</p>\n\n<h2>Как установить?</h2>\n\n{{ install }}\n\n<p>\n  После чего откройте в браузере страницу http://localhost:8080/\n  и вы должны увидеть страницу Welcome! Test page.\n</p>\n\n<h2>Как редактировать код?</h2>\n\n<p>Чтобы изменения вносились сразу после сохранения откройте новое окно треминала и используйте команду:</p>\n\n{{ webpack }}\n\n<a href=\"https://webpack.js.org/\" target=\"_blank\">Подробнее о webpack</a>\n\n<h2>Как редактировать css стили?</h2>\n\n<p>Для того чтобы отслеживать изменение стилей в новом окне запустите:</p>\n\n{{ gulp }}\n\n<p>\n  Предпочтительнее всего размещать стили в папках с компонентами.\n  Порядок стилей не должен иметь значения.\n  Для этого вы можете воспользоваться <a\n    target=\"_blank\"\n    href=\"https://ru.bem.info/methodology/css/\"\n  >бэм методологией</a>.\n</p>\n\n<a href=\"https://gulpjs.com/\" target=\"_blank\">Подробнее о gulp</a>\n"
+module.exports = "<h1>Готовый каркас</h1>\n\n<p>Готовый каркас позволит вам быстро приступить к созданию веб-интерфейса с серверным пререндерингом.</p>\n\n<h2>Как установить?</h2>\n\n{{ install }}\n\n<p>\n  После чего откройте в браузере страницу http://localhost:8080/\n  и вы должны увидеть:\n  <br>\n  <i>Welcome! Test page.</i>\n</p>\n\n<h2>Как редактировать код?</h2>\n\n<p>Чтобы изменения вносились сразу после сохранения откройте новое окно треминала и используйте команду:</p>\n\n{{ webpack }}\n\n<a href=\"https://webpack.js.org/\" target=\"_blank\">Подробнее о webpack</a>\n\n<h2>Как редактировать css стили?</h2>\n\n<p>Для того чтобы отслеживать изменение стилей в новом окне запустите:</p>\n\n{{ gulp }}\n\n<p>\n  Предпочтительнее всего размещать стили в папках с компонентами.\n  Порядок стилей не должен иметь значения.\n  Для этого вы можете воспользоваться <a\n    target=\"_blank\"\n    href=\"https://ru.bem.info/methodology/css/\"\n  >бэм методологией</a>.\n</p>\n\n<a href=\"https://gulpjs.com/\" target=\"_blank\">Подробнее о gulp</a>\n"
 
 /***/ }),
 /* 436 */

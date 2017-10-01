@@ -211,6 +211,7 @@ input[type=button] {
 .clearfix {
   zoom: 1; }
 
+
 /**
  * GitHub Gist Theme
  * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
@@ -298,8 +299,6 @@ input[type=button] {
   margin: 0px 10px;
   display: flex; }
 
-
-
 .content {
   padding: 0px 30px 30px 30px;
   margin-bottom: 30px;
@@ -328,6 +327,7 @@ input[type=button] {
     font-size: 20px; }
   .content b {
     font-weight: 600; }
+
 
 
 
