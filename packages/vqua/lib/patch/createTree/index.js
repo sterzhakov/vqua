@@ -15,12 +15,17 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       domNodes,
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
-        const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+        const withDomLiveNodes =
+          decorateNodes(liveNodes, {
+            dom: domNodes
+          })
 
-        const decoratedLiveNodes =
+        const sortedLiveNodes =
+          sortLiveNodes(withDomLiveNodes, templateNodes)
+
+        const orderedLiveNodes =
           decorateNodes(sortedLiveNodes, {
             order: { startFrom: offset },
-            dom: domNodes
           })
 
         const decoratedTemplateNodes =
@@ -29,7 +34,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
           })
 
         return {
-          filteredLiveNodes: decoratedLiveNodes,
+          filteredLiveNodes: orderedLiveNodes,
           filteredTemplateNodes: decoratedTemplateNodes
         }
 

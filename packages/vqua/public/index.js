@@ -507,12 +507,17 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       domNodes,
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
-        const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+        const withDomLiveNodes =
+          decorateNodes(liveNodes, {
+            dom: domNodes
+          })
 
-        const decoratedLiveNodes =
+        const sortedLiveNodes =
+          sortLiveNodes(withDomLiveNodes, templateNodes)
+
+        const orderedLiveNodes =
           decorateNodes(sortedLiveNodes, {
             order: { startFrom: offset },
-            dom: domNodes
           })
 
         const decoratedTemplateNodes =
@@ -521,7 +526,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
           })
 
         return {
-          filteredLiveNodes: decoratedLiveNodes,
+          filteredLiveNodes: orderedLiveNodes,
           filteredTemplateNodes: decoratedTemplateNodes
         }
 
@@ -1447,19 +1452,6 @@ const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
   const sortedLiveProps = sortProps(liveProps)
   const sortedTemplateProps = sortProps(templateProps)
-
-  // TODO: delete comment
-
-  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
-  //
-  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
-  //   sortedTemplateProps.eventProps.onClick()
-  //
-  //   if (sortedLiveProps.eventProps.onClick) {
-  //     sortedLiveProps.eventProps.onClick()
-  //   }
-  //
-  //
 
   updateElementProps(
     domNode,
@@ -5351,7 +5343,6 @@ describe('Create patch tree', () => {
         liveNodes,
         templateNodes,
       })
-
 
     expect(patchNodes[0].actions).toEqual([ REPLACE_NODE ])
     expect(patchNodes[1].actions).toEqual([ UPDATE_NODE ])

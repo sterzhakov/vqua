@@ -93,7 +93,6 @@ describe('Create patch tree', () => {
         templateNodes,
       })
 
-
     expect(patchNodes[0].actions).toEqual([ REPLACE_NODE ])
     expect(patchNodes[1].actions).toEqual([ UPDATE_NODE ])
     expect(patchNodes[2].actions).toEqual([ UPDATE_NODE ])
