@@ -1,27 +1,33 @@
-const decorateOrder = ({ startFrom, index }) => {
-  return { order: startFrom + index }
-}
-
-const decorateDom = ({ dom, index }) => {
-  return { dom: dom[index] }
-}
-
 module.exports = (nodes, { dom = false, order = false }) => {
 
   if (!nodes) return []
 
-  return nodes.map((liveNode, index) => {
+  const info = nodes.reduce((info, node, index) => {
 
-    const nodeOrder = order
-      ? decorateOrder({ index, startFrom: order.startFrom || 0 })
-      : {}
+    if (!node) return {
+      nodes: [ ...info.nodes, node ],
+      order: info.order,
+    }
 
     const nodeDom = dom
-      ? decorateDom({ dom, index })
+      ? { dom: dom[info.order] }
       : {}
 
-    return Object.assign({}, liveNode, nodeDom, nodeOrder)
+    const startFrom = order.startFrom || 0
 
-  })
+    const nodeOrder = order
+      ? { order: index + startFrom}
+      : {}
+
+    const newNode = Object.assign({}, node, nodeDom, nodeOrder)
+
+    return {
+      nodes: [ ...info.nodes, newNode ],
+      order: info.order + 1,
+    }
+
+  }, { nodes: [], order: 0 })
+
+  return info.nodes
 
 }

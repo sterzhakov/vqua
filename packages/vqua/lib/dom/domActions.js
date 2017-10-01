@@ -8,6 +8,19 @@ const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
   const sortedLiveProps = sortProps(liveProps)
   const sortedTemplateProps = sortProps(templateProps)
 
+  // TODO: delete comment
+
+  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
+  //
+  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
+  //   sortedTemplateProps.eventProps.onClick()
+  //
+  //   if (sortedLiveProps.eventProps.onClick) {
+  //     sortedLiveProps.eventProps.onClick()
+  //   }
+  //
+  //
+
   updateElementProps(
     domNode,
     sortedLiveProps.elementProps,

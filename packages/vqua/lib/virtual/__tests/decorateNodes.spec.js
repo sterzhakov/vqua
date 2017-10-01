@@ -34,6 +34,22 @@ describe('Decorate live nodes', () => {
       decoratedNodes[1].order
     ).toBe(1)
 
+  })
+
+  it('include null values when decorate with order', () => {
+
+    const liveNodes = [{}, null, null, {}]
+
+    const decoratedNodes = decorateNodes(liveNodes, { order: true })
+
+    expect(
+      decoratedNodes[0].order
+    ).toBe(0)
+
+    expect(
+      decoratedNodes[3].order
+    ).toBe(3)
+
 
   })
 
@@ -63,6 +79,38 @@ describe('Decorate live nodes', () => {
 
     expect(
       decoratedNodes[1].dom.isSameNode(textNode)
+    ).toBe(true)
+
+  })
+
+  it('skip null when decorate with dom node', () => {
+
+    const liveNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+      },
+      null,
+      null,
+      {
+        type: TEXT_TYPE,
+        text: 'text',
+      }
+    ]
+
+    const textNode = document.createTextNode('text')
+    const tagNode = document.createElement('div')
+
+    const domNodes = [ tagNode, textNode ]
+
+    const decoratedNodes = decorateNodes(liveNodes, { dom: domNodes })
+
+    expect(
+      decoratedNodes[0].dom.isSameNode(tagNode)
+    ).toBe(true)
+
+    expect(
+      decoratedNodes[3].dom.isSameNode(textNode)
     ).toBe(true)
 
   })

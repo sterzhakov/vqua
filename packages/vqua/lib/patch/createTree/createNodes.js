@@ -62,8 +62,8 @@ const createNodes = ({
       createNodes({
         offset: 0,
         limit: liveChilds ? liveChilds.length : 0,
-        liveNodes: liveChilds,
-        templateNodes: templateChilds,
+        liveNodes: liveChilds || [],
+        templateNodes: templateChilds || [],
         createNode,
         filterNodes,
         domNodes: domChilds

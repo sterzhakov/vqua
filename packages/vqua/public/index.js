@@ -811,8 +811,10 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       domNodes,
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
+        const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+
         const decoratedLiveNodes =
-          decorateNodes(liveNodes, {
+          decorateNodes(sortedLiveNodes, {
             order: { startFrom: offset },
             dom: domNodes
           })
@@ -823,7 +825,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
           })
 
         return {
-          filteredLiveNodes: sortLiveNodes(decoratedLiveNodes, templateNodes),
+          filteredLiveNodes: decoratedLiveNodes,
           filteredTemplateNodes: decoratedTemplateNodes
         }
 
@@ -841,31 +843,37 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 /* 19 */
 /***/ (function(module, exports) {
 
-const decorateOrder = ({ startFrom, index }) => {
-  return { order: startFrom + index }
-}
-
-const decorateDom = ({ dom, index }) => {
-  return { dom: dom[index] }
-}
-
 module.exports = (nodes, { dom = false, order = false }) => {
 
   if (!nodes) return []
 
-  return nodes.map((liveNode, index) => {
+  const info = nodes.reduce((info, node, index) => {
 
-    const nodeOrder = order
-      ? decorateOrder({ index, startFrom: order.startFrom || 0 })
-      : {}
+    if (!node) return {
+      nodes: [ ...info.nodes, node ],
+      order: info.order,
+    }
 
     const nodeDom = dom
-      ? decorateDom({ dom, index })
+      ? { dom: dom[info.order] }
       : {}
 
-    return Object.assign({}, liveNode, nodeDom, nodeOrder)
+    const startFrom = order.startFrom || 0
 
-  })
+    const nodeOrder = order
+      ? { order: index + startFrom}
+      : {}
+
+    const newNode = Object.assign({}, node, nodeDom, nodeOrder)
+
+    return {
+      nodes: [ ...info.nodes, newNode ],
+      order: info.order + 1,
+    }
+
+  }, { nodes: [], order: 0 })
+
+  return info.nodes
 
 }
 
@@ -1076,13 +1084,13 @@ const getLivePairForTemplate = (liveNode, templateNode, keyedLiveNodes) => {
 }
 
 
-const wrapNodesWithTheirKeys = (nodes) => (
-  nodes.reduce((keyedNodes, node) => (
-    (node && node.key)
+const wrapNodesWithTheirKeys = (nodes) => {
+  return nodes.reduce((keyedNodes, node) => {
+    return (node && node.key)
       ? Object.assign({}, keyedNodes, { [node.key]: node })
       : keyedNodes
-  ), {})
-)
+  }, {})
+}
 
 
 const sortUsedLiveNodes = ({ liveNodes, templateNodes, keyedLiveNodes }) => {
@@ -1102,11 +1110,11 @@ const sortUsedLiveNodes = ({ liveNodes, templateNodes, keyedLiveNodes }) => {
 }
 
 
-const sortUnusedLiveNodes = ({ liveNodes, usedOrderIndexes }) => {
+const sortUnusedLiveNodes = ({ liveNodes, usedLiveIds }) => {
 
-  return liveNodes.filter((liveNode) => {
+  return liveNodes.filter((liveNode, index) => {
 
-    return !include(usedOrderIndexes, liveNode.order)
+    return !include(usedLiveIds, liveNode.id)
 
   })
 
@@ -1115,27 +1123,42 @@ const sortUnusedLiveNodes = ({ liveNodes, usedOrderIndexes }) => {
 
 const sortLiveNodes = (liveNodes = [], templateNodes = []) => {
 
-  const keyedLiveNodes = wrapNodesWithTheirKeys(liveNodes)
+  const liveSortableNodes = liveNodes.map((node, index) => {
+
+    return { id: index, key: node.key, node }
+
+  })
+
+  const keyedLiveNodes = wrapNodesWithTheirKeys(liveSortableNodes)
 
   const usedLiveNodes =
     sortUsedLiveNodes({
-      liveNodes,
+      liveNodes: liveSortableNodes,
       templateNodes,
       keyedLiveNodes
     })
 
-  const usedOrderIndexes =
-    usedLiveNodes.reduce((indexes, usedLiveNode) => {
-      return usedLiveNode ? [ ...indexes, usedLiveNode.order ] : indexes
-    }, [])
+  const usedLiveIds = usedLiveNodes.reduce((ids, usedLiveNode, index) => {
+    return Number.isInteger(usedLiveNode && usedLiveNode.id)
+      ? [ ...ids, usedLiveNode.id ]
+      : ids
+  }, [])
 
   const unusedLiveNodes =
     sortUnusedLiveNodes({
-      liveNodes,
-      usedOrderIndexes
+      liveNodes: liveSortableNodes,
+      usedLiveIds
     })
 
-  return [ ...usedLiveNodes, ...unusedLiveNodes ]
+  const sortableLiveNodes = [ ...usedLiveNodes, ...unusedLiveNodes ]
+
+  return sortableLiveNodes.map((sortableNode) => {
+
+    return sortableNode
+      ? sortableNode.node
+      : sortableNode
+
+  })
 
 }
 
@@ -1238,8 +1261,7 @@ const actions = [
     name: INSERT_NODE,
     check: ({ liveNode, templateNode }) => {
       return (
-        liveNode &&
-        templateNode &&
+        liveNode && templateNode &&
         liveNode.order != templateNode.order
       )
     },
@@ -1425,6 +1447,19 @@ const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
   const sortedLiveProps = sortProps(liveProps)
   const sortedTemplateProps = sortProps(templateProps)
+
+  // TODO: delete comment
+
+  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
+  //
+  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
+  //   sortedTemplateProps.eventProps.onClick()
+  //
+  //   if (sortedLiveProps.eventProps.onClick) {
+  //     sortedLiveProps.eventProps.onClick()
+  //   }
+  //
+  //
 
   updateElementProps(
     domNode,
@@ -2076,8 +2111,8 @@ const createNodes = ({
       createNodes({
         offset: 0,
         limit: liveChilds ? liveChilds.length : 0,
-        liveNodes: liveChilds,
-        templateNodes: templateChilds,
+        liveNodes: liveChilds || [],
+        templateNodes: templateChilds || [],
         createNode,
         filterNodes,
         domNodes: domChilds
@@ -2194,6 +2229,11 @@ module.exports = ({ templateNode, statistic }) => {
     ? { statistic }
     : {}
 
+  const keyParams =
+    templateNode.key
+      ? { key: templateNode.key }
+      : {}
+
   const newTagNode = {
     type: templateNode.type,
     tag: templateNode.tag,
@@ -2201,7 +2241,7 @@ module.exports = ({ templateNode, statistic }) => {
     childs: templateNode.childs,
   }
 
-  return Object.assign({}, newTagNode, refParams, statisticParams)
+  return Object.assign({}, newTagNode, refParams, statisticParams, keyParams)
 
 }
 
@@ -3099,9 +3139,10 @@ var map = {
 	"./dom/__tests/updateTree/updateCallback.spec.js": 80,
 	"./dom/__tests/updateTree/updateNodes.spec.js": 81,
 	"./helpers/__tests/handleError.spec.js": 82,
-	"./patch/__tests/createTree/createCallback.spec.js": 83,
-	"./patch/__tests/createTree/createNodes.spec.js": 84,
 	"./patch/__tests/createTree/index.spec.js": 85,
+	"./patch/createTree/__tests/createCallback.spec.js": 122,
+	"./patch/createTree/__tests/createNodes.spec.js": 123,
+	"./patch/createTree/__tests/index.spec.js": 124,
 	"./virtual/Statistic/__tests/Statistic.spec.js": 86,
 	"./virtual/__tests/Component.spec.js": 88,
 	"./virtual/__tests/assignDomNodes.spec.js": 89,
@@ -4825,283 +4866,8 @@ describe('Handle error', () => {
 
 
 /***/ }),
-/* 83 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const createNode = __webpack_require__(34)
-const {
-  TEXT_TYPE, TAG_TYPE
-} = __webpack_require__(0)
-
-describe('Create patch node', () => {
-
-  it('copy liveNode, templateNode, limit', () => {
-
-    const patchNode =
-      createNode({
-        liveNode: {},
-        templateNode: {},
-        limit: 0,
-      })
-
-    expect(patchNode.liveNode).toEqual({})
-    expect(patchNode.templateNode).toEqual({})
-    expect(patchNode.limit).toEqual(0)
-
-  })
-
-  it('calculate nextLimit', () => {
-
-    const patchNode =
-      createNode({
-        liveNode: {
-          type: TAG_TYPE,
-          props: {},
-          childs: [],
-        },
-        templateNode: null,
-        limit: 2,
-      })
-
-    expect(patchNode.nextLimit).toBe(1)
-
-  })
-
-  it('calculate node actions', () => {
-
-    const patchNode =
-      createNode({
-        liveNode: {
-          type: TAG_TYPE,
-          props: {},
-          childs: [],
-        },
-        templateNode: null,
-        limit: 2,
-      })
-
-    expect(patchNode.actions.length).toBe(1)
-
-  })
-
-})
-
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const { omit } = __webpack_require__(1)
-const createNodes = __webpack_require__(35)
-const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
-
-describe('Create patch nodes', () => {
-
-  it('filter nodes', () => {
-
-    const allNodes = [
-      { id: 1, childs: [] },
-      { id: 2, childs: [] },
-      { id: 3, childs: [] }
-    ]
-
-    const patchNodes =
-      createNodes({
-        limit: 0,
-        domNodes: allNodes,
-        liveNodes: allNodes,
-        templateNodes: allNodes,
-        filterNodes: (liveNodes, templateNodes) => {
-
-          const compareNodes = (a, b) => a.id < b.id
-
-          return {
-            filteredLiveNodes: liveNodes.sort(compareNodes),
-            filteredTemplateNodes: templateNodes.sort(compareNodes),
-          }
-        },
-        createNode: ({ templateNode, liveNode }) => {
-          return { templateNode, liveNode }
-        },
-      })
-
-    expect(patchNodes).toEqual([
-      {
-        templateNode: { id: 3, childs: [] },
-        liveNode: { id: 3, childs: [] },
-        childs: [],
-      },
-      {
-        templateNode: { id: 2, childs: [] },
-        liveNode: { id: 2, childs: [] },
-        childs: [],
-      },
-      {
-        templateNode: { id: 1, childs: [] },
-        liveNode: { id: 1, childs: [] },
-        childs: [],
-      },
-    ])
-
-  })
-
-  it('call createNode for childs with all arguments', () => {
-
-    const allNodes = [
-      {
-        type: TAG_TYPE,
-        tag: 'div',
-        childs: [
-          {
-            type: TAG_TYPE,
-            tag: 'span',
-            childs: [
-              {
-                type: TEXT_TYPE,
-                text: 'text',
-                childs: [],
-              }
-            ]
-          },
-          {
-            type: TAG_TYPE,
-            tag: 'p',
-            childs: [],
-          }
-        ],
-      }
-    ]
-
-    const patchNodes =
-      createNodes({
-        limit: 0,
-        liveNodes: allNodes,
-        templateNodes: allNodes,
-        createNode: params => params,
-      })
-
-    expect(patchNodes).toEqual([
-      {
-        index: 0,
-        limit: 0,
-        offset: 0,
-        liveNode: allNodes[0],
-        templateNode: allNodes[0],
-        childs: [
-          {
-            index: 0,
-            limit: 2,
-            offset: 0,
-            liveNode: allNodes[0].childs[0],
-            templateNode: allNodes[0].childs[0],
-            childs: [
-              {
-                index: 0,
-                limit: 1,
-                offset: 0,
-                liveNode: allNodes[0].childs[0].childs[0],
-                templateNode: allNodes[0].childs[0].childs[0],
-                childs: [],
-              },
-            ],
-          },
-          {
-            index: 1,
-            limit: 2,
-            offset: 0,
-            liveNode: allNodes[0].childs[1],
-            templateNode: allNodes[0].childs[1],
-            childs: [],
-          },
-        ]
-      }
-    ])
-
-
-  })
-
-
-
-
-  it('call createNode with last returned limit', () => {
-
-    const allNodes = [{ childs: [] }, { childs: [] }, { childs: [] }]
-
-    const patchNodes =
-      createNodes({
-        limit: 0,
-        domNodes: allNodes,
-        liveNodes: allNodes,
-        templateNodes: allNodes,
-        createNode: (params) => {
-          return Object.assign({}, params, { nextLimit: params.index + 1 })
-        },
-      })
-
-    expect(patchNodes[0].nextLimit).toBe(1)
-    expect(patchNodes[1].nextLimit).toBe(2)
-    expect(patchNodes[2].nextLimit).toBe(3)
-
-  })
-
-  it('call createNode with index argument', () => {
-
-    const allNodes = [{ childs: [] }, { childs: [] }]
-
-    const patchNodes =
-      createNodes({
-        domNodes: allNodes,
-        liveNodes: allNodes,
-        templateNodes: allNodes,
-        createNode: params => params,
-      })
-
-      expect(patchNodes[0].index).toEqual(0)
-      expect(patchNodes[1].index).toEqual(1)
-
-  })
-
-  it('call createNode with limit argument', () => {
-
-    const allNodes = [{ childs: [] }, { childs: [] }]
-
-    const patchNodes =
-      createNodes({
-        limit: 2,
-        domNodes: allNodes,
-        liveNodes: allNodes,
-        templateNodes: allNodes,
-        createNode: params => params,
-      })
-
-    expect(patchNodes[0].limit).toBe(2)
-    expect(patchNodes[1].limit).toBe(2)
-
-
-  })
-
-  it('call createNode with offset argument', () => {
-
-    const allNodes = [{ childs: [] }, { childs: [] }]
-
-    const patchNodes =
-      createNodes({
-        offset: 2,
-        domNodes: allNodes,
-        liveNodes: allNodes,
-        templateNodes: allNodes,
-        createNode: params => params,
-      })
-
-    expect(patchNodes[0].offset).toBe(2)
-    expect(patchNodes[1].offset).toBe(2)
-
-  })
-
-})
-
-
-/***/ }),
+/* 83 */,
+/* 84 */,
 /* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5583,6 +5349,22 @@ describe('Decorate live nodes', () => {
       decoratedNodes[1].order
     ).toBe(1)
 
+  })
+
+  it('include null values when decorate with order', () => {
+
+    const liveNodes = [{}, null, null, {}]
+
+    const decoratedNodes = decorateNodes(liveNodes, { order: true })
+
+    expect(
+      decoratedNodes[0].order
+    ).toBe(0)
+
+    expect(
+      decoratedNodes[3].order
+    ).toBe(3)
+
 
   })
 
@@ -5612,6 +5394,38 @@ describe('Decorate live nodes', () => {
 
     expect(
       decoratedNodes[1].dom.isSameNode(textNode)
+    ).toBe(true)
+
+  })
+
+  it('skip null when decorate with dom node', () => {
+
+    const liveNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+      },
+      null,
+      null,
+      {
+        type: TEXT_TYPE,
+        text: 'text',
+      }
+    ]
+
+    const textNode = document.createTextNode('text')
+    const tagNode = document.createElement('div')
+
+    const domNodes = [ tagNode, textNode ]
+
+    const decoratedNodes = decorateNodes(liveNodes, { dom: domNodes })
+
+    expect(
+      decoratedNodes[0].dom.isSameNode(tagNode)
+    ).toBe(true)
+
+    expect(
+      decoratedNodes[3].dom.isSameNode(textNode)
     ).toBe(true)
 
   })
@@ -6474,9 +6288,9 @@ describe('Sort nodes:', () => {
     it('by template nodes', () => {
 
       const liveNodes = [
-        { text: 'hello',      order: 0 },
-        { tag: 'div', key: 1, order: 1 },
-        { tag: 'div', key: 3, order: 2 },
+        { text: 'hello' },
+        { tag: 'div', key: 1 },
+        { tag: 'div', key: 3 },
       ]
 
       const templateNodes = [
@@ -6487,16 +6301,14 @@ describe('Sort nodes:', () => {
         { text: 'hello world'},
       ]
 
-      expect(
-        sortLiveNodes(liveNodes, templateNodes)
-      ).toEqual([
-        { text: 'hello', order: 0 },
-        null,
-        null,
-        { tag: 'div', key: 1, order: 1 },
-        null,
-        { tag: 'div', key: 3, order: 2 },
-      ])
+      const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+
+      expect(sortedLiveNodes[0].text).toEqual('hello')
+      expect(sortedLiveNodes[1]).toEqual(null)
+      expect(sortedLiveNodes[2]).toEqual(null)
+      expect(sortedLiveNodes[3].key).toEqual(1)
+      expect(sortedLiveNodes[4]).toEqual(null)
+      expect(sortedLiveNodes[5].key).toEqual(3)
 
     })
 
@@ -6561,21 +6373,21 @@ describe('Sort nodes:', () => {
       it('when unused exists', () => {
 
         const liveNodes = [
-          { tag: 'div', key: 1, order: 1 },
-          { tag: 'div', key: 2, order: 2 },
-          { tag: 'div', key: 3, order: 3 },
-          { tag: 'div', key: 4, order: 4 },
+          { id: 1 },
+          { id: 2 },
+          { id: 3 },
+          { id: 4 },
         ]
 
-        const usedOrderIndexes = [1,3]
+        const usedLiveIds = [1,3]
 
         expect(
           sortUnusedLiveNodes({
-            liveNodes, usedOrderIndexes
+            liveNodes, usedLiveIds
           })
         ).toEqual([
-          { tag: 'div', key: 2, order: 2 },
-          { tag: 'div', key: 4, order: 4 },
+          { id: 2 },
+          { id: 4 },
         ])
 
       })
@@ -8876,6 +8688,399 @@ module.exports = [
 	"video",
 	"wbr"
 ]
+
+
+/***/ }),
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const createNode = __webpack_require__(34)
+const {
+  TEXT_TYPE, TAG_TYPE
+} = __webpack_require__(0)
+
+describe('Create patch node', () => {
+
+  it('copy liveNode, templateNode, limit', () => {
+
+    const patchNode =
+      createNode({
+        liveNode: {},
+        templateNode: {},
+        limit: 0,
+      })
+
+    expect(patchNode.liveNode).toEqual({})
+    expect(patchNode.templateNode).toEqual({})
+    expect(patchNode.limit).toEqual(0)
+
+  })
+
+  it('calculate nextLimit', () => {
+
+    const patchNode =
+      createNode({
+        liveNode: {
+          type: TAG_TYPE,
+          props: {},
+          childs: [],
+        },
+        templateNode: null,
+        limit: 2,
+      })
+
+    expect(patchNode.nextLimit).toBe(1)
+
+  })
+
+  it('calculate node actions', () => {
+
+    const patchNode =
+      createNode({
+        liveNode: {
+          type: TAG_TYPE,
+          props: {},
+          childs: [],
+        },
+        templateNode: null,
+        limit: 2,
+      })
+
+    expect(patchNode.actions.length).toBe(1)
+
+  })
+
+})
+
+
+/***/ }),
+/* 123 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { omit } = __webpack_require__(1)
+const createNodes = __webpack_require__(35)
+const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
+
+describe('Create patch nodes', () => {
+
+  it('filter nodes', () => {
+
+    const allNodes = [
+      { id: 1, childs: [] },
+      { id: 2, childs: [] },
+      { id: 3, childs: [] }
+    ]
+
+    const patchNodes =
+      createNodes({
+        limit: 0,
+        domNodes: allNodes,
+        liveNodes: allNodes,
+        templateNodes: allNodes,
+        filterNodes: (liveNodes, templateNodes) => {
+
+          const compareNodes = (a, b) => a.id < b.id
+
+          return {
+            filteredLiveNodes: liveNodes.sort(compareNodes),
+            filteredTemplateNodes: templateNodes.sort(compareNodes),
+          }
+        },
+        createNode: ({ templateNode, liveNode }) => {
+          return { templateNode, liveNode }
+        },
+      })
+
+    expect(patchNodes).toEqual([
+      {
+        templateNode: { id: 3, childs: [] },
+        liveNode: { id: 3, childs: [] },
+        childs: [],
+      },
+      {
+        templateNode: { id: 2, childs: [] },
+        liveNode: { id: 2, childs: [] },
+        childs: [],
+      },
+      {
+        templateNode: { id: 1, childs: [] },
+        liveNode: { id: 1, childs: [] },
+        childs: [],
+      },
+    ])
+
+  })
+
+  it('call createNode for childs with all arguments', () => {
+
+    const allNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        childs: [
+          {
+            type: TAG_TYPE,
+            tag: 'span',
+            childs: [
+              {
+                type: TEXT_TYPE,
+                text: 'text',
+                childs: [],
+              }
+            ]
+          },
+          {
+            type: TAG_TYPE,
+            tag: 'p',
+            childs: [],
+          }
+        ],
+      }
+    ]
+
+    const patchNodes =
+      createNodes({
+        limit: 0,
+        liveNodes: allNodes,
+        templateNodes: allNodes,
+        createNode: params => params,
+      })
+
+    expect(patchNodes).toEqual([
+      {
+        index: 0,
+        limit: 0,
+        offset: 0,
+        liveNode: allNodes[0],
+        templateNode: allNodes[0],
+        childs: [
+          {
+            index: 0,
+            limit: 2,
+            offset: 0,
+            liveNode: allNodes[0].childs[0],
+            templateNode: allNodes[0].childs[0],
+            childs: [
+              {
+                index: 0,
+                limit: 1,
+                offset: 0,
+                liveNode: allNodes[0].childs[0].childs[0],
+                templateNode: allNodes[0].childs[0].childs[0],
+                childs: [],
+              },
+            ],
+          },
+          {
+            index: 1,
+            limit: 2,
+            offset: 0,
+            liveNode: allNodes[0].childs[1],
+            templateNode: allNodes[0].childs[1],
+            childs: [],
+          },
+        ]
+      }
+    ])
+
+
+  })
+
+
+
+
+  it('call createNode with last returned limit', () => {
+
+    const allNodes = [{ childs: [] }, { childs: [] }, { childs: [] }]
+
+    const patchNodes =
+      createNodes({
+        limit: 0,
+        domNodes: allNodes,
+        liveNodes: allNodes,
+        templateNodes: allNodes,
+        createNode: (params) => {
+          return Object.assign({}, params, { nextLimit: params.index + 1 })
+        },
+      })
+
+    expect(patchNodes[0].nextLimit).toBe(1)
+    expect(patchNodes[1].nextLimit).toBe(2)
+    expect(patchNodes[2].nextLimit).toBe(3)
+
+  })
+
+  it('call createNode with index argument', () => {
+
+    const allNodes = [{ childs: [] }, { childs: [] }]
+
+    const patchNodes =
+      createNodes({
+        domNodes: allNodes,
+        liveNodes: allNodes,
+        templateNodes: allNodes,
+        createNode: params => params,
+      })
+
+      expect(patchNodes[0].index).toEqual(0)
+      expect(patchNodes[1].index).toEqual(1)
+
+  })
+
+  it('call createNode with limit argument', () => {
+
+    const allNodes = [{ childs: [] }, { childs: [] }]
+
+    const patchNodes =
+      createNodes({
+        limit: 2,
+        domNodes: allNodes,
+        liveNodes: allNodes,
+        templateNodes: allNodes,
+        createNode: params => params,
+      })
+
+    expect(patchNodes[0].limit).toBe(2)
+    expect(patchNodes[1].limit).toBe(2)
+
+
+  })
+
+  it('call createNode with offset argument', () => {
+
+    const allNodes = [{ childs: [] }, { childs: [] }]
+
+    const patchNodes =
+      createNodes({
+        offset: 2,
+        domNodes: allNodes,
+        liveNodes: allNodes,
+        templateNodes: allNodes,
+        createNode: params => params,
+      })
+
+    expect(patchNodes[0].offset).toBe(2)
+    expect(patchNodes[1].offset).toBe(2)
+
+  })
+
+})
+
+
+/***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const createTree = __webpack_require__(18)
+const {
+  TEXT_TYPE, TAG_TYPE
+} = __webpack_require__(0)
+const {
+  INSERT_NODE, CREATE_NODE, UPDATE_NODE, REPLACE_NODE, DELETE_NODE
+} = __webpack_require__(3)
+
+fdescribe('Create patch tree', () => {
+
+  it('update actions', () => {
+
+    const domNodes = [
+      { childs: [] },
+      { childs: [] },
+      { childs: [] },
+      { childs: [] }
+    ]
+
+    const liveNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: {},
+        childs: []
+      },
+      {
+        type: TEXT_TYPE,
+        text: 'some text',
+        childs: []
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: { id: 1 },
+        childs: [],
+        key: 1
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'p',
+        props: { id: 1 },
+        childs: [],
+        key: 2
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'p',
+        props: { id: 1 },
+        childs: [],
+      },
+    ]
+
+    const templateNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'p',
+        props: { id: 1 },
+        childs: []
+      },
+      {
+        type: TEXT_TYPE,
+        text: 'some another text',
+        childs: []
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: { id: 1 },
+        key: 1,
+        childs: [],
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'p',
+        props: { id: 1 },
+        key: 3,
+        childs: [],
+      },
+      {
+        type: TAG_TYPE,
+        tag: 'p',
+        props: { id: 1 },
+        key: 2,
+        childs: [],
+      },
+    ]
+
+    const patchNodes =
+      createTree({
+        domNodes,
+        liveNodes,
+        templateNodes,
+      })
+
+    console.log(patchNodes)
+
+    expect(patchNodes[0].actions).toEqual([ REPLACE_NODE ])
+    expect(patchNodes[1].actions).toEqual([ UPDATE_NODE ])
+    expect(patchNodes[2].actions).toEqual([ UPDATE_NODE ])
+    expect(patchNodes[3].actions).toEqual([ CREATE_NODE ])
+    expect(patchNodes[4].actions).toEqual([ UPDATE_NODE ])
+    expect(patchNodes[5].actions).toEqual([ DELETE_NODE ])
+
+  })
+
+})
 
 
 /***/ })

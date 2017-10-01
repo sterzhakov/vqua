@@ -36,9 +36,9 @@ describe('Sort nodes:', () => {
     it('by template nodes', () => {
 
       const liveNodes = [
-        { text: 'hello',      order: 0 },
-        { tag: 'div', key: 1, order: 1 },
-        { tag: 'div', key: 3, order: 2 },
+        { text: 'hello' },
+        { tag: 'div', key: 1 },
+        { tag: 'div', key: 3 },
       ]
 
       const templateNodes = [
@@ -49,16 +49,14 @@ describe('Sort nodes:', () => {
         { text: 'hello world'},
       ]
 
-      expect(
-        sortLiveNodes(liveNodes, templateNodes)
-      ).toEqual([
-        { text: 'hello', order: 0 },
-        null,
-        null,
-        { tag: 'div', key: 1, order: 1 },
-        null,
-        { tag: 'div', key: 3, order: 2 },
-      ])
+      const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+
+      expect(sortedLiveNodes[0].text).toEqual('hello')
+      expect(sortedLiveNodes[1]).toEqual(null)
+      expect(sortedLiveNodes[2]).toEqual(null)
+      expect(sortedLiveNodes[3].key).toEqual(1)
+      expect(sortedLiveNodes[4]).toEqual(null)
+      expect(sortedLiveNodes[5].key).toEqual(3)
 
     })
 
@@ -123,21 +121,21 @@ describe('Sort nodes:', () => {
       it('when unused exists', () => {
 
         const liveNodes = [
-          { tag: 'div', key: 1, order: 1 },
-          { tag: 'div', key: 2, order: 2 },
-          { tag: 'div', key: 3, order: 3 },
-          { tag: 'div', key: 4, order: 4 },
+          { id: 1 },
+          { id: 2 },
+          { id: 3 },
+          { id: 4 },
         ]
 
-        const usedOrderIndexes = [1,3]
+        const usedLiveIds = [1,3]
 
         expect(
           sortUnusedLiveNodes({
-            liveNodes, usedOrderIndexes
+            liveNodes, usedLiveIds
           })
         ).toEqual([
-          { tag: 'div', key: 2, order: 2 },
-          { tag: 'div', key: 4, order: 4 },
+          { id: 2 },
+          { id: 4 },
         ])
 
       })

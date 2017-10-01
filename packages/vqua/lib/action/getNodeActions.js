@@ -9,8 +9,7 @@ const actions = [
     name: INSERT_NODE,
     check: ({ liveNode, templateNode }) => {
       return (
-        liveNode &&
-        templateNode &&
+        liveNode && templateNode &&
         liveNode.order != templateNode.order
       )
     },

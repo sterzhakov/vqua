@@ -32,13 +32,13 @@ const getLivePairForTemplate = (liveNode, templateNode, keyedLiveNodes) => {
 }
 
 
-const wrapNodesWithTheirKeys = (nodes) => (
-  nodes.reduce((keyedNodes, node) => (
-    (node && node.key)
+const wrapNodesWithTheirKeys = (nodes) => {
+  return nodes.reduce((keyedNodes, node) => {
+    return (node && node.key)
       ? Object.assign({}, keyedNodes, { [node.key]: node })
       : keyedNodes
-  ), {})
-)
+  }, {})
+}
 
 
 const sortUsedLiveNodes = ({ liveNodes, templateNodes, keyedLiveNodes }) => {
@@ -58,11 +58,11 @@ const sortUsedLiveNodes = ({ liveNodes, templateNodes, keyedLiveNodes }) => {
 }
 
 
-const sortUnusedLiveNodes = ({ liveNodes, usedOrderIndexes }) => {
+const sortUnusedLiveNodes = ({ liveNodes, usedLiveIds }) => {
 
-  return liveNodes.filter((liveNode) => {
+  return liveNodes.filter((liveNode, index) => {
 
-    return !include(usedOrderIndexes, liveNode.order)
+    return !include(usedLiveIds, liveNode.id)
 
   })
 
@@ -71,27 +71,42 @@ const sortUnusedLiveNodes = ({ liveNodes, usedOrderIndexes }) => {
 
 const sortLiveNodes = (liveNodes = [], templateNodes = []) => {
 
-  const keyedLiveNodes = wrapNodesWithTheirKeys(liveNodes)
+  const liveSortableNodes = liveNodes.map((node, index) => {
+
+    return { id: index, key: node.key, node }
+
+  })
+
+  const keyedLiveNodes = wrapNodesWithTheirKeys(liveSortableNodes)
 
   const usedLiveNodes =
     sortUsedLiveNodes({
-      liveNodes,
+      liveNodes: liveSortableNodes,
       templateNodes,
       keyedLiveNodes
     })
 
-  const usedOrderIndexes =
-    usedLiveNodes.reduce((indexes, usedLiveNode) => {
-      return usedLiveNode ? [ ...indexes, usedLiveNode.order ] : indexes
-    }, [])
+  const usedLiveIds = usedLiveNodes.reduce((ids, usedLiveNode, index) => {
+    return Number.isInteger(usedLiveNode && usedLiveNode.id)
+      ? [ ...ids, usedLiveNode.id ]
+      : ids
+  }, [])
 
   const unusedLiveNodes =
     sortUnusedLiveNodes({
-      liveNodes,
-      usedOrderIndexes
+      liveNodes: liveSortableNodes,
+      usedLiveIds
     })
 
-  return [ ...usedLiveNodes, ...unusedLiveNodes ]
+  const sortableLiveNodes = [ ...usedLiveNodes, ...unusedLiveNodes ]
+
+  return sortableLiveNodes.map((sortableNode) => {
+
+    return sortableNode
+      ? sortableNode.node
+      : sortableNode
+
+  })
 
 }
 

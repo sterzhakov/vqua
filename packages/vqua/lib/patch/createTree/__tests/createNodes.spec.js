@@ -1,5 +1,5 @@
 const { omit } = require('vqua-utils')
-const createNodes = require('../../createTree/createNodes')
+const createNodes = require('../createNodes')
 const { TEXT_TYPE, TAG_TYPE } = require('../../../constants/nodeTypes')
 
 describe('Create patch nodes', () => {

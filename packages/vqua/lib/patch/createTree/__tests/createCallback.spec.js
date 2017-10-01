@@ -1,4 +1,4 @@
-const createNode = require('../../createTree/createCallback')
+const createNode = require('../createCallback')
 const {
   TEXT_TYPE, TAG_TYPE
 } = require('../../../constants/nodeTypes')
