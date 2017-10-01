@@ -6,7 +6,7 @@ const {
   INSERT_NODE, CREATE_NODE, UPDATE_NODE, REPLACE_NODE, DELETE_NODE
 } = require('../../../constants/actionTypes')
 
-fdescribe('Create patch tree', () => {
+describe('Create patch tree', () => {
 
   it('update actions', () => {
 
@@ -93,7 +93,6 @@ fdescribe('Create patch tree', () => {
         templateNodes,
       })
 
-    console.log(patchNodes)
 
     expect(patchNodes[0].actions).toEqual([ REPLACE_NODE ])
     expect(patchNodes[1].actions).toEqual([ UPDATE_NODE ])

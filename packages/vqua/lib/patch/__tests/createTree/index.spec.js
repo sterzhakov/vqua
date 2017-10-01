@@ -97,7 +97,7 @@ describe('Create patch tree', () => {
     expect(patchNodes[1].actions).toEqual([ UPDATE_NODE ])
     expect(patchNodes[2].actions).toEqual([ UPDATE_NODE ])
     expect(patchNodes[3].actions).toEqual([ CREATE_NODE ])
-    expect(patchNodes[4].actions).toEqual([ INSERT_NODE, UPDATE_NODE ])
+    expect(patchNodes[4].actions).toEqual([ UPDATE_NODE ])
     expect(patchNodes[5].actions).toEqual([ DELETE_NODE ])
 
   })
