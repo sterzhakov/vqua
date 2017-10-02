@@ -906,12 +906,17 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       domNodes,
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
-        const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+        const withDomLiveNodes =
+          decorateNodes(liveNodes, {
+            dom: domNodes
+          })
 
-        const decoratedLiveNodes =
+        const sortedLiveNodes =
+          sortLiveNodes(withDomLiveNodes, templateNodes)
+
+        const orderedLiveNodes =
           decorateNodes(sortedLiveNodes, {
             order: { startFrom: offset },
-            dom: domNodes
           })
 
         const decoratedTemplateNodes =
@@ -920,7 +925,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
           })
 
         return {
-          filteredLiveNodes: decoratedLiveNodes,
+          filteredLiveNodes: orderedLiveNodes,
           filteredTemplateNodes: decoratedTemplateNodes
         }
 
@@ -1152,7 +1157,7 @@ class TasksContainer extends Component {
 
   }
 
-  handleTodoAdd() {
+  handleTaskAdd() {
 
     const { input } = this.refs
 
@@ -1177,7 +1182,7 @@ class TasksContainer extends Component {
 
   handleTaskToggle(task) {
 
-    const tasks = this.state.tasks.map((_task) => {
+    const tasks = this.state.tasks.map  ((_task) => {
 
       return (_task.id == task.id)
         ? Object.assign({},
@@ -1190,6 +1195,18 @@ class TasksContainer extends Component {
 
     this.setState({ tasks })
 
+
+  }
+
+  handleTaskDelete(task) {
+
+    const tasks = this.state.tasks.filter((_task) => {
+
+      return _task.id != task.id
+
+    })
+
+    this.setState({ tasks })
 
   }
 
@@ -1209,24 +1226,32 @@ class TasksContainer extends Component {
             placeholder: 'todo name'
           }),
           button({
-            onClick: () => { this.handleTodoAdd() },
+            onClick: () => { this.handleTaskAdd() },
             class: 'todo__add__button',
           }, 'Add')
         ),
         br(),
         this.state.tasks.map((task, index) => {
           return [
-            a({
-              class: 'todo__item',
-              href: '#todo__item__toggle',
-              key: task.id,
-              onClick: () => { this.handleTaskToggle(task) }
-            },
-              task.completed
-                ? s({}, task.name)
-                : task.name
-            ),
-            br({ key: task.id + '_br', })
+            div({ class: 'todo__item', key: task.id },
+              a({
+                class: 'todo__item',
+                href: '#todo__item__toggle',
+                onClick: () => { this.handleTaskToggle(task) }
+              },
+                task.completed
+                  ? s({}, task.name)
+                  : task.name
+              ),
+              a({
+                class: 'todo__delete',
+                href: '#todo__item__delete',
+                onClick: () => { this.handleTaskDelete(task) }
+              },
+                '[x]'
+              ),
+              br()
+            )
           ]
         })
       )
@@ -3322,19 +3347,6 @@ const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
   const sortedLiveProps = sortProps(liveProps)
   const sortedTemplateProps = sortProps(templateProps)
-
-  // TODO: delete comment
-
-  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
-  //
-  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
-  //   sortedTemplateProps.eventProps.onClick()
-  //
-  //   if (sortedLiveProps.eventProps.onClick) {
-  //     sortedLiveProps.eventProps.onClick()
-  //   }
-  //
-  //
 
   updateElementProps(
     domNode,
