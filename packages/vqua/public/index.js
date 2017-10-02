@@ -258,7 +258,6 @@ class Base {
 
     })
 
-    return true
 
   }
 
@@ -537,7 +536,6 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
   )
 
   return patchNodes
-
 
 }
 
@@ -1879,7 +1877,6 @@ module.exports = ({
             templateNode.instance.node.instanceId
           )
 
-
           updateProps(
             liveNode.dom,
             liveNode.props,
@@ -2071,7 +2068,7 @@ const createNodes = ({
 
     const templateNode = filteredTemplateNodes[index] || null
     const liveNode = filteredLiveNodes[index] || null
-    const domNode = domNodes && domNodes[index] || null
+    const domNode = liveNode && liveNode.dom || null
 
     const prevPatchNode = patchNodes[patchNodes.length - 1]
 

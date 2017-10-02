@@ -57,7 +57,6 @@ module.exports = ({
             templateNode.instance.node.instanceId
           )
 
-
           updateProps(
             liveNode.dom,
             liveNode.props,

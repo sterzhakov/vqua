@@ -44,5 +44,4 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
   return patchNodes
 
-
 }

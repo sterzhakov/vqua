@@ -28,7 +28,7 @@ const createNodes = ({
 
     const templateNode = filteredTemplateNodes[index] || null
     const liveNode = filteredLiveNodes[index] || null
-    const domNode = domNodes && domNodes[index] || null
+    const domNode = liveNode && liveNode.dom || null
 
     const prevPatchNode = patchNodes[patchNodes.length - 1]
 
