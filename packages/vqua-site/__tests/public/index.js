@@ -4576,11 +4576,14 @@ module.exports = function (_ref) {
       var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
           domNodes = _ref2.domNodes;
 
-      var sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes);
-
-      var decoratedLiveNodes = decorateNodes(sortedLiveNodes, {
-        order: { startFrom: offset },
+      var withDomLiveNodes = decorateNodes(liveNodes, {
         dom: domNodes
+      });
+
+      var sortedLiveNodes = sortLiveNodes(withDomLiveNodes, templateNodes);
+
+      var orderedLiveNodes = decorateNodes(sortedLiveNodes, {
+        order: { startFrom: offset }
       });
 
       var decoratedTemplateNodes = decorateNodes(templateNodes, {
@@ -4588,7 +4591,7 @@ module.exports = function (_ref) {
       });
 
       return {
-        filteredLiveNodes: decoratedLiveNodes,
+        filteredLiveNodes: orderedLiveNodes,
         filteredTemplateNodes: decoratedTemplateNodes
       };
     }
@@ -11204,8 +11207,6 @@ var Base = function () {
           hookNode(AFTER_DOM_CREATE, liveNode, null, null);
         }
       });
-
-      return true;
     }
   }]);
 
@@ -12217,7 +12218,7 @@ var createNodes = function createNodes(_ref) {
 
     var templateNode = filteredTemplateNodes[index] || null;
     var liveNode = filteredLiveNodes[index] || null;
-    var domNode = domNodes && domNodes[index] || null;
+    var domNode = liveNode && liveNode.dom || null;
 
     var prevPatchNode = patchNodes[patchNodes.length - 1];
 
@@ -12599,19 +12600,6 @@ var updateProps = function updateProps(domNode, liveProps, templateProps, isProp
   var sortedLiveProps = sortProps(liveProps);
   var sortedTemplateProps = sortProps(templateProps);
 
-  // TODO: delete comment
-
-  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
-  //
-  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
-  //   sortedTemplateProps.eventProps.onClick()
-  //
-  //   if (sortedLiveProps.eventProps.onClick) {
-  //     sortedLiveProps.eventProps.onClick()
-  //   }
-  //
-  //
-
   updateElementProps(domNode, sortedLiveProps.elementProps, sortedTemplateProps.elementProps, isPropsEqual);
 
   updateEventProps(domNode, sortedLiveProps.eventProps, sortedTemplateProps.eventProps, isPropsEqual);
@@ -12827,7 +12815,9 @@ module.exports = function (leftProp, rightProp) {
       case 'function':
         {
 
-          return left.prop.toString() == right.prop.toString();
+          // TODO: Need more light solution
+          // return left.prop.toString() == right.prop.toString()
+          return false;
 
           break;
         }

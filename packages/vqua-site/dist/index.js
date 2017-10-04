@@ -2106,7 +2106,7 @@ module.exports = function () {
       humanId = _ref.humanId,
       raw = _ref.raw;
 
-  var context = raw ? __webpack_require__(449) : __webpack_require__(483);
+  var context = raw ? __webpack_require__(449) : __webpack_require__(485);
 
   return context.keys().reduce(function (examples, pathname) {
 
@@ -2136,7 +2136,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var readDir = __webpack_require__(491);
+var readDir = __webpack_require__(493);
 var path = __webpack_require__(45);
 var fs = __webpack_require__(45);
 var getPathInfo = __webpack_require__(53);
@@ -2164,7 +2164,7 @@ module.exports = function () {
 
               if (pathInfo.articleName == humanId) {
 
-                var content = raw ? fs.readFileSync(pathname).toString() : pathInfo.isPreview ? __webpack_require__(496)("" + pathname) : null;
+                var content = raw ? fs.readFileSync(pathname).toString() : pathInfo.isPreview ? __webpack_require__(498)("" + pathname) : null;
 
                 var example = Object.assign({}, pathInfo, { content: content });
 
@@ -3380,7 +3380,7 @@ var _require2 = __webpack_require__(6),
     classNames = _require2.classNames,
     omit = _require2.omit;
 
-var Link = __webpack_require__(501);
+var Link = __webpack_require__(503);
 
 var MenuItems = function (_Component) {
   _inherits(MenuItems, _Component);
@@ -4848,11 +4848,14 @@ module.exports = function (_ref) {
       var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
           domNodes = _ref2.domNodes;
 
-      var sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes);
-
-      var decoratedLiveNodes = decorateNodes(sortedLiveNodes, {
-        order: { startFrom: offset },
+      var withDomLiveNodes = decorateNodes(liveNodes, {
         dom: domNodes
+      });
+
+      var sortedLiveNodes = sortLiveNodes(withDomLiveNodes, templateNodes);
+
+      var orderedLiveNodes = decorateNodes(sortedLiveNodes, {
+        order: { startFrom: offset }
       });
 
       var decoratedTemplateNodes = decorateNodes(templateNodes, {
@@ -4860,7 +4863,7 @@ module.exports = function (_ref) {
       });
 
       return {
-        filteredLiveNodes: decoratedLiveNodes,
+        filteredLiveNodes: orderedLiveNodes,
         filteredTemplateNodes: decoratedTemplateNodes
       };
     }
@@ -5281,7 +5284,7 @@ var _require = __webpack_require__(7),
 
 var App = __webpack_require__(164);
 var ExampleModel = __webpack_require__(158);
-var createArticle = __webpack_require__(507);
+var createArticle = __webpack_require__(509);
 
 var ArticleContainer = function (_Component) {
   _inherits(ArticleContainer, _Component);
@@ -5349,8 +5352,8 @@ var _require = __webpack_require__(7),
     Component = _require.Component,
     html = _require.html;
 
-var Sidebar = __webpack_require__(499);
-var Content = __webpack_require__(505);
+var Sidebar = __webpack_require__(501);
+var Content = __webpack_require__(507);
 
 var App = function (_Component) {
   _inherits(App, _Component);
@@ -5405,7 +5408,7 @@ var _require = __webpack_require__(7),
     Component = _require.Component;
 
 var App = __webpack_require__(164);
-var Error404 = __webpack_require__(532);
+var Error404 = __webpack_require__(534);
 
 var ErrorContainer = function (_Component) {
   _inherits(ErrorContainer, _Component);
@@ -10837,7 +10840,7 @@ var navigation = createNavigation({ routes: routes, cache: cache }, function (pa
       callback = params.callback;
 
 
-  var Component = __webpack_require__(498)("./" + component.name);
+  var Component = __webpack_require__(500)("./" + component.name);
 
   var templateNodes = [Component.v(component.props, component.context)];
 
@@ -11019,8 +11022,6 @@ var Base = function () {
           hookNode(AFTER_DOM_CREATE, liveNode, null, null);
         }
       });
-
-      return true;
     }
   }]);
 
@@ -12435,7 +12436,7 @@ var createNodes = function createNodes(_ref) {
 
     var templateNode = filteredTemplateNodes[index] || null;
     var liveNode = filteredLiveNodes[index] || null;
-    var domNode = domNodes && domNodes[index] || null;
+    var domNode = liveNode && liveNode.dom || null;
 
     var prevPatchNode = patchNodes[patchNodes.length - 1];
 
@@ -12817,19 +12818,6 @@ var updateProps = function updateProps(domNode, liveProps, templateProps, isProp
   var sortedLiveProps = sortProps(liveProps);
   var sortedTemplateProps = sortProps(templateProps);
 
-  // TODO: delete comment
-
-  // if (sortedTemplateProps.eventProps.onClick == '() => { console.log(task.id) }') {
-  //
-  //   console.log(sortedLiveProps.eventProps, sortedTemplateProps.eventProps)
-  //   sortedTemplateProps.eventProps.onClick()
-  //
-  //   if (sortedLiveProps.eventProps.onClick) {
-  //     sortedLiveProps.eventProps.onClick()
-  //   }
-  //
-  //
-
   updateElementProps(domNode, sortedLiveProps.elementProps, sortedTemplateProps.elementProps, isPropsEqual);
 
   updateEventProps(domNode, sortedLiveProps.eventProps, sortedTemplateProps.eventProps, isPropsEqual);
@@ -13045,7 +13033,9 @@ module.exports = function (leftProp, rightProp) {
       case 'function':
         {
 
-          return left.prop.toString() == right.prop.toString();
+          // TODO: Need more light solution
+          // return left.prop.toString() == right.prop.toString()
+          return false;
 
           break;
         }
@@ -13693,7 +13683,7 @@ var MainController = __webpack_require__(431);
 var ArticleController = __webpack_require__(432);
 var ErrorController = __webpack_require__(162);
 
-var _require3 = __webpack_require__(497),
+var _require3 = __webpack_require__(499),
     localeMatcher = _require3.localeMatcher;
 
 var routes = [route('/', MainController.index), route([localeMatcher], ArticleController.show, {}, route('/:humanId', ArticleController.show)), route('*', ErrorController.notFound)];
@@ -13936,7 +13926,7 @@ module.exports = "<h1>Introduction</h1>\n\n<p><b>Vqua</b> is a javascript librar
 /* 442 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Вступление</h1>\n\n<p>\n  <b>Vqua</b> это JavaScript бибилиотека для создание веб-интерфейсов,\n  ориентированная на создания изморфных/унивесральных приложений.\n  Или говоря более простым языком то ваш сайт будет лучше индексироваться поисковыми системами.\n</p>\n\n\n<h2>\n  Экосистема\n</h2>\n\n<h3>Серверный рендер</h3>\n\n<ul>\n  <li><a href=\"#link\">vqua-router</a> - универсальный роутер</li>\n  <li><a href=\"#link\">vqua-navigation</a> - браузерная навигация</li>\n  <li><a href=\"#link\">vqua-server</a> - серверный пререндер</li>\n  <li><a href=\"#link\">vqua-boilerplate-ssr</a> - каркас универсального приложения</li>\n</ul>\n\n<br>\n\n<h3>Другое</h3>\n\n<ul>\n  <li><a href=\"#link\">dom2vqua</a> - преобразует dom ноды в vqua ноды</li>\n  <li><a href=\"#link\">html2vqua</a> - преобразует html строку в vqua ноды</li>\n  <li><a href=\"#link\">vqua2string</a> - преобразует vqua ноды в строку</li>\n  <li><a href=\"#link\">vqua-interpolate</a> - преобразует переменные в текстовых нодах</li>\n  <li><a href=\"#link\">vqua-utils</a> - утилиты использумые в vqua</li>\n</ul>\n"
+module.exports = "<h1>Вступление</h1>\n\n<p>\n  <b>Vqua</b> это JavaScript бибилиотека для создание веб-интерфейсов,\n  ориентированная на создания изморфных/унивесральных приложений.\n  Или говоря более простым языком то ваш сайт будет лучше индексироваться поисковыми системами.\n</p>\n\n<br>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/a6YrNX_ECtI\" frameborder=\"0\" allowfullscreen></iframe>\n\n\n<h2>\n  Экосистема\n</h2>\n\n<h3>Серверный рендер</h3>\n\n<ul>\n  <li><a href=\"#link\">vqua-router</a> - универсальный роутер</li>\n  <li><a href=\"#link\">vqua-navigation</a> - браузерная навигация</li>\n  <li><a href=\"#link\">vqua-server</a> - серверный пререндер</li>\n  <li><a href=\"#link\">vqua-boilerplate-ssr</a> - каркас универсального приложения</li>\n</ul>\n\n<br>\n\n<h3>Другое</h3>\n\n<ul>\n  <li><a href=\"#link\">dom2vqua</a> - преобразует dom ноды в vqua ноды</li>\n  <li><a href=\"#link\">html2vqua</a> - преобразует html строку в vqua ноды</li>\n  <li><a href=\"#link\">vqua2string</a> - преобразует vqua ноды в строку</li>\n  <li><a href=\"#link\">vqua-interpolate</a> - преобразует переменные в текстовых нодах</li>\n  <li><a href=\"#link\">vqua-utils</a> - утилиты использумые в vqua</li>\n</ul>\n"
 
 /***/ }),
 /* 443 */
@@ -14058,42 +14048,42 @@ function escapeHtml(string) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./boilerplate/examples/gulp.sh": 534,
-	"./boilerplate/examples/install.sh": 450,
-	"./boilerplate/examples/webpack.sh": 533,
-	"./browser-navigation/examples/create-navigation.js": 451,
-	"./browser-navigation/examples/install.sh": 452,
-	"./context/examples/app.preview.js": 453,
-	"./create-server/examples/create-server.sh": 454,
-	"./create-server/examples/install.js": 455,
-	"./create-server/examples/layout.js": 456,
+	"./boilerplate/examples/gulp.sh": 450,
+	"./boilerplate/examples/install.sh": 451,
+	"./boilerplate/examples/webpack.sh": 452,
+	"./browser-navigation/examples/create-navigation.js": 453,
+	"./browser-navigation/examples/install.sh": 454,
+	"./context/examples/app.preview.js": 455,
+	"./create-server/examples/create-server.sh": 456,
+	"./create-server/examples/install.js": 457,
+	"./create-server/examples/layout.js": 458,
 	"./fast-start/examples/hello-world-html.html": 157,
-	"./fast-start/examples/hello-world-js.js": 457,
-	"./fast-start/examples/webpack-config.js": 458,
-	"./fast-start/examples/webpack-install.sh": 459,
-	"./fast-start/examples/webpack-run.sh": 460,
-	"./hooks/examples/after-mount.js": 461,
-	"./hooks/examples/after-update.js": 462,
-	"./hooks/examples/before-mount.js": 463,
-	"./hooks/examples/before-unmount.js": 464,
-	"./hooks/examples/before-update.js": 465,
-	"./hooks/examples/is-need-update.js": 466,
-	"./introduction/examples/pure-javascript.js": 467,
-	"./props/examples/board.preview.js": 468,
-	"./props/examples/hello.preview.js": 469,
-	"./props/examples/keys-dom.preview.js": 470,
-	"./props/examples/keys-instance.js": 471,
-	"./props/examples/universe.preview.js": 472,
-	"./references/examples/component.js": 473,
-	"./references/examples/dom.preview.js": 474,
-	"./router/examples/install.sh": 475,
-	"./router/examples/match-routes.js": 476,
-	"./router/examples/matcher.js": 477,
-	"./sample/examples/test.preview.js": 478,
-	"./server-render/examples/browser-navigation.js": 479,
-	"./server-render/examples/controller.js": 480,
-	"./server-render/examples/create-server.js": 481,
-	"./state/examples/counter.preview.js": 482
+	"./fast-start/examples/hello-world-js.js": 459,
+	"./fast-start/examples/webpack-config.js": 460,
+	"./fast-start/examples/webpack-install.sh": 461,
+	"./fast-start/examples/webpack-run.sh": 462,
+	"./hooks/examples/after-mount.js": 463,
+	"./hooks/examples/after-update.js": 464,
+	"./hooks/examples/before-mount.js": 465,
+	"./hooks/examples/before-unmount.js": 466,
+	"./hooks/examples/before-update.js": 467,
+	"./hooks/examples/is-need-update.js": 468,
+	"./introduction/examples/pure-javascript.js": 469,
+	"./props/examples/board.preview.js": 470,
+	"./props/examples/hello.preview.js": 471,
+	"./props/examples/keys-dom.preview.js": 472,
+	"./props/examples/keys-instance.js": 473,
+	"./props/examples/universe.preview.js": 474,
+	"./references/examples/component.js": 475,
+	"./references/examples/dom.preview.js": 476,
+	"./router/examples/install.sh": 477,
+	"./router/examples/match-routes.js": 478,
+	"./router/examples/matcher.js": 479,
+	"./sample/examples/test.preview.js": 480,
+	"./server-render/examples/browser-navigation.js": 481,
+	"./server-render/examples/controller.js": 482,
+	"./server-render/examples/create-server.js": 483,
+	"./state/examples/counter.preview.js": 484
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -14115,213 +14105,225 @@ webpackContext.id = 449;
 /* 450 */
 /***/ (function(module, exports) {
 
-module.exports = "git clone git@github.com:sterjakovigor/vqua.git\ncp -R ./vqua/packages/vqua-boilerplate-ssr/ ./vqua-boilerplate-ssr\ncd vqua-boilerplate-ssr/\nnpm i\nnpm i -g nodemon\nnodemon server\n"
+module.exports = "gulp\n"
 
 /***/ }),
 /* 451 */
 /***/ (function(module, exports) {
 
-module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
+module.exports = "git clone git@github.com:sterjakovigor/vqua.git\ncp -R ./vqua/packages/vqua-boilerplate-ssr/ ./vqua-boilerplate-ssr\ncd vqua-boilerplate-ssr/\nnpm i\nnpm i -g nodemon\nnodemon server\n"
 
 /***/ }),
 /* 452 */
 /***/ (function(module, exports) {
 
-module.exports = "npm i --save vqua-navigation\n"
+module.exports = "webpack -w\n"
 
 /***/ }),
 /* 453 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component } = require('vqua')\n\n// cut before\n\nclass User extends Component {\n\n  static injectContext() {\n\n    return ['username']\n\n  }\n\n  render() {\n\n    return this.context.username\n\n  }\n\n}\n\nclass App extends Component {\n\n  passContext() {\n\n    return {\n      username: 'Igor',\n    }\n\n  }\n\n  render() {\n\n    return User.v()\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = App\n"
+module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
 
 /***/ }),
 /* 454 */
 /***/ (function(module, exports) {
 
-module.exports = "const app =\n  createServer({\n    routes: [],\n    layout: (html, data) => '',\n    publicPath: './dist',\n    containerPath: './build/containers',\n  })\n\napp.listen(8080)\n"
+module.exports = "npm i --save vqua-navigation\n"
 
 /***/ }),
 /* 455 */
 /***/ (function(module, exports) {
 
-module.exports = "npm i --save vqua-server\n"
+module.exports = "const { Component } = require('vqua')\n\n// cut before\n\nclass User extends Component {\n\n  static injectContext() {\n\n    return ['username']\n\n  }\n\n  render() {\n\n    return this.context.username\n\n  }\n\n}\n\nclass App extends Component {\n\n  passContext() {\n\n    return {\n      username: 'Igor',\n    }\n\n  }\n\n  render() {\n\n    return User.v()\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = App\n"
 
 /***/ }),
 /* 456 */
 /***/ (function(module, exports) {
 
-module.exports = "const layout = (html = '', data = '') => {\n\n  return (\n    '<html>' +\n      '<head>' +\n        '<meta charset=\"utf-8\">' +\n        '<link rel=\"stylesheet\" type=\"text/css\" href=\"/index.css\">' +\n      '</head>' +\n      '<body>' +\n        '<div id=\"app\">' +\n          html +\n        '</div>' +\n        '<script id=\"app-cache\" type=\"application/json\">' +\n          data +\n        '</script>' +\n        '<script src=\"/index.js\" type=\"text/javascript\"></script>' +\n      '</body>' +\n    '</html>'\n  )\n}\n"
+module.exports = "const app =\n  createServer({\n    routes: [],\n    layout: (html, data) => '',\n    publicPath: './dist',\n    containerPath: './build/containers',\n  })\n\napp.listen(8080)\n"
 
 /***/ }),
 /* 457 */
 /***/ (function(module, exports) {
 
-module.exports = "// { \"showPreview\": \"false\" }\n// cut before\n\nconst { html, Component, render } = require('vqua')\n\nclass HelloWorld extends Component {\n\n  render() {\n\n    const { div } = html\n\n    return (\n      div({},\n        'Hello world!'\n      )\n    )\n\n  }\n\n}\n\nconst app = document.getElementById('app')\n\nrender(app, HelloWorld.v(), (error) => {\n\n  if (error) throw error\n\n})\n\n// cut after\n\nmodule.exports = HelloWorld\n"
+module.exports = "npm i --save vqua-server\n"
 
 /***/ }),
 /* 458 */
 /***/ (function(module, exports) {
 
-module.exports = "const path = require('path')\n\nmodule.exports = {\n  entry: './index.js',\n  output: {\n    filename: 'index.js',\n    path: path.resolve(__dirname)\n  },\n}\n"
+module.exports = "const layout = (html = '', data = '') => {\n\n  return (\n    '<html>' +\n      '<head>' +\n        '<meta charset=\"utf-8\">' +\n        '<link rel=\"stylesheet\" type=\"text/css\" href=\"/index.css\">' +\n      '</head>' +\n      '<body>' +\n        '<div id=\"app\">' +\n          html +\n        '</div>' +\n        '<script id=\"app-cache\" type=\"application/json\">' +\n          data +\n        '</script>' +\n        '<script src=\"/index.js\" type=\"text/javascript\"></script>' +\n      '</body>' +\n    '</html>'\n  )\n}\n"
 
 /***/ }),
 /* 459 */
 /***/ (function(module, exports) {
 
-module.exports = "mkdir ./hello-world\n\ncd ./hello-world\n\nnpm install --save vqua\n\nnpm install --save-dev webpack\n"
+module.exports = "// { \"showPreview\": \"false\" }\n// cut before\n\nconst { html, Component, render } = require('vqua')\n\nclass HelloWorld extends Component {\n\n  render() {\n\n    const { div } = html\n\n    return (\n      div({},\n        'Hello world!'\n      )\n    )\n\n  }\n\n}\n\nconst app = document.getElementById('app')\n\nrender(app, HelloWorld.v(), (error) => {\n\n  if (error) throw error\n\n})\n\n// cut after\n\nmodule.exports = HelloWorld\n"
 
 /***/ }),
 /* 460 */
 /***/ (function(module, exports) {
 
-module.exports = "webpack\n"
+module.exports = "const path = require('path')\n\nmodule.exports = {\n  entry: './index.js',\n  output: {\n    filename: 'index.js',\n    path: path.resolve(__dirname)\n  },\n}\n"
 
 /***/ }),
 /* 461 */
 /***/ (function(module, exports) {
 
-module.exports = "afterMount() {}\n"
+module.exports = "mkdir ./hello-world\n\ncd ./hello-world\n\nnpm install --save vqua\n\nnpm install --save-dev webpack\n"
 
 /***/ }),
 /* 462 */
 /***/ (function(module, exports) {
 
-module.exports = "afterUpdate(prevProps, prevState, prevContext) {}\n"
+module.exports = "webpack\n"
 
 /***/ }),
 /* 463 */
 /***/ (function(module, exports) {
 
-module.exports = "beforeMount() {}\n"
+module.exports = "afterMount() {}\n"
 
 /***/ }),
 /* 464 */
 /***/ (function(module, exports) {
 
-module.exports = "beforeUnmount() {}\n"
+module.exports = "afterUpdate(prevProps, prevState, prevContext) {}\n"
 
 /***/ }),
 /* 465 */
 /***/ (function(module, exports) {
 
-module.exports = "beforeUpdate(nextProps, nextState, nextContext) {}\n"
+module.exports = "beforeMount() {}\n"
 
 /***/ }),
 /* 466 */
 /***/ (function(module, exports) {
 
-module.exports = "isNeedUpdate(nextProps, nextState, nextContext) {}\n"
+module.exports = "beforeUnmount() {}\n"
 
 /***/ }),
 /* 467 */
 /***/ (function(module, exports) {
 
-module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Beatles extends Component {\n\n  render() {\n\n    const { p, a } = html\n \n    return [\n      p({ class: 'yellow' },\n        'We all live in a yellow submarine'\n      ),\n      p({ onClick: () => { alert('Hands up!') } },\n        'Yellow submarine, yellow submarine'\n      ),\n    ]\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Beatles\n"
+module.exports = "beforeUpdate(nextProps, nextState, nextContext) {}\n"
 
 /***/ }),
 /* 468 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component, html } = require('vqua')\n\nconst Hello = require('./hello.preview')\n\n// cut before\n\nclass Board extends Component {\n\n  render() {\n\n    const { div } = html\n\n    return (\n      div({ id: 'board' },\n        this.props.childs\n      )\n    )\n\n  }\n\n}\n\nconst board = Board.v({}, 'Some text!')\n\n// cut after\n\nclass Wrapper extends Component {\n\n  render() {\n\n    return board\n\n  }\n\n}\n\n\nmodule.exports = Wrapper\n"
+module.exports = "isNeedUpdate(nextProps, nextState, nextContext) {}\n"
 
 /***/ }),
 /* 469 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component } = require('vqua')\n\n// cut before\n\nclass Hello extends Component {\n\n  static defaultProps() {\n\n    return {\n      name: 'World'\n    }\n\n  }\n\n  render() {\n\n    return (\n      'Hello, ' + this.props.name + '!'\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Hello\n"
+module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Beatles extends Component {\n\n  render() {\n\n    const { p, a } = html\n \n    return [\n      p({ class: 'yellow' },\n        'We all live in a yellow submarine'\n      ),\n      p({ onClick: () => { alert('Hands up!') } },\n        'Yellow submarine, yellow submarine'\n      ),\n    ]\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Beatles\n"
 
 /***/ }),
 /* 470 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n\nclass Toggler extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      active: true\n    }\n\n  }\n\n  handleClick(event) {\n\n    event.preventDefault()\n\n    this.setState({ active: !this.state.active })\n\n  }\n\n  render() {\n\n    const { div, a, br } = html\n\n    const first = (\n      div({ key: 'first' },\n        div({},\n          'first'\n        )\n      )\n    )\n\n    const second = (\n      div({ key: 'second' },\n        'second'\n      )\n    )\n\n    const toggle = [\n      a({ href: '#toggle', onClick: (e) => this.handleClick(e) },\n        'Toggle!'\n      ),\n      br(),\n    ]\n\n    return this.state.active\n      ? [ toggle, second, first ]\n      : [ toggle, first, second ]\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Toggler\n"
+module.exports = "const { Component, html } = require('vqua')\n\nconst Hello = require('./hello.preview')\n\n// cut before\n\nclass Board extends Component {\n\n  render() {\n\n    const { div } = html\n\n    return (\n      div({ id: 'board' },\n        this.props.childs\n      )\n    )\n\n  }\n\n}\n\nconst board = Board.v({}, 'Some text!')\n\n// cut after\n\nclass Wrapper extends Component {\n\n  render() {\n\n    return board\n\n  }\n\n}\n\n\nmodule.exports = Wrapper\n"
 
 /***/ }),
 /* 471 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n\n[\n  Example.v({ key: 'first' }),\n  Example.v({ key: 'second' })\n]\n\n// cut after\n\nmodule.exports = Toggler\n"
+module.exports = "const { Component } = require('vqua')\n\n// cut before\n\nclass Hello extends Component {\n\n  static defaultProps() {\n\n    return {\n      name: 'World'\n    }\n\n  }\n\n  render() {\n\n    return (\n      'Hello, ' + this.props.name + '!'\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Hello\n"
 
 /***/ }),
 /* 472 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component } = require('vqua')\n\nconst Hello = require('./hello.preview')\n\n// cut before\n\nclass Universe extends Component {\n\n  render() {\n\n    return (\n      Hello.v({ name: 'Universe' })\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Universe\n"
+module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n\nclass Toggler extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      active: true\n    }\n\n  }\n\n  handleClick(event) {\n\n    event.preventDefault()\n\n    this.setState({ active: !this.state.active })\n\n  }\n\n  render() {\n\n    const { div, a, br } = html\n\n    const first = (\n      div({ key: 'first' },\n        div({},\n          'first'\n        )\n      )\n    )\n\n    const second = (\n      div({ key: 'second' },\n        'second'\n      )\n    )\n\n    const toggle = [\n      a({ href: '#toggle', onClick: (e) => this.handleClick(e) },\n        'Toggle!'\n      ),\n      br(),\n    ]\n\n    return this.state.active\n      ? [ toggle, second, first ]\n      : [ toggle, first, second ]\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Toggler\n"
 
 /***/ }),
 /* 473 */
 /***/ (function(module, exports) {
 
-module.exports = "class App extends Component {\n\n  // ...\n\n  render() {\n\n    return (\n      Hello.v({ ref: 'hello' },\n        'Hello world'\n      )\n    )\n\n  }\n\n  // ...\n\n}\n"
+module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n\n[\n  Example.v({ key: 'first' }),\n  Example.v({ key: 'second' })\n]\n\n// cut after\n\nmodule.exports = Toggler\n"
 
 /***/ }),
 /* 474 */
 /***/ (function(module, exports) {
 
-module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n\nclass Hello extends Component {\n\n  afterMount() {\n\n    setTimeout(() => {\n\n      this.refs.text.style = 'color: tomato;'\n\n    }, 1000)\n\n  }\n\n  render() {\n\n    const { p } = html\n\n    return (\n      p({ ref: 'text' },\n        'Hello world'\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Hello\n"
+module.exports = "const { Component } = require('vqua')\n\nconst Hello = require('./hello.preview')\n\n// cut before\n\nclass Universe extends Component {\n\n  render() {\n\n    return (\n      Hello.v({ name: 'Universe' })\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Universe\n"
 
 /***/ }),
 /* 475 */
 /***/ (function(module, exports) {
 
-module.exports = "npm i --save vqua-router\n"
+module.exports = "class App extends Component {\n\n  // ...\n\n  render() {\n\n    return (\n      Hello.v({ ref: 'hello' },\n        'Hello world'\n      )\n    )\n\n  }\n\n  // ...\n\n}\n"
 
 /***/ }),
 /* 476 */
 /***/ (function(module, exports) {
 
-module.exports = "const { route, matchRoutes, separateRoutes } = require('vqua-router')\n\nconst routes = [\n  route('/', 'main', {}, [\n    route('/posts', 'all posts'),\n    route('/posts/:id', 'post by id'),\n  ]),\n]\n\nconst separatedRoutes = separateRoutes(routes)\n\n// separatedRoutes:\n// [\n//   route('/', 'main'),\n//   route('/posts', 'all posts'),\n//   route('/posts/:id', 'post by id'),\n// ]\n\nconst matchedRoute = matchRoutes(separatedRoutes, '/posts/2')\n\n// matchedRoute:\n// {\n//   path: '/posts/:id',\n//   segments: ['posts', ':id'],\n//   action: 'post by id',\n//   props: {},\n//   childs: [],\n//   request: {\n//     path: '/posts/2',\n//     segments: ['posts', '2'],\n//     params: { id: '2' },\n//   }\n// }\n"
+module.exports = "const { Component, html } = require('vqua')\n\n// cut before\n\nclass Hello extends Component {\n\n  afterMount() {\n\n    setTimeout(() => {\n\n      this.refs.text.style = 'color: tomato;'\n\n    }, 1000)\n\n  }\n\n  render() {\n\n    const { p } = html\n\n    return (\n      p({ ref: 'text' },\n        'Hello world'\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Hello\n"
 
 /***/ }),
 /* 477 */
 /***/ (function(module, exports) {
 
-module.exports = "{\n  key: 'id',\n  matcher: id => id == '5'\n}\n"
+module.exports = "npm i --save vqua-router\n"
 
 /***/ }),
 /* 478 */
 /***/ (function(module, exports) {
 
-module.exports = "module.exports = 'sample'\n"
+module.exports = "const { route, matchRoutes, separateRoutes } = require('vqua-router')\n\nconst routes = [\n  route('/', 'main', {}, [\n    route('/posts', 'all posts'),\n    route('/posts/:id', 'post by id'),\n  ]),\n]\n\nconst separatedRoutes = separateRoutes(routes)\n\n// separatedRoutes:\n// [\n//   route('/', 'main'),\n//   route('/posts', 'all posts'),\n//   route('/posts/:id', 'post by id'),\n// ]\n\nconst matchedRoute = matchRoutes(separatedRoutes, '/posts/2')\n\n// matchedRoute:\n// {\n//   path: '/posts/:id',\n//   segments: ['posts', ':id'],\n//   action: 'post by id',\n//   props: {},\n//   childs: [],\n//   request: {\n//     path: '/posts/2',\n//     segments: ['posts', '2'],\n//     params: { id: '2' },\n//   }\n// }\n"
 
 /***/ }),
 /* 479 */
 /***/ (function(module, exports) {
 
-module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
+module.exports = "{\n  key: 'id',\n  matcher: id => id == '5'\n}\n"
 
 /***/ }),
 /* 480 */
 /***/ (function(module, exports) {
 
-module.exports = "class WelcomeController {\n\n  static index(req, res) {\n\n    res.send(200, 'WelcomeContainer', {})\n\n  }\n\n}\n\nmodule.exports = WelcomeController\n"
+module.exports = "module.exports = 'sample'\n"
 
 /***/ }),
 /* 481 */
 /***/ (function(module, exports) {
 
-module.exports = "const createServer = require('vqua-server')\nconst layout = require('./layout')\nconst routes = require('../build/config/routes')\n\nconst app =\n  createServer({\n    routes,\n    layout,\n    publicPath: './dist',\n    buildPath: './build',\n    containerPath: './build/containers',\n  })\n\napp.listen(8080)\n"
+module.exports = "const { render } = require('vqua')\nconst createNavigation = require('vqua-navigation')\nconst routes = require('./config/routes')\n\n\nconst $cache = document.getElementById('app-cache')\n\nconst cache = $cache.innerHTML\n\n$cache.parentNode.removeChild($cache)\n\n\nconst navigation = createNavigation({ routes, cache }, (params) => {\n\n  const { liveNodes, component, navigate, callback } = params\n\n  const Component = require('./containers/' + component.name)\n\n  const templateNodes = [ Component.v(component.props, component.context) ]\n\n  const context = { navigate }\n\n  const $app = document.getElementById('app')\n\n  const newLiveNodes = render($app, liveNodes, templateNodes, context)\n\n  callback(newLiveNodes)\n\n})\n\n\nnavigation.listen()\n"
 
 /***/ }),
 /* 482 */
 /***/ (function(module, exports) {
 
-module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Counter extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      counter: 0\n    }\n\n  }\n\n  handleClick(event) {\n\n    event.preventDefault()\n\n    this.setState({ counter: this.state.counter + 1 })\n\n  }\n\n  render() {\n\n    const { div, a, p } = html\n\n    return (\n      div({},\n        p({}, this.state.counter),\n        a({\n          href: '#click',\n          onClick: event => this.handleClick(event)\n        },\n          'Click me!'\n        )\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Counter\n"
+module.exports = "class WelcomeController {\n\n  static index(req, res) {\n\n    res.send(200, 'WelcomeContainer', {})\n\n  }\n\n}\n\nmodule.exports = WelcomeController\n"
 
 /***/ }),
 /* 483 */
+/***/ (function(module, exports) {
+
+module.exports = "const createServer = require('vqua-server')\nconst layout = require('./layout')\nconst routes = require('../build/config/routes')\n\nconst app =\n  createServer({\n    routes,\n    layout,\n    publicPath: './dist',\n    buildPath: './build',\n    containerPath: './build/containers',\n  })\n\napp.listen(8080)\n"
+
+/***/ }),
+/* 484 */
+/***/ (function(module, exports) {
+
+module.exports = "const { html, Component } = require('vqua')\n\n// cut before\n\nclass Counter extends Component {\n\n  constructor(props, context) {\n\n    super(props, context)\n\n    this.state = {\n      counter: 0\n    }\n\n  }\n\n  handleClick(event) {\n\n    event.preventDefault()\n\n    this.setState({ counter: this.state.counter + 1 })\n\n  }\n\n  render() {\n\n    const { div, a, p } = html\n\n    return (\n      div({},\n        p({}, this.state.counter),\n        a({\n          href: '#click',\n          onClick: event => this.handleClick(event)\n        },\n          'Click me!'\n        )\n      )\n    )\n\n  }\n\n}\n\n// cut after\n\nmodule.exports = Counter\n"
+
+/***/ }),
+/* 485 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./context/examples/app.preview.js": 484,
-	"./props/examples/board.preview.js": 485,
+	"./context/examples/app.preview.js": 486,
+	"./props/examples/board.preview.js": 487,
 	"./props/examples/hello.preview.js": 108,
-	"./props/examples/keys-dom.preview.js": 486,
-	"./props/examples/universe.preview.js": 487,
-	"./references/examples/dom.preview.js": 488,
-	"./sample/examples/test.preview.js": 489,
-	"./state/examples/counter.preview.js": 490
+	"./props/examples/keys-dom.preview.js": 488,
+	"./props/examples/universe.preview.js": 489,
+	"./references/examples/dom.preview.js": 490,
+	"./sample/examples/test.preview.js": 491,
+	"./state/examples/counter.preview.js": 492
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -14337,10 +14339,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 483;
+webpackContext.id = 485;
 
 /***/ }),
-/* 484 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14418,7 +14420,7 @@ var App = function (_Component2) {
 module.exports = App;
 
 /***/ }),
-/* 485 */
+/* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14489,7 +14491,7 @@ var Wrapper = function (_Component2) {
 module.exports = Wrapper;
 
 /***/ }),
-/* 486 */
+/* 488 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14562,7 +14564,7 @@ var Toggler = function (_Component) {
 module.exports = Toggler;
 
 /***/ }),
-/* 487 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14608,7 +14610,7 @@ var Universe = function (_Component) {
 module.exports = Universe;
 
 /***/ }),
-/* 488 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14665,7 +14667,7 @@ var Hello = function (_Component) {
 module.exports = Hello;
 
 /***/ }),
-/* 489 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14674,7 +14676,7 @@ module.exports = Hello;
 module.exports = 'sample';
 
 /***/ }),
-/* 490 */
+/* 492 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14744,12 +14746,12 @@ var Counter = function (_Component) {
 module.exports = Counter;
 
 /***/ }),
-/* 491 */
+/* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var fs = __webpack_require__(45);
 var p = __webpack_require__(45);
-var minimatch = __webpack_require__(492);
+var minimatch = __webpack_require__(494);
 
 function patternMatcher(pattern) {
   return function(path, stats) {
@@ -14846,7 +14848,7 @@ module.exports = readdir;
 
 
 /***/ }),
-/* 492 */
+/* 494 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = minimatch
@@ -14858,7 +14860,7 @@ try {
 } catch (er) {}
 
 var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
-var expand = __webpack_require__(493)
+var expand = __webpack_require__(495)
 
 var plTypes = {
   '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
@@ -15775,11 +15777,11 @@ function regExpEscape (s) {
 
 
 /***/ }),
-/* 493 */
+/* 495 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var concatMap = __webpack_require__(494);
-var balanced = __webpack_require__(495);
+var concatMap = __webpack_require__(496);
+var balanced = __webpack_require__(497);
 
 module.exports = expandTop;
 
@@ -15982,7 +15984,7 @@ function expand(str, isTop) {
 
 
 /***/ }),
-/* 494 */
+/* 496 */
 /***/ (function(module, exports) {
 
 module.exports = function (xs, fn) {
@@ -16001,7 +16003,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 495 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16067,7 +16069,7 @@ function range(a, b, str) {
 
 
 /***/ }),
-/* 496 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -16098,10 +16100,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 496;
+webpackContext.id = 498;
 
 /***/ }),
-/* 497 */
+/* 499 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16123,7 +16125,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 498 */
+/* 500 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -16146,10 +16148,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 498;
+webpackContext.id = 500;
 
 /***/ }),
-/* 499 */
+/* 501 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16167,11 +16169,11 @@ var _require = __webpack_require__(7),
     Component = _require.Component,
     html = _require.html;
 
-var MenuSite = __webpack_require__(500);
-var MenuGuide = __webpack_require__(502);
-var MenuLocale = __webpack_require__(503);
+var MenuSite = __webpack_require__(502);
+var MenuGuide = __webpack_require__(504);
+var MenuLocale = __webpack_require__(505);
 
-var Logo = __webpack_require__(504);
+var Logo = __webpack_require__(506);
 
 var Sidebar = function (_Component) {
   _inherits(Sidebar, _Component);
@@ -16200,7 +16202,7 @@ var Sidebar = function (_Component) {
 module.exports = Sidebar;
 
 /***/ }),
-/* 500 */
+/* 502 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16257,7 +16259,7 @@ var MenuSite = function (_Component) {
 module.exports = MenuSite;
 
 /***/ }),
-/* 501 */
+/* 503 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16330,7 +16332,7 @@ var Link = function (_Component) {
 module.exports = Link;
 
 /***/ }),
-/* 502 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16473,7 +16475,7 @@ var MenuGuide = function (_Component) {
 module.exports = MenuGuide;
 
 /***/ }),
-/* 503 */
+/* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16593,7 +16595,7 @@ var MenuLocale = function (_Component) {
 module.exports = MenuLocale;
 
 /***/ }),
-/* 504 */
+/* 506 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16643,7 +16645,7 @@ var Logo = function (_Component) {
 module.exports = Logo;
 
 /***/ }),
-/* 505 */
+/* 507 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16661,7 +16663,7 @@ var _require = __webpack_require__(7),
     Component = _require.Component,
     html = _require.html;
 
-var createNavigationLinks = __webpack_require__(506);
+var createNavigationLinks = __webpack_require__(508);
 
 var Content = function (_Component) {
   _inherits(Content, _Component);
@@ -16707,7 +16709,7 @@ var Content = function (_Component) {
 module.exports = Content;
 
 /***/ }),
-/* 506 */
+/* 508 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16733,15 +16735,15 @@ var createNavigationLinks = function createNavigationLinks(navigate) {
 module.exports = createNavigationLinks;
 
 /***/ }),
-/* 507 */
+/* 509 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var html2vqua = __webpack_require__(508);
-var vquaInterpolate = __webpack_require__(520);
-var createArticleVars = __webpack_require__(524);
+var html2vqua = __webpack_require__(510);
+var vquaInterpolate = __webpack_require__(522);
+var createArticleVars = __webpack_require__(526);
 
 module.exports = function (_ref) {
   var article = _ref.article,
@@ -16771,20 +16773,20 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 508 */
+/* 510 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(509),
+var _require = __webpack_require__(511),
     inspect = _require.inspect;
 
-var _require2 = __webpack_require__(513),
+var _require2 = __webpack_require__(515),
     html2json = _require2.html2json;
 
-var createNode = __webpack_require__(516);
-var mapNodes = __webpack_require__(519);
+var createNode = __webpack_require__(518);
+var mapNodes = __webpack_require__(521);
 
 module.exports = function (string) {
 
@@ -16796,7 +16798,7 @@ module.exports = function (string) {
 };
 
 /***/ }),
-/* 509 */
+/* 511 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -17324,7 +17326,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(511);
+exports.isBuffer = __webpack_require__(513);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -17368,7 +17370,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(512);
+exports.inherits = __webpack_require__(514);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -17386,10 +17388,10 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(74), __webpack_require__(510)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(74), __webpack_require__(512)))
 
 /***/ }),
-/* 510 */
+/* 512 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -17579,7 +17581,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 511 */
+/* 513 */
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -17590,7 +17592,7 @@ module.exports = function isBuffer(arg) {
 }
 
 /***/ }),
-/* 512 */
+/* 514 */
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -17619,14 +17621,14 @@ if (typeof Object.create === 'function') {
 
 
 /***/ }),
-/* 513 */
+/* 515 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(514);
+module.exports = __webpack_require__(516);
 
 
 /***/ }),
-/* 514 */
+/* 516 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function(global) {
@@ -17634,7 +17636,7 @@ module.exports = __webpack_require__(514);
   var debug = DEBUG ? console.log.bind(console) : function(){};
 
   if (typeof module === 'object' && typeof module.exports === 'object') {
-    __webpack_require__(515);
+    __webpack_require__(517);
   }
 
   function q(v) {
@@ -17803,7 +17805,7 @@ module.exports = __webpack_require__(514);
 
 
 /***/ }),
-/* 515 */
+/* 517 */
 /***/ (function(module, exports) {
 
 /*
@@ -18176,7 +18178,7 @@ module.exports = __webpack_require__(514);
 
 
 /***/ }),
-/* 516 */
+/* 518 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18188,7 +18190,7 @@ var _require = __webpack_require__(6),
 var _require2 = __webpack_require__(12),
     TAG_TYPE = _require2.TAG_TYPE;
 
-var _require3 = __webpack_require__(517),
+var _require3 = __webpack_require__(519),
     filterSpaces = _require3.filterSpaces;
 
 var filterText = compose(filterSpaces);
@@ -18216,13 +18218,13 @@ module.exports = function (htmlNode) {
 };
 
 /***/ }),
-/* 517 */
+/* 519 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(518),
+var _require = __webpack_require__(520),
     getLeftSpaces = _require.getLeftSpaces,
     getRightSpaces = _require.getRightSpaces;
 
@@ -18254,7 +18256,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 518 */
+/* 520 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18277,7 +18279,7 @@ var getRightSpaces = function getRightSpaces(string) {
 module.exports = { getLeftSpaces: getLeftSpaces, getRightSpaces: getRightSpaces };
 
 /***/ }),
-/* 519 */
+/* 521 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18319,15 +18321,15 @@ module.exports = function (htmlNode, createNode) {
 };
 
 /***/ }),
-/* 520 */
+/* 522 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createNodes = __webpack_require__(521);
-var replaceVariables = __webpack_require__(522);
-var mergeNearbyStrings = __webpack_require__(523);
+var createNodes = __webpack_require__(523);
+var replaceVariables = __webpack_require__(524);
+var mergeNearbyStrings = __webpack_require__(525);
 
 module.exports = function (nodes, data) {
 
@@ -18345,7 +18347,7 @@ module.exports = function (nodes, data) {
 };
 
 /***/ }),
-/* 521 */
+/* 523 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18397,7 +18399,7 @@ module.exports = function (params) {
 };
 
 /***/ }),
-/* 522 */
+/* 524 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18460,7 +18462,7 @@ module.exports = function (text, params) {
 };
 
 /***/ }),
-/* 523 */
+/* 525 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18488,7 +18490,7 @@ module.exports = function (items) {
 };
 
 /***/ }),
-/* 524 */
+/* 526 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18496,8 +18498,8 @@ module.exports = function (items) {
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var filterCode = __webpack_require__(525);
-var Code = __webpack_require__(526);
+var filterCode = __webpack_require__(527);
+var Code = __webpack_require__(528);
 
 var extension2language = {
   '.js': 'javascript',
@@ -18543,7 +18545,7 @@ module.exports = function (_ref) {
 };
 
 /***/ }),
-/* 525 */
+/* 527 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18602,7 +18604,7 @@ var filter = function filter(string) {
 module.exports = filter;
 
 /***/ }),
-/* 526 */
+/* 528 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18616,11 +18618,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var highlightjs = __webpack_require__(527);
-var javascriptSyntax = __webpack_require__(528);
-var shellSyntax = __webpack_require__(529);
-var xmlSyntax = __webpack_require__(530);
-var CodePreview = __webpack_require__(531);
+var highlightjs = __webpack_require__(529);
+var javascriptSyntax = __webpack_require__(530);
+var shellSyntax = __webpack_require__(531);
+var xmlSyntax = __webpack_require__(532);
+var CodePreview = __webpack_require__(533);
 
 var _require = __webpack_require__(6),
     htmlQuotes = _require.htmlQuotes;
@@ -18678,7 +18680,7 @@ var Code = function (_Component) {
 module.exports = Code;
 
 /***/ }),
-/* 527 */
+/* 529 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -19500,7 +19502,7 @@ https://highlightjs.org/
 
 
 /***/ }),
-/* 528 */
+/* 530 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19675,7 +19677,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 529 */
+/* 531 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19694,7 +19696,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 530 */
+/* 532 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19801,7 +19803,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 531 */
+/* 533 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19891,7 +19893,7 @@ var CodePreview = function (_Component) {
 module.exports = CodePreview;
 
 /***/ }),
-/* 532 */
+/* 534 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19942,18 +19944,6 @@ var Error404 = function (_Component) {
 }(Component);
 
 module.exports = Error404;
-
-/***/ }),
-/* 533 */
-/***/ (function(module, exports) {
-
-module.exports = "webpack -w\n"
-
-/***/ }),
-/* 534 */
-/***/ (function(module, exports) {
-
-module.exports = "gulp\n"
 
 /***/ })
 /******/ ]);
