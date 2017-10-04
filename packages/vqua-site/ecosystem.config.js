@@ -16,7 +16,7 @@ module.exports = {
       path : '/home/sterjakov/vqua-site',
       'post-deploy' : [
         'npm install',
-        'pm2 reload ecosystem.config.js --env production'
+        'pm2 reload packages/vqua-site/ecosystem.config.js --env production'
       ].join(' && ')
     },
   }
