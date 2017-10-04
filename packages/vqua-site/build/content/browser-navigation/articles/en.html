@@ -1,0 +1,86 @@
+<h1>Browser navigation</h1>
+
+<h2>How to install?</h2>
+
+{{ install }}
+
+<h2>Example</h2>
+
+{{ create-navigation }}
+
+<h2>Description</h2>
+
+<p>
+  The createNavigation function creates a navigation object. Its task is to:
+</p>
+
+<ol>
+  <li>
+    Find the route along the requested path and its handler
+  </li>
+  <li>
+    Execute the route handler and pass its result to the navigation handler
+    <br>
+    And also use the cached version of the result in the case of the first download
+  </li>
+  <li>
+    Keep the current state of the virtual tree
+  </li>
+  <li>
+    Provide a method for managing navigation
+  </li>
+</ol>
+
+<h2>Function createNavigation(params = {}, navigationCallback = (...) => {})</h2>
+
+<p>
+  <b>params</b>
+  <ul>
+    <li>
+      <i>routes</i> - array of routes (vqua-routes)
+    </li>
+    <li>
+      <i>cache</i> - JSON string with the result of the first route handler
+    </li>
+  </ul>
+</p>
+
+<p>
+  <b>navigationCallback</b>
+  <ul>
+    <li>
+      <i>liveNodes</i> - array of virtual vqua objects (current state)
+    </li>
+    <li>
+      <i>component</i> - component object (the result of the route handler response)
+      <ul>
+        <li>
+          <i>name</i> - component name string
+        </li>
+        <li>
+          <i>props</i> - component parameters object
+        </li>
+        <li>
+          <i>context</i> - component context object
+        </li>
+      </ul>
+    </li>
+    <li>
+      <i>navigate(path)</i> - navigation control method
+      <ul>
+        <li>
+          <i>path</i> - new path string
+        </li>
+      </ul>
+    </li>
+    <li>
+      <i>callback(liveNodes) - navigation handler</i>.
+      <br> Required to save the current state of the virtual tree.
+      <ul>
+        <li>
+          <i>liveNodes</i> - array of virtual vqua tree elements
+        </li>
+      </ul>
+    </li>
+  </ul>
+</p>

@@ -1,0 +1,108 @@
+<h1>Create server</h1>
+
+<h2>How to install?</h2>
+
+{{ install }}
+
+<h2>Example</h2>
+
+{{ create-server }}
+
+<h2>Description</h2>
+
+<p>
+  Function createServer return instance of simple
+  node <a
+    target="_blank"
+    href="https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server"
+  >http server</a>.
+  <br>
+  <br>
+  When a request arrives at the server, the path is parsed and the first matched vqua route is located on it.
+  After that, control is passed to the action function specified in the route.
+  <br>
+  <br>
+  The action method takes two request, response arguments.
+  With one exception, for response object is added two callbacks - send and redirect,
+  which will work both on the server and in the browser.
+  Of course for the browser you need to use
+  package <a href='/en/browser-navigation' class='navigation_link'>vqua-browser</a>.
+  <br>
+  <br>
+  To see how everything works right away and together,
+  use <a href='http://localhost:8080/en/boilerplate' class='navigation_link'>ready boilerplate</a>
+</p>
+
+<h2>Arguments for createServer(<b>object</b>)</h2>
+
+<p>All arguments are required.</p>
+
+<p>
+  <b>routes</b> - array of routes  (vqua-routes)
+</p>
+
+<p>
+  <b>layout</b> - function callback(html, data)
+  <br>
+  <i>html</i> - component of the controller, converted to an html string
+  <br>
+  <i>data</i> - The data returned by the controller is converted into a JSON string
+</p>
+
+<p>Example layout:</p>
+
+{{ layout }}
+
+<p>
+  <b>publicPath</b> - the path to the folder where static files are stored
+  <br/>
+
+</p>
+
+<p>
+  <b>containerPath</b> - the path to the folder where the containers are stored (vqua top-level components)
+</p>
+
+<h2>Function action(request, response)</h2>
+
+<p>
+  <b>request</b>- in addition to the standard parameters <a
+    target="_blank"
+    href="https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_http_request_options_callback"
+  >http request</a> contain:
+  <ul>
+    <li>
+      <b>params</b> - object of routing parameters
+    </li>
+    <li>
+      <b>segments</b> - array of route segments
+    </li>
+  </ul>
+</p>
+
+<p>
+  <b>response</b>- in addition to the standard parameters <a
+    target="_blank"
+    href="https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_serverresponse"
+  >http response</a> contain:
+  <ul>
+    <li>
+      <b>redirect(statusCode, url)</b>
+      <br>
+      <i>statusCode</i> - numeric server response code (300, 301, etc.)
+      <br>
+      <i>url</i> - redirection path string
+    </li>
+    <li>
+      <b>send(statusCode, containerName, containerProps, containerContext)</b>
+      <br>
+      <i>statusCode</i> - numeric server response code (200, 500, etc.)
+      <br>
+      <i>containerName</i> - the string name of the component's vqua
+      <br>
+      <i>containerProps</i> - component vqua parameter object
+      <br>
+      <i>containerContext</i> - context object of the component's vqua
+    </li>
+  </ul>
+</p>

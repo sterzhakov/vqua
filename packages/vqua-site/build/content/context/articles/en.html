@@ -1,0 +1,26 @@
+<h1>Context</h1>
+
+<p>
+  Sometimes you may need to throw parameters into several components at once.
+  For example, you need to provide all of your components with translations.
+  And each time to transmit props will be simply tedious.
+  Here you will be helped by the context.
+</p>
+
+<p>
+  To pass the context to the children you need to implement a method <b>passContext</b> in
+  the parent component and return the context object.
+</p>
+
+<p>
+  Also inside the method <b>passContext</b> you can use objects <b>this.props</b> and <b>this.state</b>
+</p>
+
+<p>
+  And in the component, the expecting context is to implement a static method <b>injectContext</b>
+  and return an array of properties of the expected context.
+</p>
+
+<p>Example:</p>
+
+{{ app }}
