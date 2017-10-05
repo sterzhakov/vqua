@@ -123,7 +123,7 @@ module.exports = ({
 
       case INSERT_NODE: {
 
-        insertAt(liveNode.dom, parentDomNode, liveNode.order)
+        insertAt(liveNode.dom, parentDomNode, templateNode.order)
 
         return [ ...domNodes, liveNode.dom ]
 
