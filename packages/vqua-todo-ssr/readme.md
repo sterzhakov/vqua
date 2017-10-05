@@ -1,4 +1,4 @@
-[← back](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua)
+[← back](https://github.com/sterjakovigor/vqua/tree/master)
 
 # Vqua todo ssr
 
