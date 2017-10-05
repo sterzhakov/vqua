@@ -1,1 +1,0 @@
-beforeUpdate(nextProps, nextState, nextContext) {}

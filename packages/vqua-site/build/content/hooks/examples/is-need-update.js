@@ -1,1 +1,0 @@
-isNeedUpdate(nextProps, nextState, nextContext) {}
