@@ -1,6 +1,6 @@
 {
   "name": "vqua-boilerplate-ssr",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,10 @@
   },
   "keywords": [],
   "dependencies": {
-    "vqua": "^1.0.7",
-    "vqua-navigation": "^1.0.7",
-    "vqua-router": "^1.0.7",
-    "vqua-server": "^1.0.7"
+    "vqua": "^1.0.8",
+    "vqua-navigation": "^1.0.8",
+    "vqua-router": "^1.0.8",
+    "vqua-server": "^1.0.8"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
