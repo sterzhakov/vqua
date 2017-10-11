@@ -16,7 +16,9 @@ class TasksContainer extends Component {
 
   }
 
-  handleTaskAdd() {
+  handleTaskAdd(event) {
+
+    event.preventDefault()
 
     const { input } = this.refs
 
@@ -39,7 +41,9 @@ class TasksContainer extends Component {
 
   }
 
-  handleTaskToggle(task) {
+  handleTaskToggle(event, task) {
+
+    event.preventDefault()
 
     this.setState({
       tasks: this.state.tasks.map((_task) => {
@@ -57,7 +61,9 @@ class TasksContainer extends Component {
 
   }
 
-  handleTaskDelete(task) {
+  handleTaskDelete(event, task) {
+
+    event.preventDefault()
 
     this.setState({
       tasks: this.state.tasks.filter((_task) => {
@@ -84,7 +90,7 @@ class TasksContainer extends Component {
             placeholder: 'todo name'
           }),
           button({
-            onClick: () => { this.handleTaskAdd() },
+            onClick: (event) => { this.handleTaskAdd(event) },
           }, 'Add')
         ),
         br(),
@@ -93,7 +99,7 @@ class TasksContainer extends Component {
             div({ key: task.id },
               a({
                 href: '#todo__item__toggle',
-                onClick: () => { this.handleTaskToggle(task) }
+                onClick: (event) => { this.handleTaskToggle(event, task) }
               },
                 task.completed
                   ? s({}, task.name)
@@ -101,7 +107,7 @@ class TasksContainer extends Component {
               ),
               a({
                 href: '#todo__item__delete',
-                onClick: () => { this.handleTaskDelete(task) }
+                onClick: (event) => { this.handleTaskDelete(event, task) }
               },
                 '[x]'
               ),

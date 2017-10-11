@@ -107,8 +107,8 @@ module.exports = {
 
 module.exports = {
   Component: __webpack_require__(29),
-  html: __webpack_require__(71),
-  render: __webpack_require__(73),
+  html: __webpack_require__(73),
+  render: __webpack_require__(75),
 }
 
 
@@ -427,9 +427,9 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-  route: __webpack_require__(81),
-  matchRoutes: __webpack_require__(82),
-  separateRoutes: __webpack_require__(85),
+  route: __webpack_require__(83),
+  matchRoutes: __webpack_require__(84),
+  separateRoutes: __webpack_require__(87),
 }
 
 
@@ -570,12 +570,8 @@ module.exports = (liveNodes, templateNodes, options) => {
     const sortedTemplateNodes =
       sortTemplateNodes(refsTemplateNodes)
 
-
-    const decoratedLiveNodes =
-      decorateNodes(flatten([liveNodes]), { order: true })
-
     const sortedLiveNodes =
-      sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
+      sortLiveNodes(liveNodes, { templateNodes: sortedTemplateNodes })
 
     return {
       filteredLiveNodes: sortedLiveNodes,
@@ -726,7 +722,7 @@ const sortUnusedLiveNodes = ({ liveNodes, usedLiveIds }) => {
 }
 
 
-const sortLiveNodes = (liveNodes = [], templateNodes = []) => {
+const sortLiveNodes = (liveNodes = [], { templateNodes = [] }) => {
 
   const liveSortableNodes = liveNodes.map((node, index) => {
 
@@ -890,9 +886,11 @@ module.exports = loop
 /***/ (function(module, exports, __webpack_require__) {
 
 const { sortLiveNodes } = __webpack_require__(18)
+const reorderDeletedLiveNodes = __webpack_require__(62)
+const reorderAddedLiveNodes = __webpack_require__(91)
 const decorateNodes = __webpack_require__(19)
-const createNodes = __webpack_require__(61)
-const createCallback = __webpack_require__(62)
+const createNodes = __webpack_require__(63)
+const createCallback = __webpack_require__(64)
 
 module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
@@ -906,6 +904,11 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       domNodes,
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
+        const orderedTemplateNodes =
+          decorateNodes(templateNodes, {
+            order: { startFrom: offset }
+          })
+
         const withDomLiveNodes =
           decorateNodes(liveNodes, {
             dom: domNodes,
@@ -913,16 +916,23 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
           })
 
         const sortedLiveNodes =
-          sortLiveNodes(withDomLiveNodes, templateNodes)
+          sortLiveNodes(withDomLiveNodes, {
+            templateNodes: orderedTemplateNodes 
+          })
 
-        const decoratedTemplateNodes =
-          decorateNodes(templateNodes, {
-            order: { startFrom: offset }
+        const reorderedDeletedLiveNodes =
+          reorderDeletedLiveNodes(sortedLiveNodes, {
+            templateNodes: orderedTemplateNodes
+          })
+
+        const reorderedAddedLiveNodes =
+          reorderAddedLiveNodes(reorderedDeletedLiveNodes, {
+            templateNodes: orderedTemplateNodes
           })
 
         return {
-          filteredLiveNodes: sortedLiveNodes,
-          filteredTemplateNodes: decoratedTemplateNodes
+          filteredLiveNodes: reorderedAddedLiveNodes,
+          filteredTemplateNodes: orderedTemplateNodes
         }
 
       }
@@ -938,8 +948,8 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const updateDomNode = __webpack_require__(66)
-const updateNodes = __webpack_require__(70)
+const updateDomNode = __webpack_require__(68)
+const updateNodes = __webpack_require__(72)
 
 module.exports = ({ parentDomNode, patchNodes }) => {
 
@@ -1152,7 +1162,9 @@ class TasksContainer extends Component {
 
   }
 
-  handleTaskAdd() {
+  handleTaskAdd(event) {
+
+    event.preventDefault()
 
     const { input } = this.refs
 
@@ -1175,7 +1187,9 @@ class TasksContainer extends Component {
 
   }
 
-  handleTaskToggle(task) {
+  handleTaskToggle(event, task) {
+
+    event.preventDefault()
 
     this.setState({
       tasks: this.state.tasks.map((_task) => {
@@ -1193,7 +1207,9 @@ class TasksContainer extends Component {
 
   }
 
-  handleTaskDelete(task) {
+  handleTaskDelete(event, task) {
+
+    event.preventDefault()
 
     this.setState({
       tasks: this.state.tasks.filter((_task) => {
@@ -1220,7 +1236,7 @@ class TasksContainer extends Component {
             placeholder: 'todo name'
           }),
           button({
-            onClick: () => { this.handleTaskAdd() },
+            onClick: (event) => { this.handleTaskAdd(event) },
           }, 'Add')
         ),
         br(),
@@ -1229,7 +1245,7 @@ class TasksContainer extends Component {
             div({ key: task.id },
               a({
                 href: '#todo__item__toggle',
-                onClick: () => { this.handleTaskToggle(task) }
+                onClick: (event) => { this.handleTaskToggle(event, task) }
               },
                 task.completed
                   ? s({}, task.name)
@@ -1237,7 +1253,7 @@ class TasksContainer extends Component {
               ),
               a({
                 href: '#todo__item__delete',
-                onClick: () => { this.handleTaskDelete(task) }
+                onClick: (event) => { this.handleTaskDelete(event, task) }
               },
                 '[x]'
               ),
@@ -1288,8 +1304,8 @@ module.exports = WelcomeContainer
 /***/ (function(module, exports, __webpack_require__) {
 
 const { render } = __webpack_require__(2)
-const createNavigation = __webpack_require__(78)
-const routes = __webpack_require__(86)
+const createNavigation = __webpack_require__(80)
+const routes = __webpack_require__(88)
 
 
 const $cache = document.getElementById('app-cache')
@@ -1303,7 +1319,7 @@ const navigation = createNavigation({ routes, cache }, (params) => {
 
   const { liveNodes, component, navigate, callback } = params
 
-  const Component = __webpack_require__(88)("./" + component.name)
+  const Component = __webpack_require__(90)("./" + component.name)
 
   const templateNodes = [ Component.v(component.props, component.context) ]
 
@@ -1333,7 +1349,7 @@ const filterDomNodes = __webpack_require__(20)
 const getParentNodes = __webpack_require__(59)
 const filterNodesOffsets = __webpack_require__(60)
 const createPatchTree = __webpack_require__(21)
-const findDomNode = __webpack_require__(65)
+const findDomNode = __webpack_require__(67)
 const updateDomTree = __webpack_require__(22)
 const eachNodes = __webpack_require__(9)
 const hookNode = __webpack_require__(3)
@@ -2901,7 +2917,72 @@ module.exports = (nodes) => {
 
 
 /***/ }),
-/* 61 */
+/* 61 */,
+/* 62 */
+/***/ (function(module, exports) {
+
+module.exports = (liveNodes, { templateNodes, offset = 0 }) => {
+
+  const savedLiveNodes = liveNodes.slice(0, templateNodes.length)
+
+  const savedLiveStands = savedLiveNodes.map((uncutLiveNode, index) => {
+
+    return { index, node: uncutLiveNode }
+
+  })
+
+  const sortedLiveStands = savedLiveStands.sort((prev, next) => {
+
+    if (prev.node == null) {
+
+      return 1
+
+    } else
+
+    if (next.node == null) {
+
+      return -1
+
+    } else {
+
+      return prev.node.order - next.node.order
+
+    }
+
+  })
+
+  const newLiveStands =
+    sortedLiveStands.map((liveStand, index) => {
+
+      if (!liveStand.node) return liveStand
+
+      const newLiveStand = Object.assign({}, liveStand, {
+        node: Object.assign({}, liveStand.node, {
+          order: offset + index
+        })
+      })
+
+      return newLiveStand
+
+    })
+
+  const newSavedLiveNodes = newLiveStands
+    .sort((prev, next) => prev.index - next.index)
+    .map(newLiveStand => newLiveStand.node)
+
+  const newUnsavedLiveNodes = liveNodes
+    .slice(templateNodes.length)
+    .map(unsavedLiveNode => Object.assign({}, unsavedLiveNode, { order: null }))
+
+  const newLiveNodes = [ ...newSavedLiveNodes, ...newUnsavedLiveNodes ]
+
+  return newLiveNodes
+
+}
+
+
+/***/ }),
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { times } = __webpack_require__(0)
@@ -2985,12 +3066,12 @@ module.exports = createNodes
 
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { intersect } = __webpack_require__(0)
-const countActionsScore = __webpack_require__(63)
-const getNodeActions = __webpack_require__(64)
+const countActionsScore = __webpack_require__(65)
+const getNodeActions = __webpack_require__(66)
 const { DELETE_NODE, REPLACE_NODE } = __webpack_require__(5)
 
 module.exports = ({ liveNode, templateNode, limit }) => {
@@ -3023,7 +3104,7 @@ module.exports = ({ liveNode, templateNode, limit }) => {
 
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { CREATE_NODE, DELETE_NODE } = __webpack_require__(5)
@@ -3060,7 +3141,7 @@ module.exports = (actions) => {
 
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -3148,7 +3229,7 @@ module.exports = ({ liveNode, templateNode }) => {
 
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, exports) {
 
 const loop = (node, offsets, index = 0) => {
@@ -3173,13 +3254,13 @@ module.exports = loop
 
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { addRef, removeRef } = __webpack_require__(16)
-const { createElement, insertAt, updateProps } = __webpack_require__(67)
+const { createElement, insertAt, updateProps } = __webpack_require__(69)
 const sortProps = __webpack_require__(23)
-const isPropsEqual = __webpack_require__(69)
+const isPropsEqual = __webpack_require__(71)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(5)
@@ -3324,13 +3405,13 @@ module.exports = ({
 
 
 /***/ }),
-/* 67 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(1)
 const sortProps = __webpack_require__(23)
 const events = __webpack_require__(24)
-const diffProps = __webpack_require__(68)
+const diffProps = __webpack_require__(70)
 
 const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
@@ -3483,7 +3564,7 @@ module.exports = {
 
 
 /***/ }),
-/* 68 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { union } = __webpack_require__(0)
@@ -3583,7 +3664,7 @@ module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
 
 /***/ }),
-/* 69 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { kindOf } = __webpack_require__(0)
@@ -3632,7 +3713,7 @@ module.exports = (leftProp, rightProp) => {
 
 
 /***/ }),
-/* 70 */
+/* 72 */
 /***/ (function(module, exports) {
 
 const updateNodes = ({ patchNodes, parentDomNode, updateDomNode }) => {
@@ -3663,11 +3744,11 @@ module.exports = updateNodes
 
 
 /***/ }),
-/* 71 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(1)
-const tags = __webpack_require__(72)
+const tags = __webpack_require__(74)
 const { flatten, include, omit } = __webpack_require__(0)
 
 const h = (tag, props = {}, childs) => {
@@ -3708,7 +3789,7 @@ tags.forEach((tag) => {
 
 
 /***/ }),
-/* 72 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -3832,7 +3913,7 @@ module.exports = [
 
 
 /***/ }),
-/* 73 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten } = __webpack_require__(0)
@@ -3844,7 +3925,7 @@ const hookNode = __webpack_require__(3)
 const { AFTER_DOM_CREATE } = __webpack_require__(4)
 const createPatchTree = __webpack_require__(21)
 const updateDomTree = __webpack_require__(22)
-const dom2vqua = __webpack_require__(74)
+const dom2vqua = __webpack_require__(76)
 const humanizeNodes = __webpack_require__(13)
 
 module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
@@ -3899,12 +3980,12 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const convertTag = __webpack_require__(75)
-const convertText = __webpack_require__(76)
-const mapNodes = __webpack_require__(77)
+const convertTag = __webpack_require__(77)
+const convertText = __webpack_require__(78)
+const mapNodes = __webpack_require__(79)
 
 module.exports = (nodes) => {
 
@@ -3935,7 +4016,7 @@ module.exports = (nodes) => {
 
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TAG_TYPE } = __webpack_require__(1)
@@ -3961,7 +4042,7 @@ module.exports = (node) => {
 
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE } = __webpack_require__(1)
@@ -3978,7 +4059,7 @@ module.exports = (node) => {
 
 
 /***/ }),
-/* 77 */
+/* 79 */
 /***/ (function(module, exports) {
 
 const loop = (node, createNode) => {
@@ -4022,11 +4103,11 @@ module.exports = loop
 
 
 /***/ }),
-/* 78 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Store = __webpack_require__(79)
-const navigate = __webpack_require__(80)
+const Store = __webpack_require__(81)
+const navigate = __webpack_require__(82)
 const { htmlQuotes } = __webpack_require__(0)
 const { separateRoutes } = __webpack_require__(12)
 
@@ -4092,7 +4173,7 @@ module.exports = createNavigation
 
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports) {
 
 class Store {
@@ -4121,7 +4202,7 @@ module.exports = Store
 
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { render } = __webpack_require__(2)
@@ -4187,7 +4268,7 @@ module.exports = navigate
 
 
 /***/ }),
-/* 81 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const path2segments = __webpack_require__(25)
@@ -4204,12 +4285,12 @@ module.exports = (path, action, props = {}, childs = []) => {
 
 
 /***/ }),
-/* 82 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const matchSegments = __webpack_require__(83)
+const matchSegments = __webpack_require__(85)
 const path2segments = __webpack_require__(25)
-const paramsFromSegments = __webpack_require__(84)
+const paramsFromSegments = __webpack_require__(86)
 
 module.exports = (routes, path) => {
 
@@ -4239,7 +4320,7 @@ module.exports = (routes, path) => {
 
 
 /***/ }),
-/* 83 */
+/* 85 */
 /***/ (function(module, exports) {
 
 module.exports = (templateSegments, requestSegments) => {
@@ -4283,7 +4364,7 @@ module.exports = (templateSegments, requestSegments) => {
 
 
 /***/ }),
-/* 84 */
+/* 86 */
 /***/ (function(module, exports) {
 
 module.exports = (templateSegments, requestSegments) => {
@@ -4317,7 +4398,7 @@ module.exports = (templateSegments, requestSegments) => {
 
 
 /***/ }),
-/* 85 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(0)
@@ -4359,12 +4440,12 @@ module.exports = separateRoutes
 
 
 /***/ }),
-/* 86 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { route } = __webpack_require__(12)
 const { Component, html } = __webpack_require__(2)
-const TasksController = __webpack_require__(87)
+const TasksController = __webpack_require__(89)
 
 const routes = [
   route('/', TasksController.index),
@@ -4374,7 +4455,7 @@ module.exports = routes
 
 
 /***/ }),
-/* 87 */
+/* 89 */
 /***/ (function(module, exports) {
 
 class TasksController {
@@ -4391,7 +4472,7 @@ module.exports = TasksController
 
 
 /***/ }),
-/* 88 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -4414,7 +4495,90 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 88;
+webpackContext.id = 90;
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports) {
+
+module.exports = (liveNodes, { templateNodes }) => {
+
+  const memo = templateNodes.reduce((memo, templateNode, index) => {
+
+    const liveNode = liveNodes[index]
+
+    const newLiveNode = !liveNode || !memo.multipliers.length
+      ? liveNode
+      : memo.multipliers.reduce((newLiveNode, multiplier) => {
+
+          if (
+            newLiveNode.order > multiplier.min &&
+            newLiveNode.order < multiplier.max
+          ) {
+
+            return Object.assign({},
+              newLiveNode,
+              { order: newLiveNode.order + multiplier.rate }
+            )
+
+          } else {
+
+            return newLiveNode
+
+          }
+
+        }, liveNode)
+
+    const newLiveNodes = [
+      ...memo.newLiveNodes,
+      newLiveNode
+    ]
+
+    if (!liveNode) {
+
+      return {
+        newLiveNodes,
+        multipliers: [
+          ...memo.multipliers,
+          {
+            min: templateNode.order - 1,
+            max: Infinity,
+            rate: 1,
+          }
+        ]
+      }
+
+    } else
+
+    if (newLiveNode.order > templateNode.order) {
+
+      return {
+        newLiveNodes,
+        multipliers: [
+          ...memo.multipliers,
+          {
+            min: -Infinity,
+            max: newLiveNode.order,
+            rate: 1,
+          }
+        ]
+      }
+
+    } else {
+
+      return {
+        newLiveNodes,
+        multipliers: memo.multipliers,
+      }
+
+    }
+
+  }, { multipliers: [], newLiveNodes: [] })
+
+  return [ ...memo.newLiveNodes, ...liveNodes.slice(templateNodes.length) ]
+
+}
+
 
 /***/ })
 /******/ ]);
