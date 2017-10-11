@@ -1,4 +1,6 @@
 const { sortLiveNodes } = require('../../virtual/sortNodes')
+const reorderDeletedLiveNodes = require('../../virtual/reorderDeletedLiveNodes')
+const reorderAddedLiveNodes = require('../../virtual/reorderAddedLiveNodes')
 const decorateNodes = require('../../virtual/decorateNodes')
 const createNodes = require('./createNodes')
 const createCallback = require('./createCallback')
@@ -15,6 +17,11 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       domNodes,
       filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
 
+        const orderedTemplateNodes =
+          decorateNodes(templateNodes, {
+            order: { startFrom: offset }
+          })
+
         const withDomLiveNodes =
           decorateNodes(liveNodes, {
             dom: domNodes,
@@ -22,16 +29,23 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
           })
 
         const sortedLiveNodes =
-          sortLiveNodes(withDomLiveNodes, templateNodes)
+          sortLiveNodes(withDomLiveNodes, {
+            templateNodes: orderedTemplateNodes 
+          })
 
-        const decoratedTemplateNodes =
-          decorateNodes(templateNodes, {
-            order: { startFrom: offset }
+        const reorderedDeletedLiveNodes =
+          reorderDeletedLiveNodes(sortedLiveNodes, {
+            templateNodes: orderedTemplateNodes
+          })
+
+        const reorderedAddedLiveNodes =
+          reorderAddedLiveNodes(reorderedDeletedLiveNodes, {
+            templateNodes: orderedTemplateNodes
           })
 
         return {
-          filteredLiveNodes: sortedLiveNodes,
-          filteredTemplateNodes: decoratedTemplateNodes
+          filteredLiveNodes: reorderedAddedLiveNodes,
+          filteredTemplateNodes: orderedTemplateNodes
         }
 
       }

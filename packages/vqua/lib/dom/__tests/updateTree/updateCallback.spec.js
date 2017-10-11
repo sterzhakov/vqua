@@ -309,8 +309,10 @@ describe('Update dom callback', () => {
       order: 0
     }
 
+    const templateNode = { order: 0 }
+
     const insertedNode =
-      updateNode({ actions, parentDomNode, liveNode })
+      updateNode({ actions, parentDomNode, liveNode, templateNode })
 
     expect(
       parentDomNode.childNodes[0].isSameNode(insertedNode)

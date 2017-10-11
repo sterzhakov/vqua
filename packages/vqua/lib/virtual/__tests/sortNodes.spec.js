@@ -24,7 +24,7 @@ describe('Sort nodes:', () => {
       const templateNodes = []
 
       expect(
-        sortLiveNodes(liveNodes, templateNodes)
+        sortLiveNodes(liveNodes, { templateNodes })
       ).toEqual([
         { text: 'hello' },
         { tag: 'div', key: 1 },
@@ -49,7 +49,7 @@ describe('Sort nodes:', () => {
         { text: 'hello world'},
       ]
 
-      const sortedLiveNodes = sortLiveNodes(liveNodes, templateNodes)
+      const sortedLiveNodes = sortLiveNodes(liveNodes, { templateNodes })
 
       expect(sortedLiveNodes[0].text).toEqual('hello')
       expect(sortedLiveNodes[1]).toEqual(null)

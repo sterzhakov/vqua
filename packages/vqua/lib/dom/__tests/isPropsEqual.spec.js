@@ -11,7 +11,7 @@ describe('Is props equal for', () => {
           () => { return 1 },
           () => { return 1 }
         )
-      ).toBe(true)
+      ).toBe(false)
 
     })
 

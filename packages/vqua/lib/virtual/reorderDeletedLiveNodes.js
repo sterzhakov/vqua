@@ -1,38 +1,14 @@
-module.exports = (liveNodes, { templateNodes }) => {
+module.exports = (liveNodes, { templateNodes, offset = 0 }) => {
 
-  const matchOrder = (liveNode, templateNode) => {
+  const savedLiveNodes = liveNodes.slice(0, templateNodes.length)
 
-    return (!templateNode && liveNode)
-      ? liveNode.order
-      : null
-
-  }
-
-  const orders = liveNodes.reduce((orders, liveNode, index) => {
-
-    const templateNode = templateNodes[index]
-
-    const order = matchOrder(liveNode, templateNode)
-
-    return Number.isInteger(order) ? [ ...orders, order ] : orders
-
-  }, []).sort()
-
-  const rules = orders.map((order, index) => {
-
-    return { order, rate: index + 1 }
-
-  })
-
-  const uncutLiveNodes = liveNodes.slice(0, templateNodes.length)
-
-  const uncutLiveStands = uncutLiveNodes.map((uncutLiveNode, index) => {
+  const savedLiveStands = savedLiveNodes.map((uncutLiveNode, index) => {
 
     return { index, node: uncutLiveNode }
 
   })
 
-  const sortedLiveStands = uncutLiveStands.sort((prev, next) => {
+  const sortedLiveStands = savedLiveStands.sort((prev, next) => {
 
     if (prev.node == null) {
 
@@ -52,78 +28,31 @@ module.exports = (liveNodes, { templateNodes }) => {
 
   })
 
-  console.log(sortedLiveStands, rules)
+  const newLiveStands =
+    sortedLiveStands.map((liveStand, index) => {
 
-  // const { newLiveStands } = sortedLiveStands.reduce((info, liveStand) => {
-  //
-  //   if (!liveStand.node || info.rules.length == 0) {
-  //
-  //     return {
-  //       rules,
-  //       newLiveStands: [ ...info.newLiveStands, liveStand ]
-  //     }
-  //
-  //   } else
-  //
-  //   // TODO: Переделай в цикл orders
-  //
-  //   if (rules[1] && liveStand.node.order > rules[1].order) {
-  //
-  //     const newLiveStand = Object.assign({}, liveStand,
-  //       {
-  //         node: Object.assign({}, liveStand.node, {
-  //           order: liveStand.node.order - rules[1].rate,
-  //         })
-  //       }
-  //     )
-  //
-  //     return {
-  //       rules: rules.slice(1),
-  //       newLiveStands: [ ...info.newLiveStands, newLiveStand ]
-  //     }
-  //
-  //   } else
-  //
-  //   if (liveStand.node.order < rules[0].order) {
-  //
-  //     const newLiveStand = Object.assign({}, liveStand,
-  //       {
-  //         node: Object.assign({}, liveStand.node, {
-  //           order: liveStand.node.order - rules[0].rate,
-  //         })
-  //       }
-  //     )
-  //
-  //     return {
-  //       rules,
-  //       newLiveStands: [ ...info.newLiveStands, liveStand ]
-  //     }
-  //
-  //   }
-  //
-  //   console.log(liveStand, rules)
-  //
-  // }, { rules, newLiveStands: [] })
+      if (!liveStand.node) return liveStand
 
-  // const newUncutLiveNodes = newLiveStands
-  //   .sort((prev, next) => prev.index - next.index)
-  //   .map(newLiveStand => newLiveStand.node)
-  //
-  //
-  // const cutLiveNodes = liveNodes.slice(orders.length)
-  //
-  // const newCutLiveNodes = cutLiveNodes.map((cutLiveNode) => {
-  //
-  //   return Object.assign({}, cutLiveNode, {
-  //     order: null
-  //   })
-  //
-  // })
-  //
-  //
-  // const newLiveNodes = [ ...newUncutLiveNodes, ...newCutLiveNodes ]
-  //
-  //
-  // return newLiveNodes
+      const newLiveStand = Object.assign({}, liveStand, {
+        node: Object.assign({}, liveStand.node, {
+          order: offset + index
+        })
+      })
+
+      return newLiveStand
+
+    })
+
+  const newSavedLiveNodes = newLiveStands
+    .sort((prev, next) => prev.index - next.index)
+    .map(newLiveStand => newLiveStand.node)
+
+  const newUnsavedLiveNodes = liveNodes
+    .slice(templateNodes.length)
+    .map(unsavedLiveNode => Object.assign({}, unsavedLiveNode, { order: null }))
+
+  const newLiveNodes = [ ...newSavedLiveNodes, ...newUnsavedLiveNodes ]
+
+  return newLiveNodes
 
 }

@@ -69,7 +69,7 @@ const sortUnusedLiveNodes = ({ liveNodes, usedLiveIds }) => {
 }
 
 
-const sortLiveNodes = (liveNodes = [], templateNodes = []) => {
+const sortLiveNodes = (liveNodes = [], { templateNodes = [] }) => {
 
   const liveSortableNodes = liveNodes.map((node, index) => {
 

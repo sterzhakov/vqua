@@ -20,12 +20,8 @@ module.exports = (liveNodes, templateNodes, options) => {
     const sortedTemplateNodes =
       sortTemplateNodes(refsTemplateNodes)
 
-
-    const decoratedLiveNodes =
-      decorateNodes(flatten([liveNodes]), { order: true })
-
     const sortedLiveNodes =
-      sortLiveNodes(decoratedLiveNodes, sortedTemplateNodes)
+      sortLiveNodes(liveNodes, { templateNodes: sortedTemplateNodes })
 
     return {
       filteredLiveNodes: sortedLiveNodes,
