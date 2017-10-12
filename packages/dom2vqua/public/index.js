@@ -84,20 +84,29 @@ const { TAG_TYPE } = __webpack_require__(0)
 
 module.exports = (node) => {
 
-  const props = Array.from(node.attributes).reduce((props, attribute) => {
+  const propsParams = {
 
-    return Object.assign({}, props, {
-      [attribute.nodeName]: node.getAttribute(attribute.nodeName)
-    })
+    props: Array.from(node.attributes).reduce((props, attribute) => {
 
-  }, {})
+      return Object.assign({}, props, {
+        [attribute.nodeName]: node.getAttribute(attribute.nodeName)
+      })
 
-  return {
-    type: TAG_TYPE,
-    props,
-    tag: node.tagName.toLowerCase(),
-    dom: node,
+    }, {})
+
   }
+
+  const keyParams = 'data-vqua-key' in propsParams.props
+    ? { key: propsParams.props['data-vqua-key'] }
+    : {}
+
+  return (
+    Object.assign({}, propsParams, keyParams, {
+      type: TAG_TYPE,
+      tag: node.tagName.toLowerCase(),
+      dom: node,
+    })
+  )
 
 }
 
@@ -231,11 +240,12 @@ const { TAG_TYPE } = __webpack_require__(0)
 
 describe('Convert tag', () => {
 
-  it('return new object', () => {
+  fit('return new object', () => {
 
     const tag = document.createElement('div')
     tag.setAttribute('class', 'class')
     tag.setAttribute('id', 'id')
+    tag.setAttribute('data-vqua-key', '1')
 
     const newNode = convertTag(tag)
 
@@ -243,9 +253,11 @@ describe('Convert tag', () => {
       dom: tag,
       type: TAG_TYPE,
       tag: 'div',
+      key: '1',
       props: {
         id: 'id',
         class: 'class',
+        'data-vqua-key': '1',
       },
     })
 

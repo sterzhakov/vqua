@@ -2,19 +2,28 @@ const { TAG_TYPE } = require('vqua/lib/constants/nodeTypes')
 
 module.exports = (node) => {
 
-  const props = Array.from(node.attributes).reduce((props, attribute) => {
+  const propsParams = {
 
-    return Object.assign({}, props, {
-      [attribute.nodeName]: node.getAttribute(attribute.nodeName)
-    })
+    props: Array.from(node.attributes).reduce((props, attribute) => {
 
-  }, {})
+      return Object.assign({}, props, {
+        [attribute.nodeName]: node.getAttribute(attribute.nodeName)
+      })
 
-  return {
-    type: TAG_TYPE,
-    props,
-    tag: node.tagName.toLowerCase(),
-    dom: node,
+    }, {})
+
   }
+
+  const keyParams = 'data-vqua-key' in propsParams.props
+    ? { key: propsParams.props['data-vqua-key'] }
+    : {}
+
+  return (
+    Object.assign({}, propsParams, keyParams, {
+      type: TAG_TYPE,
+      tag: node.tagName.toLowerCase(),
+      dom: node,
+    })
+  )
 
 }
