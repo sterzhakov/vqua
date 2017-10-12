@@ -902,7 +902,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       templateNodes,
       createNode: createCallback,
       domNodes,
-      filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
+      filterNodes: (liveNodes, templateNodes, { domNodes, offset } = {}) => {
 
         const orderedTemplateNodes =
           decorateNodes(templateNodes, {
@@ -917,12 +917,13 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
         const sortedLiveNodes =
           sortLiveNodes(withDomLiveNodes, {
-            templateNodes: orderedTemplateNodes 
+            templateNodes: orderedTemplateNodes
           })
 
         const reorderedDeletedLiveNodes =
           reorderDeletedLiveNodes(sortedLiveNodes, {
-            templateNodes: orderedTemplateNodes
+            templateNodes: orderedTemplateNodes,
+            offset,
           })
 
         const reorderedAddedLiveNodes =
@@ -1144,125 +1145,17 @@ module.exports = (path) => {
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { Component, html } = __webpack_require__(2)
+const { Component } = __webpack_require__(2)
+
+const Todo = __webpack_require__(92)
 
 class TasksContainer extends Component {
 
-  constructor(props, context) {
-
-    super(props, context)
-
-    this.state = {
-      tasks: [
-        { name: '111', id: 1, completed: false, },
-        { name: '222', id: 2, completed: false, },
-        { name: '333', id: 3, completed: false, },
-      ]
-    }
-
-  }
-
-  handleTaskAdd(event) {
-
-    event.preventDefault()
-
-    const { input } = this.refs
-
-    if (input.value.trim().length > 0) {
-
-      this.setState({
-        tasks: [
-          {
-            id: Date.now(),
-            name: input.value,
-            completed: false,
-          },
-          ...this.state.tasks
-        ]
-      })
-
-      input.value = ''
-
-    }
-
-  }
-
-  handleTaskToggle(event, task) {
-
-    event.preventDefault()
-
-    this.setState({
-      tasks: this.state.tasks.map((_task) => {
-
-        return (_task.id == task.id)
-          ? Object.assign({},
-              _task,
-              { completed: !_task.completed }
-            )
-          : _task
-
-      })
-    })
-
-
-  }
-
-  handleTaskDelete(event, task) {
-
-    event.preventDefault()
-
-    this.setState({
-      tasks: this.state.tasks.filter((_task) => {
-
-        return _task.id != task.id
-
-      })
-    })
-
-  }
-
   render() {
 
-    const { h1, div, a, input, button, br, s } = html
-
-    return (
-      div({},
-        h1({},
-          'Todo app'
-        ),
-        div({},
-          input({
-            ref: 'input',
-            placeholder: 'todo name'
-          }),
-          button({
-            onClick: (event) => { this.handleTaskAdd(event) },
-          }, 'Add')
-        ),
-        br(),
-        this.state.tasks.map((task, index) => {
-          return [
-            div({ key: task.id },
-              a({
-                href: '#todo__item__toggle',
-                onClick: (event) => { this.handleTaskToggle(event, task) }
-              },
-                task.completed
-                  ? s({}, task.name)
-                  : task.name
-              ),
-              a({
-                href: '#todo__item__delete',
-                onClick: (event) => { this.handleTaskDelete(event, task) }
-              },
-                '[x]'
-              ),
-              br()
-            )
-          ]
-        })
-      )
-    )
+    return [
+      Todo.v(),
+    ]
 
   }
 
@@ -3003,7 +2896,7 @@ const createNodes = ({
 }) => {
 
   const { filteredLiveNodes, filteredTemplateNodes } = (
-    filterNodes(liveNodes, templateNodes, { domNodes })
+    filterNodes(liveNodes, templateNodes, { domNodes, offset })
   )
 
   const maxLength = Math.max(
@@ -4578,6 +4471,137 @@ module.exports = (liveNodes, { templateNodes }) => {
   return [ ...memo.newLiveNodes, ...liveNodes.slice(templateNodes.length) ]
 
 }
+
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { Component, html } = __webpack_require__(2)
+
+class Todo extends Component {
+
+  constructor(props, context) {
+
+    super(props, context)
+
+    this.state = {
+      tasks: [
+        { name: '111', id: 1, completed: false, },
+        { name: '222', id: 2, completed: false, },
+        { name: '333', id: 3, completed: false, },
+      ]
+    }
+
+  }
+
+  handleTaskAdd(event) {
+
+    event.preventDefault()
+
+    const { input } = this.refs
+
+    if (input.value.trim().length > 0) {
+
+      this.setState({
+        tasks: [
+          {
+            id: Date.now(),
+            name: input.value,
+            completed: false,
+          },
+          ...this.state.tasks
+        ]
+      })
+
+      input.value = ''
+
+    }
+
+  }
+
+  handleTaskToggle(event, task) {
+
+    event.preventDefault()
+
+    this.setState({
+      tasks: this.state.tasks.map((_task) => {
+
+        return (_task.id == task.id)
+          ? Object.assign({},
+              _task,
+              { completed: !_task.completed }
+            )
+          : _task
+
+      })
+    })
+
+
+  }
+
+  handleTaskDelete(event, task) {
+
+    event.preventDefault()
+
+    this.setState({
+      tasks: this.state.tasks.filter((_task) => {
+
+        return _task.id != task.id
+
+      })
+    })
+
+  }
+
+  render() {
+
+    const { h1, div, a, input, button, br, s } = html
+
+    return (
+      div({},
+        h1({},
+          'Todo app'
+        ),
+        div({},
+          input({
+            ref: 'input',
+            placeholder: 'todo name'
+          }),
+          button({
+            onClick: (event) => { this.handleTaskAdd(event) },
+          }, 'Add')
+        ),
+        br(),
+        this.state.tasks.map((task, index) => {
+          return [
+            div({ key: task.id },
+              a({
+                href: '#todo__item__toggle',
+                onClick: (event) => { this.handleTaskToggle(event, task) }
+              },
+                task.completed
+                  ? s({}, task.name)
+                  : task.name
+              ),
+              a({
+                href: '#todo__item__delete',
+                onClick: (event) => { this.handleTaskDelete(event, task) }
+              },
+                '[x]'
+              ),
+              br()
+            )
+          ]
+        })
+      )
+    )
+
+  }
+
+}
+
+module.exports = Todo
 
 
 /***/ })
