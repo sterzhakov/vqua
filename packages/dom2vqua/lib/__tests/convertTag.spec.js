@@ -3,7 +3,7 @@ const { TAG_TYPE } = require('vqua/lib/constants/nodeTypes')
 
 describe('Convert tag', () => {
 
-  fit('return new object', () => {
+  it('return new object', () => {
 
     const tag = document.createElement('div')
     tag.setAttribute('class', 'class')

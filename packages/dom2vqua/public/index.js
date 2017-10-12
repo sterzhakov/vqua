@@ -240,7 +240,7 @@ const { TAG_TYPE } = __webpack_require__(0)
 
 describe('Convert tag', () => {
 
-  fit('return new object', () => {
+  it('return new object', () => {
 
     const tag = document.createElement('div')
     tag.setAttribute('class', 'class')
