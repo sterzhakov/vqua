@@ -1153,9 +1153,7 @@ class TasksContainer extends Component {
 
   render() {
 
-    return [
-      Todo.v(),
-    ]
+    return Todo.v()
 
   }
 
