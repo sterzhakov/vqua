@@ -15,7 +15,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
       templateNodes,
       createNode: createCallback,
       domNodes,
-      filterNodes: (liveNodes, templateNodes, { domNodes } = {}) => {
+      filterNodes: (liveNodes, templateNodes, { domNodes, offset } = {}) => {
 
         const orderedTemplateNodes =
           decorateNodes(templateNodes, {
@@ -30,12 +30,13 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
         const sortedLiveNodes =
           sortLiveNodes(withDomLiveNodes, {
-            templateNodes: orderedTemplateNodes 
+            templateNodes: orderedTemplateNodes
           })
 
         const reorderedDeletedLiveNodes =
           reorderDeletedLiveNodes(sortedLiveNodes, {
-            templateNodes: orderedTemplateNodes
+            templateNodes: orderedTemplateNodes,
+            offset,
           })
 
         const reorderedAddedLiveNodes =

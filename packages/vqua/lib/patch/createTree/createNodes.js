@@ -16,7 +16,7 @@ const createNodes = ({
 }) => {
 
   const { filteredLiveNodes, filteredTemplateNodes } = (
-    filterNodes(liveNodes, templateNodes, { domNodes })
+    filterNodes(liveNodes, templateNodes, { domNodes, offset })
   )
 
   const maxLength = Math.max(
