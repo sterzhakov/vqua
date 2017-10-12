@@ -21,6 +21,22 @@ module.exports = ({ templateNode, statistic }) => {
     childs: templateNode.childs,
   }
 
-  return Object.assign({}, newTagNode, refParams, statisticParams, keyParams)
+  const propsParams =
+    templateNode.key
+      ? {
+          props: Object.assign({}, templateNode.props, {
+            'data-vqua-key': templateNode.key
+          })
+        }
+      : {}
+
+
+  return Object.assign({},
+    newTagNode,
+    refParams,
+    statisticParams,
+    keyParams,
+    propsParams,
+  )
 
 }

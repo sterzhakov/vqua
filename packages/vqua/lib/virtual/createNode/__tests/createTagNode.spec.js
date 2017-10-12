@@ -5,6 +5,28 @@ const Statistic = require('../../Statistic')
 
 describe('Create tag node', () => {
 
+  it('create node with data-vqua-key params', () => {
+
+    const templateNode = {
+      type: TAG_TYPE,
+      tag: 'div',
+      props: { id: 1 },
+      childs: [],
+      key: 1,
+    }
+
+    const newNode =
+      createTagNode({
+        templateNode
+      })
+
+    expect(newNode.props).toEqual({
+      id: 1,
+      'data-vqua-key': 1
+    })
+
+  })
+
   it('create node with statistic params', () => {
 
     const templateNode = {

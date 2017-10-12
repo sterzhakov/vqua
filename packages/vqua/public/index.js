@@ -2239,7 +2239,23 @@ module.exports = ({ templateNode, statistic }) => {
     childs: templateNode.childs,
   }
 
-  return Object.assign({}, newTagNode, refParams, statisticParams, keyParams)
+  const propsParams =
+    templateNode.key
+      ? {
+          props: Object.assign({}, templateNode.props, {
+            'data-vqua-key': templateNode.key
+          })
+        }
+      : {}
+
+
+  return Object.assign({},
+    newTagNode,
+    refParams,
+    statisticParams,
+    keyParams,
+    propsParams,
+  )
 
 }
 
@@ -7249,6 +7265,28 @@ const { TAG_TYPE } = __webpack_require__(0)
 const Statistic = __webpack_require__(4)
 
 describe('Create tag node', () => {
+
+  it('create node with data-vqua-key params', () => {
+
+    const templateNode = {
+      type: TAG_TYPE,
+      tag: 'div',
+      props: { id: 1 },
+      childs: [],
+      key: 1,
+    }
+
+    const newNode =
+      createTagNode({
+        templateNode
+      })
+
+    expect(newNode.props).toEqual({
+      id: 1,
+      'data-vqua-key': 1
+    })
+
+  })
 
   it('create node with statistic params', () => {
 
