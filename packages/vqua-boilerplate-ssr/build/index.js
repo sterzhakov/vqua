@@ -28,5 +28,4 @@ const navigation = createNavigation({ routes, cache }, (params) => {
 
 })
 
-
 navigation.listen()
