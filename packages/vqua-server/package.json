@@ -1,6 +1,6 @@
 {
   "name": "vqua-server",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Server for vqua.",
   "main": "index.js",
   "directories": {
