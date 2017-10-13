@@ -33,7 +33,7 @@ module.exports = (
   const liveNodes =
     createLiveTree([], templateNodes, {
       hooks: false,
-      context: params.context,
+      context,
     })
 
   const domNodes = filterDomNodes(liveNodes)
