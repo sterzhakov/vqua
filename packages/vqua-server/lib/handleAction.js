@@ -3,20 +3,27 @@ const responseRedirect = require('./responseRedirect')
 
 module.exports = (request, response, callback) => {
 
-  response.send = (statusCode, name, props = {}, params = {}) => {
+  response.send = (statusCode, name, params) => {
+
+    const defaultParams = {
+      props: {},
+      context: {},
+    }
 
     return (
       responseSend(
         request,
         response,
-        Object.assign({}, params, { statusCode, name, props })
+        Object.assign({}, defaultParams, params, { statusCode, name })
       )
     )
 
   }
 
   response.redirect = (statusCode, url) => {
+
     return responseRedirect(request, response, { statusCode, url })
+
   }
 
   try {

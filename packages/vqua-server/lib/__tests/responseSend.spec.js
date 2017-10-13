@@ -14,7 +14,7 @@ describe('Handle send', () => {
     routes.push(
       route('/send', (request, response) => {
 
-        response.send(200, 'AppContainer', {})
+        response.send(200, 'AppContainer')
 
       })
     )
@@ -37,7 +37,7 @@ describe('Handle send', () => {
       routes.push(
         route('/send/new-layout', (request, response) => {
 
-          response.send(200, 'AppContainer', {}, { layout: html => `<l>${html}</l>` })
+          response.send(200, 'AppContainer', { layout: html => `<l>${html}</l>` })
 
         })
       )
