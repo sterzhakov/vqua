@@ -18,7 +18,7 @@ const navigation = createNavigation({ routes, cache }, (params) => {
 
   const templateNodes = [ Component.v(component.props, component.context) ]
 
-  const context = { navigate }
+  const context = Object.assign({}, { navigate }, component.context)
 
   const $app = document.getElementById('app')
 
