@@ -22,8 +22,10 @@ const navigate = ({ onNavigate, routes, path, store, cache }) => {
         )
 
       const response = {
-        send: (statusCode, name, props = {}, params = {}) => {
-          resolve({ statusCode, name, props, params })
+        send: (statusCode, name, params) => {
+          resolve(
+            Object.assign({}, { statusCode, name }, params)
+          )
         }
       }
 
