@@ -2,7 +2,7 @@
 
 ![Image of Yaktocat](https://raw.githubusercontent.com/sterjakovigor/vqua/master/logo.jpg)
 
-It is a [monorepo](https://github.com/babel/babel/blob/master/doc/design/monorepo.md) that includes packages:
+It is a [monorepo](https://github.com/lerna/lerna) that includes packages:
 
 *Main:*
 - [vqua](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua) - virtual dom

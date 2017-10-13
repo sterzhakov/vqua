@@ -6,11 +6,11 @@ const merge = require('merge-stream')
 
 gulp.task('styles', () => {
 
-  const scssStream = gulp.src('./build/**/*.scss')
+  const scssStream = gulp.src(['./build/**/*.scss'])
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('scss-files.scss'))
 
-  const cssStream = gulp.src('./build/**/*.css')
+  const cssStream = gulp.src(['./build/**/*.css'])
     .pipe(concat('css-files.css'))
 
   const mergedStream = merge(scssStream, cssStream)
@@ -23,7 +23,7 @@ gulp.task('styles', () => {
 
 
 gulp.task('styles:watch', () => {
-  gulp.watch(['./build/**/*.scss','./build/**/*.css'], ['styles'])
+  gulp.watch(['build/**/*.scss','build/**/*.css'],{ cwd: './' }, ['styles'])
 })
 
 gulp.task('default', [ 'styles', 'styles:watch' ])

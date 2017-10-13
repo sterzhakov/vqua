@@ -3359,20 +3359,29 @@ const { TAG_TYPE } = __webpack_require__(0)
 
 module.exports = (node) => {
 
-  const props = Array.from(node.attributes).reduce((props, attribute) => {
+  const propsParams = {
 
-    return Object.assign({}, props, {
-      [attribute.nodeName]: node.getAttribute(attribute.nodeName)
-    })
+    props: Array.from(node.attributes).reduce((props, attribute) => {
 
-  }, {})
+      return Object.assign({}, props, {
+        [attribute.nodeName]: node.getAttribute(attribute.nodeName)
+      })
 
-  return {
-    type: TAG_TYPE,
-    props,
-    tag: node.tagName.toLowerCase(),
-    dom: node,
+    }, {})
+
   }
+
+  const keyParams = 'data-vqua-key' in propsParams.props
+    ? { key: propsParams.props['data-vqua-key'] }
+    : {}
+
+  return (
+    Object.assign({}, propsParams, keyParams, {
+      type: TAG_TYPE,
+      tag: node.tagName.toLowerCase(),
+      dom: node,
+    })
+  )
 
 }
 
@@ -4507,8 +4516,8 @@ describe('Sort props', () => {
   it('for event props', () => {
 
     const eventProps = {
-      onClick: () => { console.log('click') },
-      onKeyDown: () => { console.log('key down') }
+      onClick: () => { return true },
+      onKeyDown: () => { return true }
     }
 
     expect(

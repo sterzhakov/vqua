@@ -15,10 +15,6 @@ describe('Html to vqua', () => {
 
     const vquaNodes = html2vqua(string)
 
-    // console.log(
-    //   require('util').inspect(vquaNodes, false, null)
-    // )
-
     expect(vquaNodes).toEqual([
       {
         type: 2,

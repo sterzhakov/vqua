@@ -886,8 +886,8 @@ module.exports = loop
 /***/ (function(module, exports, __webpack_require__) {
 
 const { sortLiveNodes } = __webpack_require__(18)
-const reorderDeletedLiveNodes = __webpack_require__(62)
-const reorderAddedLiveNodes = __webpack_require__(91)
+const reorderDeletedLiveNodes = __webpack_require__(61)
+const reorderAddedLiveNodes = __webpack_require__(62)
 const decorateNodes = __webpack_require__(19)
 const createNodes = __webpack_require__(63)
 const createCallback = __webpack_require__(64)
@@ -1147,7 +1147,7 @@ module.exports = (path) => {
 
 const { Component } = __webpack_require__(2)
 
-const Todo = __webpack_require__(92)
+const Todo = __webpack_require__(91)
 
 class TasksContainer extends Component {
 
@@ -2569,7 +2569,23 @@ module.exports = ({ templateNode, statistic }) => {
     childs: templateNode.childs,
   }
 
-  return Object.assign({}, newTagNode, refParams, statisticParams, keyParams)
+  const propsParams =
+    templateNode.key
+      ? {
+          props: Object.assign({}, templateNode.props, {
+            'data-vqua-key': templateNode.key
+          })
+        }
+      : {}
+
+
+  return Object.assign({},
+    newTagNode,
+    refParams,
+    statisticParams,
+    keyParams,
+    propsParams,
+  )
 
 }
 
@@ -2808,8 +2824,7 @@ module.exports = (nodes) => {
 
 
 /***/ }),
-/* 61 */,
-/* 62 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = (liveNodes, { templateNodes, offset = 0 }) => {
@@ -2868,6 +2883,89 @@ module.exports = (liveNodes, { templateNodes, offset = 0 }) => {
   const newLiveNodes = [ ...newSavedLiveNodes, ...newUnsavedLiveNodes ]
 
   return newLiveNodes
+
+}
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+module.exports = (liveNodes, { templateNodes }) => {
+
+  const memo = templateNodes.reduce((memo, templateNode, index) => {
+
+    const liveNode = liveNodes[index]
+
+    const newLiveNode = !liveNode || !memo.multipliers.length
+      ? liveNode
+      : memo.multipliers.reduce((newLiveNode, multiplier) => {
+
+          if (
+            newLiveNode.order > multiplier.min &&
+            newLiveNode.order < multiplier.max
+          ) {
+
+            return Object.assign({},
+              newLiveNode,
+              { order: newLiveNode.order + multiplier.rate }
+            )
+
+          } else {
+
+            return newLiveNode
+
+          }
+
+        }, liveNode)
+
+    const newLiveNodes = [
+      ...memo.newLiveNodes,
+      newLiveNode
+    ]
+
+    if (!liveNode) {
+
+      return {
+        newLiveNodes,
+        multipliers: [
+          ...memo.multipliers,
+          {
+            min: templateNode.order - 1,
+            max: Infinity,
+            rate: 1,
+          }
+        ]
+      }
+
+    } else
+
+    if (newLiveNode.order > templateNode.order) {
+
+      return {
+        newLiveNodes,
+        multipliers: [
+          ...memo.multipliers,
+          {
+            min: -Infinity,
+            max: newLiveNode.order,
+            rate: 1,
+          }
+        ]
+      }
+
+    } else {
+
+      return {
+        newLiveNodes,
+        multipliers: memo.multipliers,
+      }
+
+    }
+
+  }, { multipliers: [], newLiveNodes: [] })
+
+  return [ ...memo.newLiveNodes, ...liveNodes.slice(templateNodes.length) ]
 
 }
 
@@ -3914,20 +4012,29 @@ const { TAG_TYPE } = __webpack_require__(1)
 
 module.exports = (node) => {
 
-  const props = Array.from(node.attributes).reduce((props, attribute) => {
+  const propsParams = {
 
-    return Object.assign({}, props, {
-      [attribute.nodeName]: node.getAttribute(attribute.nodeName)
-    })
+    props: Array.from(node.attributes).reduce((props, attribute) => {
 
-  }, {})
+      return Object.assign({}, props, {
+        [attribute.nodeName]: node.getAttribute(attribute.nodeName)
+      })
 
-  return {
-    type: TAG_TYPE,
-    props,
-    tag: node.tagName.toLowerCase(),
-    dom: node,
+    }, {})
+
   }
+
+  const keyParams = 'data-vqua-key' in propsParams.props
+    ? { key: propsParams.props['data-vqua-key'] }
+    : {}
+
+  return (
+    Object.assign({}, propsParams, keyParams, {
+      type: TAG_TYPE,
+      tag: node.tagName.toLowerCase(),
+      dom: node,
+    })
+  )
 
 }
 
@@ -4390,89 +4497,6 @@ webpackContext.id = 90;
 
 /***/ }),
 /* 91 */
-/***/ (function(module, exports) {
-
-module.exports = (liveNodes, { templateNodes }) => {
-
-  const memo = templateNodes.reduce((memo, templateNode, index) => {
-
-    const liveNode = liveNodes[index]
-
-    const newLiveNode = !liveNode || !memo.multipliers.length
-      ? liveNode
-      : memo.multipliers.reduce((newLiveNode, multiplier) => {
-
-          if (
-            newLiveNode.order > multiplier.min &&
-            newLiveNode.order < multiplier.max
-          ) {
-
-            return Object.assign({},
-              newLiveNode,
-              { order: newLiveNode.order + multiplier.rate }
-            )
-
-          } else {
-
-            return newLiveNode
-
-          }
-
-        }, liveNode)
-
-    const newLiveNodes = [
-      ...memo.newLiveNodes,
-      newLiveNode
-    ]
-
-    if (!liveNode) {
-
-      return {
-        newLiveNodes,
-        multipliers: [
-          ...memo.multipliers,
-          {
-            min: templateNode.order - 1,
-            max: Infinity,
-            rate: 1,
-          }
-        ]
-      }
-
-    } else
-
-    if (newLiveNode.order > templateNode.order) {
-
-      return {
-        newLiveNodes,
-        multipliers: [
-          ...memo.multipliers,
-          {
-            min: -Infinity,
-            max: newLiveNode.order,
-            rate: 1,
-          }
-        ]
-      }
-
-    } else {
-
-      return {
-        newLiveNodes,
-        multipliers: memo.multipliers,
-      }
-
-    }
-
-  }, { multipliers: [], newLiveNodes: [] })
-
-  return [ ...memo.newLiveNodes, ...liveNodes.slice(templateNodes.length) ]
-
-}
-
-
-/***/ }),
-/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { Component, html } = __webpack_require__(2)

@@ -21,8 +21,8 @@ describe('Sort props', () => {
   it('for event props', () => {
 
     const eventProps = {
-      onClick: () => { console.log('click') },
-      onKeyDown: () => { console.log('key down') }
+      onClick: () => { return true },
+      onKeyDown: () => { return true }
     }
 
     expect(
