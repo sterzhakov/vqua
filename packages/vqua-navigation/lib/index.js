@@ -1,64 +1,94 @@
-const Store = require('./Store')
-const navigate = require('./navigate')
 const { htmlQuotes } = require('vqua-utils')
-const { separateRoutes } = require('vqua-router')
+const { matchRoutes } = require('vqua-router')
 
-const createParams = (params) => {
+class Navigation {
 
-  const cache = params.cache
-    ? htmlQuotes.decode(params.cache)
-    : null
+  constructor(routes) {
 
-  const routes = separateRoutes(params.routes)
+    this.routes = routes
 
-  return Object.assign({}, params, { cache, routes })
+    this.onNavigateCallback = null
 
-}
+  }
 
-const createNavigation = ({ routes, cache }, onNavigate) => {
+  onNavigate(callback) {
 
-  const store = new Store
+    this.onNavigateCallback = callback
 
-  return {
+  }
 
-    listen: () => {
+  navigate(path, cache = false) {
 
-      const params =
-        createParams({
-          onNavigate,
-          routes,
-          path: window.location.pathname,
-          store: store,
-          cache,
-        })
+    if (!this.onNavigateCallback) {
 
-      navigate(params)
+      throw new Error('onNavigate(callback) doesn\'t present')
 
-      window.onpopstate = () => {
+    } else {
 
-        const params =
-          createParams({
-            onNavigate,
-            routes,
-            path: window.location.pathname,
-            store: store,
-            cache: null,
-          })
-
-        navigate(params)
-
-      }
-
-    },
-
-    close: () => {
-
-      window.onpopstate = null
+      this.handleRoute(path, cache)
 
     }
 
   }
 
+  handleRoute(path, cache) {
+
+    new Promise((resolve, reject) => {
+
+      if (cache) {
+
+        resolve(JSON.parse(cache))
+
+      } else {
+
+        this.handleAction(path, resolve, reject)
+
+      }
+
+    }).then(args => {
+
+      const params = Object.assign({}, args, { path })
+
+      this.onNavigateCallback(params)
+
+    }).catch(error => {
+
+      throw error
+
+    })
+
+
+  }
+
+  handleAction(path, resolve, reject, routeIndex = 0) {
+
+    const availableRoutes = this.routes.slice(routeIndex)
+
+    const route = matchRoutes(availableRoutes, path)
+
+    if (!route) return reject(new Error('Route not found'))
+
+    const next = () => {
+
+      this.handleAction(path, resolve, reject, route.index + 1)
+
+    }
+
+    const request = Object.assign({}, route.request, { url: path })
+
+    const response = {
+      send: (statusCode, componentName, params) => {
+        resolve({ statusCode, componentName, params })
+      }
+    }
+
+    // call hooks
+
+    route.action(request, response, next)
+
+
+  }
+
 }
 
-module.exports = createNavigation
+module.exports = Navigation
