@@ -4,11 +4,11 @@ module.exports = (config) => {
 
   const publicPath = path.join(process.cwd(), config.publicPath)
 
-  const containerPath = path.join(process.cwd(), config.containerPath)
+  const componentPath = path.join(process.cwd(), config.componentPath)
 
   return Object.assign({}, config, {
     publicPath,
-    containerPath,
+    componentPath,
     routes: config.routes,
   })
 
