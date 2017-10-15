@@ -1,6 +1,14 @@
-module.exports = (request, response, { statusCode, url, params = {} }) => {
+module.exports = (
+  request,
+  response,
+  {
+    statusCode,
+    redirectPath,
+    params = {}
+  }
+) => {
 
-  response.writeHead(statusCode, { 'Location': url })
+  response.writeHead(statusCode, { 'Location': redirectPath })
 
   response.end()
 

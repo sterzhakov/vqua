@@ -18,11 +18,11 @@ module.exports = (request, response, next, callback) => {
 
   }
 
-  response.redirect = (statusCode, url, params = {}) => {
+  response.redirect = (statusCode, redirectPath, params = {}) => {
 
     const newParams = {
       statusCode,
-      url,
+      redirectPath,
       params
     }
 
