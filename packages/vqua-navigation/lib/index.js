@@ -1,5 +1,6 @@
 const { htmlQuotes } = require('vqua-utils')
 const { matchRoutes } = require('vqua-router')
+const { include } = require('vqua-utils')
 
 class Navigation {
 
@@ -9,6 +10,8 @@ class Navigation {
 
     this.onNavigateCallback = null
 
+    this.onRedirectCallback = null
+
   }
 
   onNavigate(callback) {
@@ -17,21 +20,13 @@ class Navigation {
 
   }
 
-  navigate(path, cache = false) {
+  onRedirect(callback) {
 
-    if (!this.onNavigateCallback) {
-
-      throw new Error('onNavigate(callback) doesn\'t present')
-
-    } else {
-
-      this.handleRoute(path, cache)
-
-    }
+    this.onRedirectCallback = callback
 
   }
 
-  handleRoute(path, cache) {
+  navigate(path, cache = false) {
 
     new Promise((resolve, reject) => {
 
@@ -49,14 +44,21 @@ class Navigation {
 
       const params = Object.assign({}, args, { path })
 
-      this.onNavigateCallback(params)
+      if (include([300,301], params.statusCode)) {
+
+        this.onRedirectCallback(params)
+
+      } else {
+
+        this.onNavigateCallback(params)
+
+      }
 
     }).catch(error => {
 
       throw error
 
     })
-
 
   }
 
@@ -77,8 +79,11 @@ class Navigation {
     const request = Object.assign({}, route.request, { url: path })
 
     const response = {
-      send: (statusCode, componentName, params) => {
+      send: (statusCode, componentName, params = {}) => {
         resolve({ statusCode, componentName, params })
+      },
+      redirect: (statusCode, redirectPath, params = {}) => {
+        resolve({ statusCode, redirectPath, params })
       }
     }
 

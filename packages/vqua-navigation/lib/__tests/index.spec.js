@@ -3,6 +3,47 @@ const { route, initRoutes } = require('vqua-router')
 
 describe('Navigation', () => {
 
+  it('on redirect', (done) => {
+
+    class PostsController {
+
+      index(request, response) {
+
+        response.redirect(300, '/home')
+
+      }
+
+    }
+
+    const routes = [
+      route('/posts', 'Posts#index')
+    ]
+
+    const controllers = {
+      PostsController: new PostsController
+    }
+
+    const initedRoutes = initRoutes({ routes, controllers })
+
+    const navigation = new Navigation(initedRoutes)
+
+    navigation.onRedirect((params) => {
+
+      expect(params).toEqual({
+        path: '/posts',
+        redirectPath: '/home',
+        statusCode: 300,
+        params: {}
+      })
+
+      done()
+
+    })
+
+    navigation.navigate('/posts')
+
+  })
+
   it('next route', (done) => {
 
     class PostsController {
