@@ -1,8 +1,6 @@
-module.exports = (request, response, { statusCode, url }) => {
+module.exports = (request, response, { statusCode, url, params = {} }) => {
 
-  response.writeHead(statusCode, {
-    'Location': url
-  })
+  response.writeHead(statusCode, { 'Location': url })
 
   response.end()
 

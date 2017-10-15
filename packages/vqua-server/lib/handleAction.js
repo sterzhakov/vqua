@@ -20,14 +20,11 @@ module.exports = (request, response, next, callback) => {
 
   response.redirect = (statusCode, url, params = {}) => {
 
-    const newParams =
-      Object.assign({},
-        {
-          statusCode,
-          url
-        },
-        params
-      )
+    const newParams = {
+      statusCode,
+      url,
+      params
+    }
 
     responseRedirect(request, response, newParams)
 
@@ -39,11 +36,7 @@ module.exports = (request, response, next, callback) => {
 
     const result = request.action(request, response, next)
 
-    if (result instanceof Promise) {
-
-      result.catch(callback)
-
-    }
+    if (result instanceof Promise) result.catch(callback)
 
   } catch(error) {
 
