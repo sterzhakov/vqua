@@ -1,0 +1,17 @@
+{
+  "name": "vqua-controller",
+  "version": "1.0.0",
+  "description": "Vqua controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "vqua",
+    "vqua-controller",
+    "vqua",
+    "server"
+  ],
+  "author": "",
+  "license": "ISC"
+}
