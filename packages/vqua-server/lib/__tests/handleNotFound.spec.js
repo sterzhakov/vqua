@@ -2,7 +2,7 @@ const { route } = require('vqua-router')
 const request = require('request')
 const initServer = require('./helpers/initServer')
 
-let routes = []
+const routes = []
 
 describe('Handle not found', () => {
 

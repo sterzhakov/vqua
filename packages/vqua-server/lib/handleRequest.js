@@ -7,30 +7,36 @@ const handleNotFound = require('./handleNotFound')
 const handleFile = require('./handleFile')
 const handleError = require('./handleError')
 
-module.exports = (request, response) => (async () => {
+const handleRequest = (request, response, routeIndex = 0) => (async () => {
 
   const { pathname } = url.parse(request.url)
 
-  const route = matchRoutes(request.config.routes, pathname)
+  const availableRoutes = request.config.routes.slice(routeIndex)
+
+  const route = matchRoutes(availableRoutes, pathname)
+
+  const next = () => {
+
+    handleRequest(request, response, route.index + 1)
+
+  }
 
   const extname = path.extname(pathname)
 
-  const isRouteExtension = include(['', '.html', '.htm', '.json'], extname)
+  const isActionExtname = include(['', '.html', '.htm', '.json'], extname)
 
-  if (route && isRouteExtension) {
+  if (route && isActionExtname) {
 
-    const requestRoute = Object.assign({}, request, {
-      params: route.request.params,
-      segments: route.request.segments,
-      action: route.action,
-    })
+    request.params     = route.request.params
+    request.segments   = route.request.segments
+    request.action     = route.action
+    request.controller = route.controller
 
+    handleAction(request, response, next, (error) => {
 
-    handleAction(requestRoute, response, (error) => {
+      request.error = error
 
-      const requestError = Object.assign({}, requestRoute, { error })
-
-      if (error) handleError(requestError, response)
+      if (error) handleError(request, response)
 
     })
 
@@ -38,12 +44,14 @@ module.exports = (request, response) => (async () => {
 
     handleFile(request, response, (error) => {
 
-      const requestError = Object.assign({}, request, { error })
+      request.error = error
 
-      if (error) handleNotFound(requestError, response)
+      if (error) handleNotFound(request, response)
 
     })
 
   }
 
 })()
+
+module.exports = handleRequest

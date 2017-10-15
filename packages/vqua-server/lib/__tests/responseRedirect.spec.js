@@ -3,21 +3,21 @@ const request = require('request')
 const initServer = require('./helpers/initServer')
 const App = require('./data/App')
 
-let routes = []
+const routes = [
+
+  route('/redirect', (request, response) => {
+
+    response.redirect(302, '/hello-world')
+
+  })
+
+]
 
 describe('Handle action', () => {
 
   initServer(routes)
 
   it('GET /redirect | 302', (done) => {
-
-    routes.push(
-      route('/redirect', (request, response) => {
-
-        response.redirect(302, '/hello-world')
-
-      })
-    )
 
     request({
       url: 'http://localhost:8888/redirect',

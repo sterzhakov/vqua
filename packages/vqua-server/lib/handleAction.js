@@ -1,34 +1,45 @@
 const responseSend = require('./responseSend')
 const responseRedirect = require('./responseRedirect')
 
-module.exports = (request, response, callback) => {
+module.exports = (request, response, next, callback) => {
 
-  response.send = (statusCode, name, params) => {
+  response.send = (statusCode, name, params = {}) => {
 
-    const defaultParams = {
-      props: {},
-      context: {},
-    }
-
-    return (
-      responseSend(
-        request,
-        response,
-        Object.assign({}, defaultParams, params, { statusCode, name })
+    const newParams =
+      Object.assign({},
+        {
+          props: {},
+          context: {},
+          statusCode,
+          name
+        },
+        params,
       )
-    )
+
+    responseSend(request, response, newParams)
 
   }
 
-  response.redirect = (statusCode, url) => {
+  response.redirect = (statusCode, url, params = {}) => {
 
-    return responseRedirect(request, response, { statusCode, url })
+    const newParams =
+      Object.assign({},
+        {
+          statusCode,
+          url
+        },
+        params
+      )
+
+    responseRedirect(request, response, newParams)
 
   }
 
   try {
 
-    const result = request.action(request, response)
+    // call hooks
+
+    const result = request.action(request, response, next)
 
     if (result instanceof Promise) {
 

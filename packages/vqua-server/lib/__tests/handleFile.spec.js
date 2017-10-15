@@ -2,7 +2,15 @@ const { route } = require('vqua-router')
 const request = require('request')
 const initServer = require('./helpers/initServer')
 
-let routes = []
+const routes = [
+
+  route('/:filename', (request, response) => {
+
+    response.end('Hello world!')
+
+  })
+
+]
 
 describe('Handle action', () => {
 
@@ -38,14 +46,6 @@ describe('Handle action', () => {
 
 
   it('GET /test.txt => /:filename | 200 | Hello world!', (done) => {
-
-    routes.push(
-      route('/:filename', (request, response) => {
-
-        response.end('Hello world!')
-
-      })
-    )
 
     request('http://localhost:8888/test.txt', (error, response, body) => {
 

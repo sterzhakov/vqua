@@ -3,21 +3,27 @@ const request = require('request')
 const initServer = require('./helpers/initServer')
 const App = require('./data/App')
 
-let routes = []
+const routes = [
+
+  route('/send', (request, response) => {
+
+    response.send(200, 'AppContainer')
+
+  }),
+
+  route('/send/new-layout', (request, response) => {
+
+    response.send(200, 'AppContainer', { layout: html => `<l>${html}</l>` })
+
+  })
+
+]
 
 describe('Handle send', () => {
 
   initServer(routes)
 
   it('GET /send | 200 | [layout with nodes to string]', (done) => {
-
-    routes.push(
-      route('/send', (request, response) => {
-
-        response.send(200, 'AppContainer')
-
-      })
-    )
 
     request('http://localhost:8888/send', (error, response, body) => {
 
@@ -33,14 +39,6 @@ describe('Handle send', () => {
   it(
     'GET /send/new-layout | 200 | [new layout with nodes to string]',
     (done) => {
-
-      routes.push(
-        route('/send/new-layout', (request, response) => {
-
-          response.send(200, 'AppContainer', { layout: html => `<l>${html}</l>` })
-
-        })
-      )
 
       request('http://localhost:8888/send/new-layout', (error, response, body) => {
 
