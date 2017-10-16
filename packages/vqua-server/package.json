@@ -7,7 +7,6 @@
     "lib": "lib"
   },
   "dependencies": {
-    "axios": "^0.16.2",
     "mime-types": "^2.1.16",
     "request": "^2.81.0",
     "vqua": "^1.0.11",

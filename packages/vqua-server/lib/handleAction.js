@@ -32,8 +32,6 @@ module.exports = (request, response, next, callback) => {
 
   try {
 
-    // call hooks
-
     const result = request.action(request, response, next)
 
     if (result instanceof Promise) result.catch(callback)

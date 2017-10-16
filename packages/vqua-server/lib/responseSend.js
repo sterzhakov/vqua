@@ -23,7 +23,10 @@ module.exports = (request, response, params) => {
   const data = JSON.stringify({
     statusCode: params.statusCode,
     componentName: params.componentName,
-    params
+    params: {
+      props: params.props,
+      context: params.context,
+    }
   })
 
   const encodedData = htmlQuotes.encode(data)
