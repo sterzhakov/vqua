@@ -87,22 +87,9 @@ describe('Navigation', () => {
 
   })
 
-  it('process route', (done) => {
+  fit('process route from cache', (done) => {
 
-    class PostsController {
-
-      index(request, response) {
-
-        expect(request.params.id).toBe('2')
-
-        response.send(200, 'PostsContainer', {
-          props: { name: 'test' },
-          context: { name: 'test' }
-        })
-
-      }
-
-    }
+    class PostsController {}
 
     const routes = [
       route('/posts/:id', 'Posts#index')
@@ -132,7 +119,17 @@ describe('Navigation', () => {
 
     })
 
-    navigation.navigate('/posts/2')
+    const cache = JSON.stringify({
+      path: '/posts/2',
+      statusCode: 200,
+      componentName: 'PostsContainer',
+      params: {
+        props: { name: 'test' },
+        context: { name: 'test' },
+      }
+    })
+
+    navigation.navigate('/posts/2', cache)
 
   })
 

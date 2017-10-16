@@ -8,6 +8,10 @@ class Navigation {
 
     this.routes = routes
 
+    this.request = null
+
+    this.response = null
+
     this.onNavigateCallback = null
 
     this.onRedirectCallback = null
@@ -40,9 +44,9 @@ class Navigation {
 
       }
 
-    }).then(args => {
+    }).then(data => {
 
-      const params = Object.assign({}, args, { path })
+      const params = Object.assign({}, data, { path })
 
       if (include([300,301], params.statusCode)) {
 
@@ -76,9 +80,11 @@ class Navigation {
 
     }
 
-    const request = Object.assign({}, route.request, { url: path })
+    this.request = this.request || Object.assign({},
+      route.request, { url: path }
+    )
 
-    const response = {
+    this.response = this.response || {
       send: (statusCode, componentName, params = {}) => {
         resolve({ statusCode, componentName, params })
       },
@@ -89,7 +95,7 @@ class Navigation {
 
     // call hooks
 
-    route.action(request, response, next)
+    route.action(this.request, this.response, next)
 
 
   }
