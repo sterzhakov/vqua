@@ -1,10 +1,13 @@
 const matchSegments = require('./matchSegments')
 const path2segments = require('./path2segments')
 const paramsFromSegments = require('./paramsFromSegments')
+const filterPath = require('./filterPath')
 
 module.exports = (routes, path) => {
 
-  const segments = path2segments(path)
+  const filteredPath = filterPath(path)
+
+  const segments = path2segments(filteredPath)
 
   const route = routes.find((route) => {
 
@@ -18,7 +21,7 @@ module.exports = (routes, path) => {
 
   const request = {
     request: {
-      path,
+      path: filteredPath,
       segments,
       params
     }
