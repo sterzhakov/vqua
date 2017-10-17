@@ -9,11 +9,11 @@ const handleError = require('./handleError')
 
 const handleRequest = (request, response, routeIndex = 0) => (async () => {
 
-  const { pathname } = url.parse(request.url)
+  request.url = url.parse(request.url)
 
   const availableRoutes = request.config.routes.slice(routeIndex)
 
-  const route = matchRoutes(availableRoutes, pathname)
+  const route = matchRoutes(availableRoutes, request.url.pathname)
 
   const next = () => {
 
@@ -21,7 +21,7 @@ const handleRequest = (request, response, routeIndex = 0) => (async () => {
 
   }
 
-  const extname = path.extname(pathname)
+  const extname = path.extname(request.url.pathname)
 
   const isActionExtname = include(['', '.html', '.htm', '.json'], extname)
 

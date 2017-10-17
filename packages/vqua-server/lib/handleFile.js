@@ -6,7 +6,7 @@ module.exports = (request, response, callback) => {
 
   const { publicPath } = request.config
 
-  const requestPath = path.join(publicPath, path.normalize(request.url))
+  const requestPath = path.join(publicPath, path.normalize(request.url.pathname))
 
   fs.stat(requestPath, (error, stats) => {
 
