@@ -87,7 +87,7 @@ describe('Navigation', () => {
 
   })
 
-  fit('process route from cache', (done) => {
+  it('process route from cache', (done) => {
 
     class PostsController {}
 

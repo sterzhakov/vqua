@@ -32,6 +32,10 @@ class Navigation {
 
   navigate(path, cache = false) {
 
+    this.request = null
+
+    this.response = null
+
     new Promise((resolve, reject) => {
 
       if (cache) {
@@ -40,11 +44,15 @@ class Navigation {
 
       } else {
 
-        this.handleAction(path, resolve, reject)
+        this.handleAction(path, 0, (data) => {
+
+          resolve(data)
+
+        })
 
       }
 
-    }).then(data => {
+    }).then((data) => {
 
       const params = Object.assign({}, data, { path })
 
@@ -58,45 +66,43 @@ class Navigation {
 
       }
 
-    }).catch(error => {
-
-      throw error
-
     })
 
   }
 
-  handleAction(path, resolve, reject, routeIndex = 0) {
+  handleAction(path, routeIndex, callback) {
 
     const availableRoutes = this.routes.slice(routeIndex)
 
     const route = matchRoutes(availableRoutes, path)
 
-    if (!route) return reject(new Error('Route not found'))
-
     const next = () => {
 
-      this.handleAction(path, resolve, reject, route.index + 1)
+      this.handleAction(path, route.index + 1, callback)
 
     }
 
-    this.request = this.request || Object.assign({},
-      route.request, { url: path }
-    )
+    if (!this.request) {
 
-    this.response = this.response || {
-      send: (statusCode, componentName, params = {}) => {
-        resolve({ statusCode, componentName, params })
-      },
-      redirect: (statusCode, redirectPath, params = {}) => {
-        resolve({ statusCode, redirectPath, params })
+      this.request = Object.assign({}, route.request, { url: path })
+
+    }
+
+
+    if (!this.response) {
+
+      this.response = {
+        send: (statusCode, componentName, params = {}) => {
+          callback({ statusCode, componentName, params })
+        },
+        redirect: (statusCode, redirectPath, params = {}) => {
+          callback({ statusCode, redirectPath, params })
+        }
       }
-    }
 
-    // call hooks
+    }
 
     route.action(this.request, this.response, next)
-
 
   }
 
