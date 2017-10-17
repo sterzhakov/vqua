@@ -84,7 +84,7 @@ class Navigation {
 
     if (!this.request) {
 
-      this.request = Object.assign({}, route.request, { url: path })
+      this.request = Object.assign({}, route.request)
 
     }
 
