@@ -9,8 +9,8 @@ module.exports = (request, response, next, callback) => {
       statusCode,
       componentName,
       params: Object.assign({},
-        params.props   ? {} : { props:   {} },
-        params.context ? {} : { context: {} },
+        params.props || { props:   {} },
+        params.context || { context: {} }
       )
     })
 

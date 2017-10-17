@@ -10,6 +10,7 @@ const handleError = require('./handleError')
 const handleRequest = (request, response, routeIndex = 0) => (async () => {
 
   request.url = url.parse(request.url)
+  request.path = request.url.pathname
 
   const availableRoutes = request.config.routes.slice(routeIndex)
 
