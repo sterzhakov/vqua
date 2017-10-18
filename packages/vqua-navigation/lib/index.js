@@ -12,15 +12,28 @@ class Navigation {
 
     this.response = null
 
-    this.onNavigateCallback = null
+    this.path = null
 
-    this.onRedirectCallback = null
+    this.onNavigateCallback =
+      ({ path, statusCode, componentName, params }) => {}
+
+    this.onRedirectCallback =
+      ({ redirectPath, statusCode, params }) => {}
+
+    this.isNeedNavigateCallback =
+      (path, nextPath) => { return path != nextPath }
 
   }
 
   onNavigate(callback) {
 
     this.onNavigateCallback = callback
+
+  }
+
+  isNeedNavigate(callback) {
+
+    this.isNeedNavigateCallback = callback
 
   }
 
@@ -32,11 +45,15 @@ class Navigation {
 
   navigate(path, cache = false) {
 
+    if (!this.isNeedNavigateCallback(path, this.path)) return false
+
     this.request = null
 
     this.response = null
 
-    new Promise((resolve, reject) => {
+    this.path = path
+
+    return new Promise((resolve, reject) => {
 
       if (cache) {
 
@@ -56,7 +73,9 @@ class Navigation {
 
       const params = Object.assign({}, data, { path })
 
-      if (include([300,301], params.statusCode)) {
+      const redirectCodes = [ 301, 302, 303, 305, 307 ]
+
+      if (include(redirectCodes, params.statusCode)) {
 
         this.onRedirectCallback(params)
 

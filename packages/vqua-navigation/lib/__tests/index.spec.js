@@ -3,13 +3,13 @@ const { route, initRoutes } = require('vqua-router')
 
 describe('Navigation', () => {
 
-  it('on redirect', (done) => {
+  fit('on redirect', (done) => {
 
     class PostsController {
 
       index(request, response) {
 
-        response.redirect(300, '/home')
+        response.redirect(301, '/home')
 
       }
 
@@ -32,7 +32,7 @@ describe('Navigation', () => {
       expect(params).toEqual({
         path: '/posts',
         redirectPath: '/home',
-        statusCode: 300,
+        statusCode: 301,
         params: {}
       })
 
@@ -130,6 +130,52 @@ describe('Navigation', () => {
     })
 
     navigation.navigate('/posts/2', cache)
+
+  })
+
+  it('Navigate for similar path, prevent navigate', () => {
+
+    const routes = [
+      route('/example', () => {}),
+    ]
+
+    const navigation = new Navigation(routes)
+
+    expect(
+      navigation.navigate('/example') instanceof Promise
+    ).toBe(true)
+
+    expect(
+      navigation.navigate('/example')
+    ).toBe(false)
+
+    expect(
+      navigation.navigate('/another-example') instanceof Promise
+    ).toBe(true)
+
+  })
+
+  it('Navigate for similar path, allow navigate', () => {
+
+    const routes = [
+      route('/example', () => {}),
+    ]
+
+    const navigation = new Navigation(routes)
+
+    navigation.onNavigate((path, nextPath) => {
+
+      return true
+
+    })
+
+    expect(
+      navigation.navigate('/example') instanceof Promise
+    ).toBe(true)
+
+    expect(
+      navigation.navigate('/example') instanceof Promise
+    ).toBe(false)
 
   })
 
