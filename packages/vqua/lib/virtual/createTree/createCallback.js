@@ -26,7 +26,7 @@ module.exports = ({
 }) => {
 
   const injectedContext =
-    templateNode.class && templateNode.class.injectContext
+    templateNode && templateNode.class && templateNode.class.injectContext
       ? pick(context, ... templateNode.class.injectContext())
       : {}
 
