@@ -1,3 +1,4 @@
+const { pick } = require('vqua-utils')
 const createNode = require('../createNode')
 const hookNode = require('../hookNode')
 const getCreateAction = require('../getCreateAction')
@@ -24,16 +25,21 @@ module.exports = ({
   statistic = null,
 }) => {
 
+  const injectedContext =
+    templateNode.class && templateNode.class.injectContext
+      ? pick(context, ... templateNode.class.injectContext())
+      : {}
+
   if (options.hooks) {
     hookNode(
       BEFORE_EACH_ITERATION,
       liveNode,
       templateNode,
-      context
+      injectedContext
     )
   }
 
-  const createAction = getCreateAction(liveNode, templateNode)
+  const createAction = getCreateAction(liveNode, templateNode, injectedContext)
 
   switch (createAction) {
 
@@ -103,7 +109,7 @@ module.exports = ({
           BEFORE_INSTANCE_UPDATE,
           liveNode,
           templateNode,
-          context
+          injectedContext
         )
       }
 
@@ -112,7 +118,7 @@ module.exports = ({
           type: UPDATE_INSTANCE,
           liveNode,
           templateNode,
-          context,
+          context: injectedContext,
           statistic,
         })
 

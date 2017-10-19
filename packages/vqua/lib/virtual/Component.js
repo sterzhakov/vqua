@@ -1,5 +1,5 @@
 const humanizeNodes = require('./humanizeNodes')
-const { flatten, omit, clone } = require('vqua-utils')
+const { flatten, omit, clone, pick } = require('vqua-utils')
 const countDomNodes = require('./countDomNodes')
 const createLiveTree = require('./createTree')
 const filterDomNodes = require('./filterDomNodes')
@@ -9,9 +9,9 @@ const createPatchTree = require('../patch/createTree')
 const findDomNode = require('../dom/findDomNode')
 const updateDomTree = require('../dom/updateTree')
 const eachNodes = require('./eachNodes')
+const { INSTANCE_TYPE, CLASS_TYPE } = require('../constants/nodeTypes')
 const hookNode = require('./hookNode')
 const { AFTER_DOM_CREATE } = require('../constants/hookTypes')
-const { INSTANCE_TYPE, CLASS_TYPE } = require('../constants/nodeTypes')
 
 class Base {
 
@@ -79,17 +79,21 @@ class Base {
 
     const newContext = clone(this.node.context)
 
-    if (!this.isNeedUpdate(this.props, newState, newContext)) return false
+    const injectedContext = this.constructor.injectContext
+      ? pick(newContext, ...this.constructor.injectContext())
+      : {}
+
+    if (!this.isNeedUpdate(this.props, newState, injectedContext)) return false
 
     if ('beforeUpdate' in this) {
 
-      this.beforeUpdate(this.props, newState, newContext)
+      this.beforeUpdate(this.props, newState, injectedContext)
 
     }
 
-    this.state = newState
+    this.waitAfterUpdate = true
 
-    const passedContext = Object.assign(newContext, this.passContext())
+    this.state = newState
 
     const liveNodes = this.node.childs
 
@@ -101,7 +105,7 @@ class Base {
         linkParent: true,
         childDomNodesCount: true,
         index: true,
-        context: clone(passedContext),
+        context: Object.assign(newContext, this.passContext()),
         liveParentNode: this.node,
         liveParentInstanceNode: this.node,
       })
@@ -138,7 +142,7 @@ class Base {
 
     updateDomTree({ patchNodes, parentDomNode: domRootNode })
 
-    eachNodes(newLiveNodes, (liveNode) => {
+    eachNodes([this.node], (liveNode) => {
 
       if (liveNode.type == INSTANCE_TYPE) {
 

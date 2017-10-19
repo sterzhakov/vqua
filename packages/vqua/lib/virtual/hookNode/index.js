@@ -70,9 +70,9 @@ module.exports = (action, liveNode, templateNode, context) => {
 
       if (liveNode.instance.waitAfterMount) {
 
-        callAfterMount(liveNode.instance)
-
         liveNode.instance.waitAfterMount = false
+
+        callAfterMount(liveNode.instance)
 
       }
 

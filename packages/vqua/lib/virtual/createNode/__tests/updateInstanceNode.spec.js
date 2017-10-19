@@ -3,30 +3,18 @@ const updateInstanceNode = require('../../createNode/updateInstanceNode')
 const { CLASS_TYPE } = require('../../../constants/nodeTypes')
 const Statistic = require('../../Statistic')
 
-describe('Update instance with next params: props, state, context', () => {
+describe('Update instance', () => {
 
-  class App extends Component {
-
-    static injectContext() {
-
-      return ['id']
-
-    }
-
-    constructor(props, context) {
-      super(props, context)
-      this.state = {
-        id: 1
-      }
-    }
-
-    render() {
-      return this.props.id
-    }
-
-  }
 
   it('create node with statistic param', () => {
+
+    class App extends Component {
+
+      render() {
+        return this.props.id
+      }
+
+    }
 
     const templateNode = {
       type: CLASS_TYPE,
@@ -53,6 +41,27 @@ describe('Update instance with next params: props, state, context', () => {
   })
 
   it('create node with new instance params', () => {
+
+    class App extends Component {
+
+      static injectContext() {
+
+        return ['id']
+
+      }
+
+      constructor(props, context) {
+        super(props, context)
+        this.state = {
+          id: 1
+        }
+      }
+
+      render() {
+        return this.props.id
+      }
+
+    }
 
     const templateNode = {
       type: CLASS_TYPE,
@@ -82,7 +91,22 @@ describe('Update instance with next params: props, state, context', () => {
 
   })
 
-  it('create node with new instance arams with childs ', () => {
+  it('create node with new instance params with childs ', () => {
+
+    class App extends Component {
+
+      constructor(props, context) {
+        super(props, context)
+        this.state = {
+          id: 1
+        }
+      }
+
+      render() {
+        return this.props.id
+      }
+
+    }
 
     const liveNode = {
       type: CLASS_TYPE,

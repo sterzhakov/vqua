@@ -122,6 +122,12 @@ describe('Create tree, create callback:', () => {
 
       class App extends Component {
 
+        static injectContext() {
+
+          return ['id']
+
+        }
+
         beforeUpdate() {}
 
         render() {}

@@ -7,7 +7,7 @@ const {
   CREATE_INSTANCE, UPDATE_INSTANCE, RESUME_INSTANCE
 } = require('../constants/createNodeTypes')
 
-module.exports = (liveNode, templateNode) => {
+module.exports = (liveNode, templateNode, context) => {
 
   if (templateNode) {
 
@@ -41,7 +41,7 @@ module.exports = (liveNode, templateNode) => {
         const props = templateNode.props
         const state = liveNode.instance.state
 
-        if (liveNode.instance.isNeedUpdate(props, state)) {
+        if (liveNode.instance.isNeedUpdate(props, state, context)) {
 
           return UPDATE_INSTANCE
 
