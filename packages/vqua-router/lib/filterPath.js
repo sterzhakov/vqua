@@ -1,4 +1,4 @@
-module.exports = (path) => {
+module.exports = (path = '') => {
 
   const afterHash = /#(.*)/
 
