@@ -1,7 +1,13 @@
 const { flatten, pick } = require('vqua-utils')
 const createNodesWithRefs = require('../createNodesWithRefs')
 
-module.exports = ({ liveNode, templateNode, context, statistic }) => {
+module.exports = ({
+  liveNode,
+  templateNode,
+  context,
+  injectedContext,
+  statistic
+}) => {
 
   const liveType = liveNode.type
   const liveInstance = liveNode.instance
@@ -12,11 +18,6 @@ module.exports = ({ liveNode, templateNode, context, statistic }) => {
 
   liveInstance.props = templateNode.props
   liveInstance.state = liveInstance.state
-
-  const injectedContext =
-    liveInstance.constructor.injectContext
-      ? pick(context, ...liveInstance.constructor.injectContext())
-      : {}
 
   liveInstance.context = injectedContext
 

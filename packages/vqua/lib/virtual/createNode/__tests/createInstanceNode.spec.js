@@ -59,7 +59,7 @@ describe('Create instance node', () => {
 
   })
 
-  it('set set props and context to instance', () => {
+  it('set props and context to instance', () => {
 
     class App extends Component {
 
@@ -78,14 +78,9 @@ describe('Create instance node', () => {
       childs: []
     }
 
-    const node =
-      createInstanceNode({
-        templateNode,
-        context: { id: 'context' }
-      })
+    const node = createInstanceNode({ templateNode })
 
     expect(node.instance.props).toEqual({ id: 'props' })
-    expect(node.instance.context).toEqual({ id: 'context' })
 
   })
 

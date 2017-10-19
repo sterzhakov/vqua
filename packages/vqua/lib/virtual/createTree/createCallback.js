@@ -72,6 +72,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          injectedContext,
           statistic,
           beforeRender: (instance) => {
 
@@ -118,7 +119,8 @@ module.exports = ({
           type: UPDATE_INSTANCE,
           liveNode,
           templateNode,
-          context: injectedContext,
+          injectedContext,
+          context,
           statistic,
         })
 

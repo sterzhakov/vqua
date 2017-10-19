@@ -15,6 +15,7 @@ module.exports = ({
   liveNode = null,
   templateNode = null,
   context = null,
+  injectedContext = null,
   beforeRender = null,
   statistic = null,
 }, callback) => {
@@ -35,6 +36,7 @@ module.exports = ({
         createInstanceNode({
           templateNode,
           context,
+          injectedContext,
           beforeRender,
           statistic,
         })
@@ -59,6 +61,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          injectedContext,
           statistic
         })
 

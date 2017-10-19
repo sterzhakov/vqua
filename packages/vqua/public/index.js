@@ -568,7 +568,7 @@ const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(24)
 const decorateNodes = __webpack_require__(20)
 const createNodesWithRefs = __webpack_require__(10)
 const createTextNodes = __webpack_require__(42)
-const statistic = __webpack_require__(90)
+const statistic = __webpack_require__(89)
 
 module.exports = (liveNodes, templateNodes, options) => {
 
@@ -2141,14 +2141,11 @@ const createNodesWithRefs = __webpack_require__(10)
 module.exports = ({
   templateNode,
   context,
+  injectedContext = {},
   afterRender,
   beforeRender,
   statistic
 } = {}) => {
-
-  const injectedContext = templateNode.class.injectContext
-    ? pick(context, ...templateNode.class.injectContext())
-    : {}
 
   const defaultProps = templateNode.class.defaultProps()
 
@@ -2305,6 +2302,7 @@ module.exports = ({
   liveNode = null,
   templateNode = null,
   context = null,
+  injectedContext = null,
   beforeRender = null,
   statistic = null,
 }, callback) => {
@@ -2325,6 +2323,7 @@ module.exports = ({
         createInstanceNode({
           templateNode,
           context,
+          injectedContext,
           beforeRender,
           statistic,
         })
@@ -2349,6 +2348,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          injectedContext,
           statistic
         })
 
@@ -2397,7 +2397,13 @@ module.exports = ({
 const { flatten, pick } = __webpack_require__(1)
 const createNodesWithRefs = __webpack_require__(10)
 
-module.exports = ({ liveNode, templateNode, context, statistic }) => {
+module.exports = ({
+  liveNode,
+  templateNode,
+  context,
+  injectedContext,
+  statistic
+}) => {
 
   const liveType = liveNode.type
   const liveInstance = liveNode.instance
@@ -2408,11 +2414,6 @@ module.exports = ({ liveNode, templateNode, context, statistic }) => {
 
   liveInstance.props = templateNode.props
   liveInstance.state = liveInstance.state
-
-  const injectedContext =
-    liveInstance.constructor.injectContext
-      ? pick(context, ...liveInstance.constructor.injectContext())
-      : {}
 
   liveInstance.context = injectedContext
 
@@ -2552,6 +2553,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
+          injectedContext,
           statistic,
           beforeRender: (instance) => {
 
@@ -2598,7 +2600,8 @@ module.exports = ({
           type: UPDATE_INSTANCE,
           liveNode,
           templateNode,
-          context: injectedContext,
+          injectedContext,
+          context,
           statistic,
         })
 
@@ -3300,33 +3303,33 @@ module.exports = (liveNodes, { templateNodes, offset = 0 }) => {
 var map = {
 	"./action/__tests/countActionsScore.spec.js": 73,
 	"./action/__tests/getNodeActions.spec.js": 74,
-	"./dom/__tests/diffProps.spec.js": 76,
-	"./dom/__tests/domActions.spec.js": 77,
-	"./dom/__tests/findDomNode.spec.js": 78,
-	"./dom/__tests/isPropsEqual.spec.js": 79,
-	"./dom/__tests/render.spec.js": 80,
-	"./dom/__tests/sortProps.spec.js": 81,
-	"./dom/__tests/updateTree/index.spec.js": 82,
-	"./dom/__tests/updateTree/updateCallback.spec.js": 83,
-	"./dom/__tests/updateTree/updateNodes.spec.js": 84,
-	"./helpers/__tests/handleError.spec.js": 85,
-	"./patch/createTree/__tests/createCallback.spec.js": 86,
-	"./patch/createTree/__tests/createNodes.spec.js": 87,
-	"./patch/createTree/__tests/index.spec.js": 88,
-	"./virtual/Statistic/__tests/Statistic.spec.js": 89,
-	"./virtual/__tests/Component.spec.js": 91,
-	"./virtual/__tests/assignDomNodes.spec.js": 92,
-	"./virtual/__tests/countDomNodes.spec.js": 93,
-	"./virtual/__tests/createNodesWithRefs.spec.js": 94,
-	"./virtual/__tests/createTextNodes.spec.js": 95,
-	"./virtual/__tests/decorateNodes.spec.js": 96,
-	"./virtual/__tests/eachNodes.spec.js": 97,
-	"./virtual/__tests/filterDomNodes.spec.js": 98,
-	"./virtual/__tests/filterNodesOffsets.spec.js": 99,
-	"./virtual/__tests/getCreateAction.spec.js": 100,
-	"./virtual/__tests/getParentNodes.spec.js": 101,
-	"./virtual/__tests/humanizeNodes.spec.js": 102,
-	"./virtual/__tests/isNeedUpdate.spec.js": 137,
+	"./dom/__tests/diffProps.spec.js": 75,
+	"./dom/__tests/domActions.spec.js": 76,
+	"./dom/__tests/findDomNode.spec.js": 77,
+	"./dom/__tests/isPropsEqual.spec.js": 78,
+	"./dom/__tests/render.spec.js": 79,
+	"./dom/__tests/sortProps.spec.js": 80,
+	"./dom/__tests/updateTree/index.spec.js": 81,
+	"./dom/__tests/updateTree/updateCallback.spec.js": 82,
+	"./dom/__tests/updateTree/updateNodes.spec.js": 83,
+	"./helpers/__tests/handleError.spec.js": 84,
+	"./patch/createTree/__tests/createCallback.spec.js": 85,
+	"./patch/createTree/__tests/createNodes.spec.js": 86,
+	"./patch/createTree/__tests/index.spec.js": 87,
+	"./virtual/Statistic/__tests/Statistic.spec.js": 88,
+	"./virtual/__tests/Component.spec.js": 90,
+	"./virtual/__tests/assignDomNodes.spec.js": 91,
+	"./virtual/__tests/countDomNodes.spec.js": 92,
+	"./virtual/__tests/createNodesWithRefs.spec.js": 93,
+	"./virtual/__tests/createTextNodes.spec.js": 94,
+	"./virtual/__tests/decorateNodes.spec.js": 95,
+	"./virtual/__tests/eachNodes.spec.js": 96,
+	"./virtual/__tests/filterDomNodes.spec.js": 97,
+	"./virtual/__tests/filterNodesOffsets.spec.js": 98,
+	"./virtual/__tests/getCreateAction.spec.js": 99,
+	"./virtual/__tests/getParentNodes.spec.js": 100,
+	"./virtual/__tests/humanizeNodes.spec.js": 101,
+	"./virtual/__tests/isNeedUpdate.spec.js": 102,
 	"./virtual/__tests/isNodeForUnmount.spec.js": 103,
 	"./virtual/__tests/mapNodes.spec.js": 104,
 	"./virtual/__tests/refs.spec.js": 105,
@@ -4020,8 +4023,7 @@ describe('Get node actions', () => {
 
 
 /***/ }),
-/* 75 */,
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const diffProps = __webpack_require__(28)
@@ -4124,7 +4126,7 @@ describe('Get props diff for', () => {
 
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
@@ -4287,7 +4289,7 @@ describe('Dom actions', () => {
 
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const findDomNode = __webpack_require__(31)
@@ -4325,7 +4327,7 @@ describe('Find node by offset', () => {
 
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const isPropsEqual = __webpack_require__(8)
@@ -4440,7 +4442,7 @@ describe('Is props equal for', () => {
 
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const render = __webpack_require__(15)
@@ -4502,7 +4504,7 @@ describe('Render dom', () => {
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const sortProps = __webpack_require__(16)
@@ -4545,7 +4547,7 @@ describe('Sort props', () => {
 
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const updateDomTree = __webpack_require__(17)
@@ -4590,7 +4592,7 @@ describe('Update dom tree', () => {
 
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const updateNode = __webpack_require__(32)
@@ -4947,7 +4949,7 @@ describe('Update dom callback', () => {
 
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
@@ -5010,7 +5012,7 @@ describe('Update dom nodes, call update callback', () => {
 
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const handleError = __webpack_require__(18)
@@ -5051,7 +5053,7 @@ describe('Handle error', () => {
 
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createNode = __webpack_require__(34)
@@ -5114,7 +5116,7 @@ describe('Create patch node', () => {
 
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
@@ -5328,7 +5330,7 @@ describe('Create patch nodes', () => {
 
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createTree = __webpack_require__(19)
@@ -5439,7 +5441,7 @@ describe('Create patch tree', () => {
 
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Statistic = __webpack_require__(4)
@@ -5474,7 +5476,7 @@ describe('Statistic', () => {
 
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Statistic = __webpack_require__(4)
@@ -5483,7 +5485,7 @@ module.exports = new Statistic
 
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -5569,7 +5571,7 @@ describe('Component', () => {
 
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const assignDomNodes = __webpack_require__(109)
@@ -5622,7 +5624,7 @@ describe('Assign dom nodes', () => {
 
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const countDomNodes = __webpack_require__(9)
@@ -5682,7 +5684,7 @@ describe('Count dom nodes for', () => {
 
 
 /***/ }),
-/* 94 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createNodesWithRefs = __webpack_require__(10)
@@ -5708,7 +5710,7 @@ describe('Create nodes with refs', () => {
 
 
 /***/ }),
-/* 95 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createTextNodes = __webpack_require__(42)
@@ -5770,7 +5772,7 @@ describe('Create child nodes', () => {
 
 
 /***/ }),
-/* 96 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const decorateNodes = __webpack_require__(20)
@@ -5894,7 +5896,7 @@ describe('Decorate live nodes', () => {
 
 
 /***/ }),
-/* 97 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const eachNodes = __webpack_require__(12)
@@ -5956,7 +5958,7 @@ describe('Virtual tree iterate', () => {
 
 
 /***/ }),
-/* 98 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const filterDomNodes = __webpack_require__(21)
@@ -6071,7 +6073,7 @@ describe('Get virtual DOM elements:', () => {
 
 
 /***/ }),
-/* 99 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const filterNodesOffsets = __webpack_require__(45)
@@ -6094,7 +6096,7 @@ describe('Filter nodes offsets', () => {
 
 
 /***/ }),
-/* 100 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const getCreateAction = __webpack_require__(46)
@@ -6184,7 +6186,7 @@ describe('Get create action:', () => {
 
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -6313,7 +6315,7 @@ describe('Get instance update info', () => {
 
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const humanizeNodes = __webpack_require__(22)
@@ -6378,6 +6380,530 @@ describe('Humanize virtual tree', () => {
 
   })
 
+
+})
+
+
+/***/ }),
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Component = __webpack_require__(2)
+const render = __webpack_require__(15)
+
+describe('Lifecycle hooks: Component.isNeedUpdate()', () => {
+
+  it('props should change when return true ', () => {
+
+    class Welcome extends Component {
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        return true
+
+      }
+
+      afterUpdate() {
+
+        expect(this.props).toEqual({ name: 'user', childs: [] })
+
+      }
+
+      render() {
+
+        return this.props.name
+
+      }
+
+    }
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      render() {
+
+        return Welcome.v({ name: this.state.name })
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    render($app, [], [App.v()], {})
+
+  })
+
+  it('state should change when return true ', () => {
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      afterUpdate() {
+
+        expect(this.state).toEqual({ name: 'user' })
+
+      }
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        return true
+
+      }
+
+      render() {
+
+        return this.state.name
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    render($app, [], [App.v()], {})
+
+  })
+
+  it('context should change when return true ', () => {
+
+    class Welcome extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        return true
+
+      }
+
+      afterUpdate() {
+
+        expect(this.context).toEqual({ name: 'user' })
+
+      }
+
+      render() {
+
+        return this.context.name
+
+      }
+
+    }
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+          other: 'test'
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      passContext() {
+
+        return {
+          name: this.state.name
+        }
+
+      }
+
+      render() {
+
+        return Welcome.v()
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    render($app, [], [App.v()], {})
+
+  })
+
+
+  it('props should not change when return false ', () => {
+
+    class Welcome extends Component {
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        return false
+
+      }
+
+      render() {
+
+        return this.props.name
+
+      }
+
+    }
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      render() {
+
+        return Welcome.v({ name: this.state.name })
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    const newLiveNodes = render($app, [], [App.v()], {})
+
+    expect(
+      newLiveNodes[0].childs[0].childs[0].instance.props
+    ).toEqual({ name: 'guest', childs: [] })
+
+  })
+
+  it('state should not change when return false ', () => {
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        return false
+
+      }
+
+      render() {
+
+        return this.state.name
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    const newLiveNodes = render($app, [], [App.v()], {})
+
+    expect(
+      newLiveNodes[0].childs[0].instance.state
+    ).toEqual({ name: 'guest'})
+
+  })
+
+  it('context should not change when return false ', () => {
+
+    class Welcome extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        return false
+
+      }
+
+      afterUpdate() {
+
+        expect(this.context).toEqual({ name: 'user' })
+
+      }
+
+      render() {
+
+        return this.context.name
+
+      }
+
+    }
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+          other: 'test'
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      passContext() {
+
+        return {
+          name: this.state.name
+        }
+
+      }
+
+      render() {
+
+        return Welcome.v()
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    const newLiveNodes = render($app, [], [App.v()], {})
+
+    expect(
+      newLiveNodes[0].childs[0].childs[0].instance.context
+    ).toEqual({ name: 'guest'})
+
+  })
+
+
+  it('nextProps should be different from state after update it', () => {
+
+    class Welcome extends Component {
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        expect(this.props).toEqual({ name: 'guest', childs: [] })
+        expect(nextProps).toEqual({ name: 'user', childs: [] })
+
+        return true
+
+      }
+
+      render() {
+
+        return this.props.name
+
+      }
+
+    }
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      render() {
+
+        return Welcome.v({ name: this.state.name })
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    render($app, [], [App.v()], {})
+
+  })
+
+  it('nextState should be different from state after update it', () => {
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        expect(this.state).toEqual({ name: 'guest' })
+        expect(nextState).toEqual({ name: 'user' })
+
+        return true
+
+      }
+
+      render() {
+
+        return this.state.name
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    render($app, [], [App.v()], {})
+
+  })
+
+  it('nextContext should be different from context after update state', () => {
+
+    class Welcome extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      isNeedUpdate(nextProps, nextState, nextContext) {
+
+        expect(this.context).toEqual({ name: 'guest' })
+        expect(nextContext).toEqual({ name: 'user' })
+
+        return true
+
+      }
+
+      render() {
+
+        return this.context.name
+
+      }
+
+    }
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = {
+          name: 'guest',
+          other: 'test'
+        }
+
+      }
+
+      afterMount() {
+
+        this.setState({ name: 'user' })
+
+      }
+
+      passContext() {
+
+        return {
+          name: this.state.name
+        }
+
+      }
+
+      render() {
+
+        return Welcome.v()
+
+      }
+
+    }
+
+    const $app = document.createElement('div')
+
+    render($app, [], [App.v()], {})
+
+  })
 
 })
 
@@ -7167,7 +7693,7 @@ describe('Create instance node', () => {
 
   })
 
-  it('set set props and context to instance', () => {
+  it('set props and context to instance', () => {
 
     class App extends Component {
 
@@ -7186,14 +7712,9 @@ describe('Create instance node', () => {
       childs: []
     }
 
-    const node =
-      createInstanceNode({
-        templateNode,
-        context: { id: 'context' }
-      })
+    const node = createInstanceNode({ templateNode })
 
     expect(node.instance.props).toEqual({ id: 'props' })
-    expect(node.instance.context).toEqual({ id: 'context' })
 
   })
 
@@ -7694,23 +8215,20 @@ describe('Update instance', () => {
 
     const liveNode = {
       type: CLASS_TYPE,
-      instance: new App({ id: 1 }, { id: 1 })
+      instance: new App({ id: 1 })
     }
 
     const newNode =
       updateInstanceNode({
         liveNode,
         templateNode,
-        context: { id: 2 }
       })
 
     expect(newNode.instance.prevProps.id).toBe(1)
     expect(newNode.instance.prevState.id).toBe(1)
-    expect(newNode.instance.prevContext.id).toBe(1)
 
     expect(newNode.instance.props.id).toBe(2)
     expect(newNode.instance.state.id).toBe(1)
-    expect(newNode.instance.context.id).toBe(2)
 
   })
 
@@ -9293,543 +9811,6 @@ module.exports = [
 	"video",
 	"wbr"
 ]
-
-
-/***/ }),
-/* 124 */,
-/* 125 */,
-/* 126 */,
-/* 127 */,
-/* 128 */,
-/* 129 */,
-/* 130 */,
-/* 131 */,
-/* 132 */,
-/* 133 */,
-/* 134 */,
-/* 135 */,
-/* 136 */,
-/* 137 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Component = __webpack_require__(2)
-const render = __webpack_require__(15)
-
-describe('Lifecycle hooks: Component.isNeedUpdate()', () => {
-
-  it('props should change when return true ', () => {
-
-    class Welcome extends Component {
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        return true
-
-      }
-
-      afterUpdate() {
-
-        expect(this.props).toEqual({ name: 'user', childs: [] })
-
-      }
-
-      render() {
-
-        return this.props.name
-
-      }
-
-    }
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      render() {
-
-        return Welcome.v({ name: this.state.name })
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    render($app, [], [App.v()], {})
-
-  })
-
-  it('state should change when return true ', () => {
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      afterUpdate() {
-
-        expect(this.state).toEqual({ name: 'user' })
-
-      }
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        return true
-
-      }
-
-      render() {
-
-        return this.state.name
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    render($app, [], [App.v()], {})
-
-  })
-
-  it('context should change when return true ', () => {
-
-    class Welcome extends Component {
-
-      static injectContext() {
-
-        return ['name']
-
-      }
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        return true
-
-      }
-
-      afterUpdate() {
-
-        expect(this.context).toEqual({ name: 'user' })
-
-      }
-
-      render() {
-
-        return this.context.name
-
-      }
-
-    }
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-          other: 'test'
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      passContext() {
-
-        return {
-          name: this.state.name
-        }
-
-      }
-
-      render() {
-
-        return Welcome.v()
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    render($app, [], [App.v()], {})
-
-  })
-
-
-  it('props should not change when return false ', () => {
-
-    class Welcome extends Component {
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        return false
-
-      }
-
-      render() {
-
-        return this.props.name
-
-      }
-
-    }
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      render() {
-
-        return Welcome.v({ name: this.state.name })
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    const newLiveNodes = render($app, [], [App.v()], {})
-
-    expect(
-      newLiveNodes[0].childs[0].childs[0].instance.props
-    ).toEqual({ name: 'guest', childs: [] })
-
-  })
-
-  it('state should not change when return false ', () => {
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        return false
-
-      }
-
-      render() {
-
-        return this.state.name
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    const newLiveNodes = render($app, [], [App.v()], {})
-
-    expect(
-      newLiveNodes[0].childs[0].instance.state
-    ).toEqual({ name: 'guest'})
-
-  })
-
-  it('context should not change when return false ', () => {
-
-    class Welcome extends Component {
-
-      static injectContext() {
-
-        return ['name']
-
-      }
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        return false
-
-      }
-
-      afterUpdate() {
-
-        expect(this.context).toEqual({ name: 'user' })
-
-      }
-
-      render() {
-
-        return this.context.name
-
-      }
-
-    }
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-          other: 'test'
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      passContext() {
-
-        return {
-          name: this.state.name
-        }
-
-      }
-
-      render() {
-
-        return Welcome.v()
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    const newLiveNodes = render($app, [], [App.v()], {})
-
-    expect(
-      newLiveNodes[0].childs[0].childs[0].instance.context
-    ).toEqual({ name: 'guest'})
-
-  })
-
-
-  it('nextProps should be different from state after update it', () => {
-
-    class Welcome extends Component {
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        expect(this.props).toEqual({ name: 'guest', childs: [] })
-        expect(nextProps).toEqual({ name: 'user', childs: [] })
-
-        return true
-
-      }
-
-      render() {
-
-        return this.props.name
-
-      }
-
-    }
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      render() {
-
-        return Welcome.v({ name: this.state.name })
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    render($app, [], [App.v()], {})
-
-  })
-
-  it('nextState should be different from state after update it', () => {
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        expect(this.state).toEqual({ name: 'guest' })
-        expect(nextState).toEqual({ name: 'user' })
-
-        return true
-
-      }
-
-      render() {
-
-        return this.state.name
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    render($app, [], [App.v()], {})
-
-  })
-
-  it('nextContext should be different from context after update state', () => {
-
-    class Welcome extends Component {
-
-      static injectContext() {
-
-        return ['name']
-
-      }
-
-      isNeedUpdate(nextProps, nextState, nextContext) {
-
-        expect(this.context).toEqual({ name: 'guest' })
-        expect(nextContext).toEqual({ name: 'user' })
-
-        return true
-
-      }
-
-      render() {
-
-        return this.context.name
-
-      }
-
-    }
-
-    class App extends Component {
-
-      constructor(props, context) {
-
-        super(props, context)
-
-        this.state = {
-          name: 'guest',
-          other: 'test'
-        }
-
-      }
-
-      afterMount() {
-
-        this.setState({ name: 'user' })
-
-      }
-
-      passContext() {
-
-        return {
-          name: this.state.name
-        }
-
-      }
-
-      render() {
-
-        return Welcome.v()
-
-      }
-
-    }
-
-    const $app = document.createElement('div')
-
-    render($app, [], [App.v()], {})
-
-  })
-
-})
 
 
 /***/ })

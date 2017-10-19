@@ -6,14 +6,11 @@ const createNodesWithRefs = require('../createNodesWithRefs')
 module.exports = ({
   templateNode,
   context,
+  injectedContext = {},
   afterRender,
   beforeRender,
   statistic
 } = {}) => {
-
-  const injectedContext = templateNode.class.injectContext
-    ? pick(context, ...templateNode.class.injectContext())
-    : {}
 
   const defaultProps = templateNode.class.defaultProps()
 
