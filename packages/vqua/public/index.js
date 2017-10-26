@@ -187,23 +187,27 @@ class Base {
 
   setState(newState, callback = false) {
 
+    const newMergedState = Object.assign({}, this.state, newState)
+
+    console.log(newMergedState)
+
     const newContext = clone(this.node.context)
 
     const injectedContext = this.constructor.injectContext
       ? pick(newContext, ...this.constructor.injectContext())
       : {}
 
-    if (!this.isNeedUpdate(this.props, newState, injectedContext)) return false
+    if (!this.isNeedUpdate(this.props, newMergedState, injectedContext)) return false
 
     if ('beforeUpdate' in this) {
 
-      this.beforeUpdate(this.props, newState, injectedContext)
+      this.beforeUpdate(this.props, newMergedState, injectedContext)
 
     }
 
     this.waitAfterUpdate = true
 
-    this.state = newState
+    this.state = newMergedState
 
     const liveNodes = this.node.childs
 
