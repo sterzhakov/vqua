@@ -1,13 +1,13 @@
 {
   "name": "vqua-interpolate",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Replace variables from vqua text nodes.",
   "main": "lib/index.js",
   "scripts": {
     "test": "jasmine"
   },
   "dependencies": {
-    "vqua": "^1.0.13"
+    "vqua": "^1.0.14"
   },
   "keywords": [
     "vqua",
