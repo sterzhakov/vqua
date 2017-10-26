@@ -1,6 +1,6 @@
 {
   "name": "vqua-server",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Server for vqua.",
   "main": "index.js",
   "directories": {
@@ -9,10 +9,10 @@
   "dependencies": {
     "mime-types": "^2.1.16",
     "request": "^2.81.0",
-    "vqua": "^1.0.14",
-    "vqua-router": "^1.0.14",
+    "vqua": "^1.0.15",
+    "vqua-router": "^1.0.15",
     "vqua-utils": "^1.0.6",
-    "vqua2string": "^1.0.14"
+    "vqua2string": "^1.0.15"
   },
   "scripts": {
     "test": "jasmine"
