@@ -79,8 +79,6 @@ class Base {
 
     const newMergedState = Object.assign({}, this.state, newState)
 
-    console.log(newMergedState)
-
     const newContext = clone(this.node.context)
 
     const injectedContext = this.constructor.injectContext
