@@ -36,7 +36,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       templateNodes,
       createNode: createCallback,
       createOptions: {
-        hooks: true,
+        hooks: options.hooks,
         linkParent: true,
         childDomNodesCount: true,
         index: true,
