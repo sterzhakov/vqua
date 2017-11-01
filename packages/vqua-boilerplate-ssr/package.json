@@ -1,7 +1,8 @@
 {
   "name": "vqua-boilerplate-ssr",
   "version": "1.0.18",
-  "description": "",
+  "description": "Boilerplate will allow you to quickly start creating
+                  a web-interface with server prerendering.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

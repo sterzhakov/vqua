@@ -19,7 +19,7 @@
     "url": "https://github.com/sterjakovigor/sakura-utils/issues"
   },
   "homepage": "https://github.com/sterjakovigor/sakura-utils#readme",
-  "description": "",
+  "description": "Utilities used in vqua",
   "devDependencies": {
     "jasmine": "^2.5.3"
   }
