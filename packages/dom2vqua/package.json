@@ -1,6 +1,6 @@
 {
   "name": "dom2vqua",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Convert dom to vqua",
   "main": "lib/index.js",
   "directories": {
@@ -15,7 +15,7 @@
     "converter"
   ],
   "dependencies": {
-    "vqua": "^1.0.16",
+    "vqua": "^1.0.17",
     "vqua-utils": "^1.0.6"
   },
   "author": "",
