@@ -195,7 +195,9 @@ class Base {
       ? pick(newContext, ...this.constructor.injectContext())
       : {}
 
-    if (!this.isNeedUpdate(this.props, newMergedState, injectedContext)) return false
+    if (
+      !this.isNeedUpdate(this.props, newMergedState, injectedContext)
+    ) return false
 
     if ('beforeUpdate' in this) {
 
@@ -3321,6 +3323,7 @@ var map = {
 	"./virtual/Statistic/__tests/Statistic.spec.js": 88,
 	"./virtual/__tests/Component.spec.js": 90,
 	"./virtual/__tests/assignDomNodes.spec.js": 91,
+	"./virtual/__tests/context.spec.js": 124,
 	"./virtual/__tests/countDomNodes.spec.js": 92,
 	"./virtual/__tests/createNodesWithRefs.spec.js": 93,
 	"./virtual/__tests/createTextNodes.spec.js": 94,
@@ -9813,6 +9816,126 @@ module.exports = [
 	"video",
 	"wbr"
 ]
+
+
+/***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const render = __webpack_require__(15)
+const Component = __webpack_require__(2)
+const html = __webpack_require__(122)
+
+describe('Context', () => {
+
+  it('pass context to child component', () => {
+
+    class Hello extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      render() {
+
+        return 'Hello ' + this.context.name + '!'
+
+      }
+
+    }
+
+    class App extends Component {
+
+      passContext() {
+
+        return {
+          name: 'Igor'
+        }
+
+      }
+
+      render() {
+
+        return Hello.v()
+
+      }
+
+    }
+
+    const app = document.createElement('div')
+
+    render(app, [], [App.v()])
+
+    expect(app.textContent).toBe('Hello Igor!')
+
+  })
+
+  it('rewrite context', () => {
+
+    class Hello extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      render() {
+
+        return 'Hello ' + this.context.name + '!'
+
+      }
+
+    }
+
+    class Rewriter extends Component {
+
+      passContext() {
+
+        return {
+          name: 'Igor Sterjakov'
+        }
+
+      }
+
+      render() {
+
+        return Hello.v()
+
+      }
+
+    }
+
+    class App extends Component {
+
+      passContext() {
+
+        return {
+          name: 'Igor'
+        }
+
+      }
+
+      render() {
+
+        return Rewriter.v()
+
+      }
+
+    }
+
+    const app = document.createElement('div')
+
+    render(app, [], [App.v()])
+
+    expect(app.textContent).toBe('Hello Igor Sterjakov!')
+
+  })
+
+
+})
 
 
 /***/ })

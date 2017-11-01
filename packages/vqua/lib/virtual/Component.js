@@ -85,7 +85,9 @@ class Base {
       ? pick(newContext, ...this.constructor.injectContext())
       : {}
 
-    if (!this.isNeedUpdate(this.props, newMergedState, injectedContext)) return false
+    if (
+      !this.isNeedUpdate(this.props, newMergedState, injectedContext)
+    ) return false
 
     if ('beforeUpdate' in this) {
 
