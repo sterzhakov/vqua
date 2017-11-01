@@ -5,164 +5,36 @@
 4 silly isInitialized
 5 silly isInitialized true
 6 silly existsSync /Users/sterjakov/projects/vqua/VERSION
-7 silly initialize attempt
-8 info current version 1.0.0
-9 silly getUpdates
-10 info Checking for updated packages...
-11 silly hasTags
-12 verbose hasTags true
-13 silly getLastTag
-14 verbose getLastTag v1.0.0
-15 info Comparing with v1.0.0.
-16 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/dom2vqua
-17 silly diff
-18 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/html2vqua
-19 silly diff
-20 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr
-21 silly diff
-22 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-interpolate
-23 silly diff
-24 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-navigation
-25 silly diff
-26 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-router
-27 silly diff
-28 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-server
-29 silly diff
-30 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-site
-31 silly diff packages/vqua-site/__tests/public/index.js
-31 silly diff packages/vqua-site/__tests/public/index.js.map
-31 silly diff packages/vqua-site/build/content/browser-navigation/articles/ru.html
-31 silly diff packages/vqua-site/dist/index.js
-31 silly diff packages/vqua-site/dist/index.js.map
-32 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua-utils
-33 silly diff
-34 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua
-35 silly diff packages/vqua/readme.md
-36 silly diffSinceIn v1.0.0 /Users/sterjakov/projects/vqua/packages/vqua2string
-37 silly diff
-38 verbose updated vqua-site
-39 verbose updated vqua
-40 silly collectDependents
-41 silly isPackageDependentOf dom2vqua vqua-site
-42 silly isPackageDependentOf vqua vqua-site
-43 silly isPackageDependentOf dom2vqua vqua-site
-44 silly isPackageDependentOf vqua-utils vqua-site
-45 silly isPackageDependentOf vqua-utils vqua-site
-46 silly isPackageDependentOf dom2vqua vqua
-47 verbose dependent dom2vqua depends on vqua
-48 silly isPackageDependentOf html2vqua vqua-site
-49 silly isPackageDependentOf vqua vqua-site
-50 silly isPackageDependentOf vqua-utils vqua-site
-51 silly isPackageDependentOf html2vqua vqua
-52 verbose dependent html2vqua depends on vqua
-53 silly isPackageDependentOf vqua-boilerplate-ssr vqua-site
-54 silly isPackageDependentOf vqua vqua-site
-55 silly isPackageDependentOf vqua-navigation vqua-site
-56 silly isPackageDependentOf vqua vqua-site
-57 silly isPackageDependentOf vqua-router vqua-site
-58 silly isPackageDependentOf vqua vqua-site
-59 silly isPackageDependentOf vqua-utils vqua-site
-60 silly isPackageDependentOf vqua-utils vqua-site
-61 silly isPackageDependentOf vqua-router vqua-site
-62 silly isPackageDependentOf vqua-server vqua-site
-63 silly isPackageDependentOf vqua vqua-site
-64 silly isPackageDependentOf vqua-router vqua-site
-65 silly isPackageDependentOf vqua-utils vqua-site
-66 silly isPackageDependentOf vqua2string vqua-site
-67 silly isPackageDependentOf vqua vqua-site
-68 silly isPackageDependentOf vqua-utils vqua-site
-69 silly isPackageDependentOf vqua-boilerplate-ssr vqua
-70 verbose dependent vqua-boilerplate-ssr depends on vqua
-71 silly isPackageDependentOf vqua-interpolate vqua-site
-72 silly isPackageDependentOf vqua vqua-site
-73 silly isPackageDependentOf vqua-interpolate vqua
-74 verbose dependent vqua-interpolate depends on vqua
-75 silly isPackageDependentOf vqua-navigation vqua-site
-76 silly isPackageDependentOf vqua-navigation vqua
-77 verbose dependent vqua-navigation depends on vqua
-78 silly isPackageDependentOf vqua-router vqua-site
-79 silly isPackageDependentOf vqua-router vqua
-80 verbose dependent vqua-router depends on vqua
-81 silly isPackageDependentOf vqua-server vqua-site
-82 silly isPackageDependentOf vqua-server vqua
-83 verbose dependent vqua-server depends on vqua
-84 silly isPackageDependentOf vqua-site vqua-site
-85 silly isPackageDependentOf dom2vqua vqua-site
-86 silly isPackageDependentOf html2vqua vqua-site
-87 silly isPackageDependentOf vqua vqua-site
-88 silly isPackageDependentOf vqua-interpolate vqua-site
-89 silly isPackageDependentOf vqua-navigation vqua-site
-90 silly isPackageDependentOf vqua-router vqua-site
-91 silly isPackageDependentOf vqua-server vqua-site
-92 silly isPackageDependentOf vqua-utils vqua-site
-93 silly isPackageDependentOf vqua2string vqua-site
-94 silly isPackageDependentOf vqua-site vqua
-95 verbose dependent vqua-site depends on vqua
-96 silly isPackageDependentOf vqua-utils vqua-site
-97 silly isPackageDependentOf vqua-utils vqua
-98 silly isPackageDependentOf vqua vqua-site
-99 silly isPackageDependentOf vqua vqua
-100 silly isPackageDependentOf dom2vqua vqua
-101 silly isPackageDependentOf vqua-utils vqua
-102 verbose dependent vqua depends on vqua
-103 silly isPackageDependentOf vqua2string vqua-site
-104 silly isPackageDependentOf vqua2string vqua
-105 verbose dependent vqua2string depends on vqua
-106 silly collectUpdates
-107 verbose has filtered update dom2vqua
-108 verbose has filtered update html2vqua
-109 verbose has filtered update vqua-boilerplate-ssr
-110 verbose has filtered update vqua-interpolate
-111 verbose has filtered update vqua-navigation
-112 verbose has filtered update vqua-router
-113 verbose has filtered update vqua-server
-114 verbose has filtered update vqua-site
-115 verbose has filtered update vqua
-116 verbose has filtered update vqua2string
-117 warn ECYCLE Encountered a cycle in the dependency graph. This may cause instability!
-118 silly initialize success
-119 silly execute attempt
-120 silly isDetachedHead
-121 silly getCurrentBranch
-122 verbose getCurrentBranch master
-123 verbose isDetachedHead false
-124 silly addFile /Users/sterjakov/projects/vqua/lerna.json
-125 silly addFile /Users/sterjakov/projects/vqua/packages/dom2vqua/package.json
-126 silly addFile /Users/sterjakov/projects/vqua/packages/html2vqua/package.json
-127 silly addFile /Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/package.json
-128 silly addFile /Users/sterjakov/projects/vqua/packages/vqua-interpolate/package.json
-129 silly addFile /Users/sterjakov/projects/vqua/packages/vqua-navigation/package.json
-130 silly addFile /Users/sterjakov/projects/vqua/packages/vqua-router/package.json
-131 silly addFile /Users/sterjakov/projects/vqua/packages/vqua-server/package.json
-132 silly addFile /Users/sterjakov/projects/vqua/packages/vqua-site/package.json
-133 silly addFile /Users/sterjakov/projects/vqua/packages/vqua/package.json
-134 silly addFile /Users/sterjakov/projects/vqua/packages/vqua2string/package.json
-135 silly commit v1.0.0
-136 verbose commit [ 'commit', '-m', 'v1.0.0' ]
-137 silly addTag v1.0.0
-138 error execute Error: fatal: tag 'v1.0.0' already exists
-138 error execute
-138 error execute     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
-138 error execute     at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
-138 error execute     at Function.addTag (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/GitUtilities.js:90:39)
-138 error execute     at PublishCommand.gitCommitAndTagVersion (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:613:30)
-138 error execute     at PublishCommand.commitAndTagUpdates (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:582:27)
-138 error execute     at PublishCommand.execute (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:261:16)
-138 error execute     at PublishCommand._attempt (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:289:21)
-138 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:276:15
-138 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:298:13
-138 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:495:11
-138 error execute  callback with error
-138 error execute  { Error: fatal: tag 'v1.0.0' already exists
-138 error execute
-138 error execute     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
-138 error execute     at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
-138 error execute     at Function.addTag (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/GitUtilities.js:90:39)
-138 error execute     at PublishCommand.gitCommitAndTagVersion (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:613:30)
-138 error execute     at PublishCommand.commitAndTagUpdates (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:582:27)
-138 error execute     at PublishCommand.execute (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:261:16)
-138 error execute     at PublishCommand._attempt (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:289:21)
-138 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:276:15
-138 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:298:13
-138 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:495:11
-138 error execute   stack: 'Error: fatal: tag \'v1.0.0\' already exists\n\n    at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)\n    at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)\n    at Function.addTag (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/GitUtilities.js:90:39)\n    at PublishCommand.gitCommitAndTagVersion (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:613:30)\n    at PublishCommand.commitAndTagUpdates (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:582:27)\n    at PublishCommand.execute (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:261:16)\n    at PublishCommand._attempt (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:289:21)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:276:15\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:298:13\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:495:11' }
+7 error EPACKAGES JSONError: Unexpected token ' ' at 4:72 in packages/vqua-boilerplate-ssr/package.json
+7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
+7 error EPACKAGES                                                                     ^
+7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
+7 error EPACKAGES                                                                     ^
+7 error EPACKAGES     at module.exports (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/parse-json/index.js:27:17)
+7 error EPACKAGES     at parse (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:8:29)
+7 error EPACKAGES     at Function.module.exports.sync.fp [as sync] (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:11:29)
+7 error EPACKAGES     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/read-pkg/index.js:40:25)
+7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:125:47
+7 error EPACKAGES     at Array.forEach (<anonymous>)
+7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:119:86
+7 error EPACKAGES     at Array.forEach (<anonymous>)
+7 error EPACKAGES     at Function.getPackages (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:118:22)
+7 error EPACKAGES     at Repository.buildPackageGraph (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Repository.js:82:51)
+7 error EPACKAGES  Errored while collecting packages and package graph { JSONError: Unexpected token ' ' at 4:72 in packages/vqua-boilerplate-ssr/package.json
+7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
+7 error EPACKAGES                                                                     ^
+7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
+7 error EPACKAGES                                                                     ^
+7 error EPACKAGES     at module.exports (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/parse-json/index.js:27:17)
+7 error EPACKAGES     at parse (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:8:29)
+7 error EPACKAGES     at Function.module.exports.sync.fp [as sync] (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:11:29)
+7 error EPACKAGES     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/read-pkg/index.js:40:25)
+7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:125:47
+7 error EPACKAGES     at Array.forEach (<anonymous>)
+7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:119:86
+7 error EPACKAGES     at Array.forEach (<anonymous>)
+7 error EPACKAGES     at Function.getPackages (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:118:22)
+7 error EPACKAGES     at Repository.buildPackageGraph (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Repository.js:82:51)
+7 error EPACKAGES   stack: 'JSONError: Unexpected token \' \' at 4:72 in packages/vqua-boilerplate-ssr/package.json\n"description": "Boilerplate will allow you to quickly start creating\n                                                                    ^\n"description": "Boilerplate will allow you to quickly start creating\n                                                                    ^\n    at module.exports (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/parse-json/index.js:27:17)\n    at parse (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:8:29)\n    at Function.module.exports.sync.fp [as sync] (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:11:29)\n    at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/read-pkg/index.js:40:25)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:125:47\n    at Array.forEach (<anonymous>)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:119:86\n    at Array.forEach (<anonymous>)\n    at Function.getPackages (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:118:22)\n    at Repository.buildPackageGraph (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Repository.js:82:51)',
+7 error EPACKAGES   name: 'JSONError',
+7 error EPACKAGES   fileName: 'packages/vqua-boilerplate-ssr/package.json' }
