@@ -88,6 +88,7 @@ module.exports = ({
 
       const newContext =
         Object.assign(
+          {},
           context,
           newLiveNode.instance.passContext()
         )
@@ -126,6 +127,7 @@ module.exports = ({
 
       const newContext =
         Object.assign(
+          {},
           context,
           newLiveNode.instance.passContext()
         )

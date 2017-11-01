@@ -107,7 +107,7 @@ class Base {
         linkParent: true,
         childDomNodesCount: true,
         index: true,
-        context: Object.assign(newContext, this.passContext()),
+        context: Object.assign({}, newContext, this.passContext()),
         liveParentNode: this.node,
         liveParentInstanceNode: this.node,
       })

@@ -18,8 +18,6 @@ module.exports = (leftProp, rightProp) => {
 
       case 'function': {
 
-        // TODO: Need more light solution
-        // return left.prop.toString() == right.prop.toString()
         return false
 
         break

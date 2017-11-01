@@ -189,8 +189,6 @@ class Base {
 
     const newMergedState = Object.assign({}, this.state, newState)
 
-    console.log(newMergedState)
-
     const newContext = clone(this.node.context)
 
     const injectedContext = this.constructor.injectContext
@@ -219,7 +217,7 @@ class Base {
         linkParent: true,
         childDomNodesCount: true,
         index: true,
-        context: Object.assign(newContext, this.passContext()),
+        context: Object.assign({}, newContext, this.passContext()),
         liveParentNode: this.node,
         liveParentInstanceNode: this.node,
       })
@@ -470,8 +468,6 @@ module.exports = (leftProp, rightProp) => {
 
       case 'function': {
 
-        // TODO: Need more light solution
-        // return left.prop.toString() == right.prop.toString()
         return false
 
         break
@@ -603,7 +599,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       templateNodes,
       createNode: createCallback,
       createOptions: {
-        hooks: true,
+        hooks: options.hooks,
         linkParent: true,
         childDomNodesCount: true,
         index: true,
@@ -2573,6 +2569,7 @@ module.exports = ({
 
       const newContext =
         Object.assign(
+          {},
           context,
           newLiveNode.instance.passContext()
         )
@@ -2611,6 +2608,7 @@ module.exports = ({
 
       const newContext =
         Object.assign(
+          {},
           context,
           newLiveNode.instance.passContext()
         )
