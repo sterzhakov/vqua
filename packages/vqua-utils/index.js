@@ -8,6 +8,7 @@ module.exports = {
   omit:           require('./lib/omit.js'),
   union:          require('./lib/union.js'),
   capitalize:     require('./lib/capitalize.js'),
+  uncapitalize:   require('./lib/uncapitalize.js'),
   classNames:     require('./lib/classNames.js'),
   first:          require('./lib/first.js'),
   last:           require('./lib/last.js'),
