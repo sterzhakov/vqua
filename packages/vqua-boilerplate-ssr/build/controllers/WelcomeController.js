@@ -1,8 +1,8 @@
 class WelcomeController {
 
-  static index(req, res) {
+  index(request, response) {
 
-    res.send(200, 'WelcomeContainer', {})
+    response.send(200, 'WelcomeContainer', { props: {}, context: {} })
 
   }
 

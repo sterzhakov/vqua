@@ -1,9 +1,5 @@
 const { route } = require('vqua-router')
-const { Component, html } = require('vqua')
-const WelcomeController = require('../controllers/WelcomeController')
 
-const routes = [
-  route('/', WelcomeController.index),
+module.exports = [
+  route('/', 'Welcome#index'),
 ]
-
-module.exports = routes

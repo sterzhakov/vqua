@@ -1,14 +1,25 @@
 const createServer = require('vqua-server')
 const layout = require('./layout')
-const routes = require('../build/config/routes')
+const initRoutes = require('../build/initializers/initRoutes')
 
-const app =
-  createServer({
-    routes,
-    layout,
-    publicPath: './dist',
-    buildPath: './build',
-    containerPath: './build/containers',
-  })
+initRoutes().then(routes => {
 
-app.listen(8080)
+  const app =
+    createServer({
+      routes,
+      layout,
+      publicPath: './dist',
+      componentPath: './build/containers',
+    })
+
+  app.listen(8000)
+
+
+})
+
+
+process.on('unhandledRejection', error => {
+
+  console.log('unhandledRejection', error)
+
+});
