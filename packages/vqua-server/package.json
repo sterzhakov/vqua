@@ -1,18 +1,18 @@
 {
   "name": "vqua-server",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Server for vqua.",
   "main": "index.js",
   "directories": {
     "lib": "lib"
   },
   "dependencies": {
+    "berries": "^1.0.2",
     "mime-types": "^2.1.16",
     "request": "^2.81.0",
-    "vqua": "^1.0.21",
-    "vqua-router": "^1.0.21",
-    "berries": "^1.0.2",
-    "vqua2string": "^1.0.21"
+    "vqua": "^1.0.22",
+    "vqua-router": "^1.0.22",
+    "vqua2string": "^1.0.22"
   },
   "scripts": {
     "test": "jasmine"
