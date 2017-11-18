@@ -1,13 +1,13 @@
 {
   "name": "html2vqua",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Convert html to vqua nodes.",
   "main": "lib/index.js",
   "dependencies": {
     "html2json": "^1.0.2",
     "jasmine": "^2.6.0",
-    "vqua": "^1.0.20",
-    "vqua-utils": "^1.0.20"
+    "vqua": "^1.0.21",
+    "vqua-utils": "^1.0.21"
   },
   "scripts": {
     "test": "jasmine"

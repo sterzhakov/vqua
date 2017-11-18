@@ -1,11 +1,11 @@
 {
   "name": "vqua2string",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Convert vqua to string",
   "main": "lib/index.js",
   "dependencies": {
-    "vqua": "^1.0.20",
-    "vqua-utils": "^1.0.20"
+    "vqua": "^1.0.21",
+    "vqua-utils": "^1.0.21"
   },
   "directories": {
     "lib": "lib"

@@ -1,6 +1,6 @@
 {
   "name": "vqua-router",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Router for vqua.",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "router"
   ],
   "dependencies": {
-    "vqua": "^1.0.20",
-    "vqua-utils": "^1.0.20"
+    "vqua": "^1.0.21",
+    "vqua-utils": "^1.0.21"
   },
   "author": "Igor Sterjakov",
   "license": "ISC",
