@@ -1,40 +1,508 @@
-0 silly input [ 'publish' ]
-1 silly flags { _: [ 'publish' ] }
+0 silly input []
+1 silly flags { _: [ 'bootstrap' ], args: [] }
 2 verbose rootPath /Users/sterjakov/projects/vqua
 3 info version 2.0.0
-4 silly isInitialized
-5 silly isInitialized true
-6 silly existsSync /Users/sterjakov/projects/vqua/VERSION
-7 error EPACKAGES JSONError: Unexpected token ' ' at 4:72 in packages/vqua-boilerplate-ssr/package.json
-7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
-7 error EPACKAGES                                                                     ^
-7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
-7 error EPACKAGES                                                                     ^
-7 error EPACKAGES     at module.exports (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/parse-json/index.js:27:17)
-7 error EPACKAGES     at parse (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:8:29)
-7 error EPACKAGES     at Function.module.exports.sync.fp [as sync] (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:11:29)
-7 error EPACKAGES     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/read-pkg/index.js:40:25)
-7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:125:47
-7 error EPACKAGES     at Array.forEach (<anonymous>)
-7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:119:86
-7 error EPACKAGES     at Array.forEach (<anonymous>)
-7 error EPACKAGES     at Function.getPackages (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:118:22)
-7 error EPACKAGES     at Repository.buildPackageGraph (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Repository.js:82:51)
-7 error EPACKAGES  Errored while collecting packages and package graph { JSONError: Unexpected token ' ' at 4:72 in packages/vqua-boilerplate-ssr/package.json
-7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
-7 error EPACKAGES                                                                     ^
-7 error EPACKAGES "description": "Boilerplate will allow you to quickly start creating
-7 error EPACKAGES                                                                     ^
-7 error EPACKAGES     at module.exports (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/parse-json/index.js:27:17)
-7 error EPACKAGES     at parse (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:8:29)
-7 error EPACKAGES     at Function.module.exports.sync.fp [as sync] (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:11:29)
-7 error EPACKAGES     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/read-pkg/index.js:40:25)
-7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:125:47
-7 error EPACKAGES     at Array.forEach (<anonymous>)
-7 error EPACKAGES     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:119:86
-7 error EPACKAGES     at Array.forEach (<anonymous>)
-7 error EPACKAGES     at Function.getPackages (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:118:22)
-7 error EPACKAGES     at Repository.buildPackageGraph (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Repository.js:82:51)
-7 error EPACKAGES   stack: 'JSONError: Unexpected token \' \' at 4:72 in packages/vqua-boilerplate-ssr/package.json\n"description": "Boilerplate will allow you to quickly start creating\n                                                                    ^\n"description": "Boilerplate will allow you to quickly start creating\n                                                                    ^\n    at module.exports (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/parse-json/index.js:27:17)\n    at parse (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:8:29)\n    at Function.module.exports.sync.fp [as sync] (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/load-json-file/index.js:11:29)\n    at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/read-pkg/index.js:40:25)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:125:47\n    at Array.forEach (<anonymous>)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:119:86\n    at Array.forEach (<anonymous>)\n    at Function.getPackages (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/PackageUtilities.js:118:22)\n    at Repository.buildPackageGraph (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Repository.js:82:51)',
-7 error EPACKAGES   name: 'JSONError',
-7 error EPACKAGES   fileName: 'packages/vqua-boilerplate-ssr/package.json' }
+4 silly existsSync /Users/sterjakov/projects/vqua/VERSION
+5 silly initialize attempt
+6 warn ECYCLE Encountered a cycle in the dependency graph. This may cause instability!
+7 silly initialize success
+8 silly execute attempt
+9 info Bootstrapping 10 packages
+10 info lifecycle preinstall
+11 silly runScript preinstall vqua
+12 silly vqua
+13 silly runScript preinstall dom2vqua
+14 silly dom2vqua
+15 silly runScript preinstall html2vqua
+16 silly html2vqua
+17 silly runScript preinstall vqua-interpolate
+18 silly vqua-interpolate
+19 silly runScript preinstall vqua-router
+20 silly vqua-router
+21 silly runScript preinstall vqua2string
+22 silly vqua2string
+23 silly runScript preinstall vqua-navigation
+24 silly vqua-navigation
+25 silly runScript preinstall vqua-server
+26 silly vqua-server
+27 silly runScript preinstall vqua-boilerplate-ssr
+28 silly vqua-boilerplate-ssr
+29 silly runScript preinstall vqua-boilerplate-ssr
+30 silly vqua-boilerplate-ssr
+31 silly hasMatchingDependency dom2vqua vqua
+32 silly hasMatchingDependency html2vqua vqua
+33 silly hasMatchingDependency vqua-boilerplate-ssr vqua
+34 silly hasMatchingDependency vqua-boilerplate-ssr vqua-navigation
+35 silly hasMatchingDependency vqua-boilerplate-ssr vqua-router
+36 silly hasMatchingDependency vqua-boilerplate-ssr vqua-server
+37 silly hasMatchingDependency vqua-interpolate vqua
+38 silly hasMatchingDependency vqua-navigation vqua
+39 silly hasMatchingDependency vqua-navigation vqua-router
+40 silly hasMatchingDependency vqua-router vqua
+41 silly hasMatchingDependency vqua-server vqua
+42 silly hasMatchingDependency vqua-server vqua-router
+43 silly hasMatchingDependency vqua-server vqua2string
+44 silly hasMatchingDependency vqua-boilerplate-ssr vqua
+45 silly hasMatchingDependency vqua-boilerplate-ssr vqua-navigation
+46 silly hasMatchingDependency vqua-boilerplate-ssr vqua-router
+47 silly hasMatchingDependency vqua-boilerplate-ssr vqua-server
+48 silly hasMatchingDependency vqua dom2vqua
+49 silly hasMatchingDependency vqua2string vqua
+50 silly hasDependencyInstalled dom2vqua jasmine
+51 silly dependencyIsSatisfied [ 'jasmine',
+51 silly dependencyIsSatisfied   '^2.6.0',
+51 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/dom2vqua/node_modules' ]
+52 verbose dependencyIsSatisfied jasmine false
+53 silly hasDependencyInstalled html2vqua jasmine
+54 silly dependencyIsSatisfied [ 'jasmine',
+54 silly dependencyIsSatisfied   '^2.6.0',
+54 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/html2vqua/node_modules' ]
+55 verbose dependencyIsSatisfied jasmine false
+56 silly hasDependencyInstalled vqua-navigation jasmine
+57 silly dependencyIsSatisfied [ 'jasmine',
+57 silly dependencyIsSatisfied   '^2.8.0',
+57 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-navigation/node_modules' ]
+58 verbose dependencyIsSatisfied jasmine false
+59 silly hasDependencyInstalled vqua jasmine
+60 silly dependencyIsSatisfied [ 'jasmine',
+60 silly dependencyIsSatisfied   '^2.5.3',
+60 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+61 verbose dependencyIsSatisfied jasmine false
+62 silly hasDependencyInstalled dom2vqua webpack
+63 silly dependencyIsSatisfied [ 'webpack',
+63 silly dependencyIsSatisfied   '^3.4.1',
+63 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/dom2vqua/node_modules' ]
+64 verbose dependencyIsSatisfied webpack false
+65 silly hasDependencyInstalled vqua-boilerplate-ssr webpack
+66 silly dependencyIsSatisfied [ 'webpack',
+66 silly dependencyIsSatisfied   '^3.5.5',
+66 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+67 verbose dependencyIsSatisfied webpack false
+68 silly hasDependencyInstalled vqua-boilerplate-ssr webpack
+69 silly dependencyIsSatisfied [ 'webpack',
+69 silly dependencyIsSatisfied   '^3.5.5',
+69 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+70 verbose dependencyIsSatisfied webpack false
+71 silly hasDependencyInstalled vqua webpack
+72 silly dependencyIsSatisfied [ 'webpack',
+72 silly dependencyIsSatisfied   '^2.6.1',
+72 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+73 verbose dependencyIsSatisfied webpack false
+74 silly hasDependencyInstalled dom2vqua berries
+75 silly dependencyIsSatisfied [ 'berries',
+75 silly dependencyIsSatisfied   '^1.0.2',
+75 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/dom2vqua/node_modules' ]
+76 verbose dependencyIsSatisfied berries false
+77 silly hasDependencyInstalled html2vqua berries
+78 silly dependencyIsSatisfied [ 'berries',
+78 silly dependencyIsSatisfied   '^1.0.2',
+78 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/html2vqua/node_modules' ]
+79 verbose dependencyIsSatisfied berries false
+80 silly hasDependencyInstalled vqua-navigation berries
+81 silly dependencyIsSatisfied [ 'berries',
+81 silly dependencyIsSatisfied   '^1.0.2',
+81 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-navigation/node_modules' ]
+82 verbose dependencyIsSatisfied berries false
+83 silly hasDependencyInstalled vqua-router berries
+84 silly dependencyIsSatisfied [ 'berries',
+84 silly dependencyIsSatisfied   '^1.0.2',
+84 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-router/node_modules' ]
+85 verbose dependencyIsSatisfied berries false
+86 silly hasDependencyInstalled vqua-server berries
+87 silly dependencyIsSatisfied [ 'berries',
+87 silly dependencyIsSatisfied   '^1.0.2',
+87 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-server/node_modules' ]
+88 verbose dependencyIsSatisfied berries false
+89 silly hasDependencyInstalled vqua berries
+90 silly dependencyIsSatisfied [ 'berries',
+90 silly dependencyIsSatisfied   '^1.0.2',
+90 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+91 verbose dependencyIsSatisfied berries false
+92 silly hasDependencyInstalled vqua2string berries
+93 silly dependencyIsSatisfied [ 'berries',
+93 silly dependencyIsSatisfied   '^1.0.2',
+93 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua2string/node_modules' ]
+94 verbose dependencyIsSatisfied berries false
+95 silly hasDependencyInstalled html2vqua html2json
+96 silly dependencyIsSatisfied [ 'html2json',
+96 silly dependencyIsSatisfied   '^1.0.2',
+96 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/html2vqua/node_modules' ]
+97 verbose dependencyIsSatisfied html2json false
+98 silly hasDependencyInstalled vqua-boilerplate-ssr gulp
+99 silly dependencyIsSatisfied [ 'gulp',
+99 silly dependencyIsSatisfied   '^3.9.1',
+99 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+100 verbose dependencyIsSatisfied gulp false
+101 silly hasDependencyInstalled vqua-boilerplate-ssr gulp
+102 silly dependencyIsSatisfied [ 'gulp',
+102 silly dependencyIsSatisfied   '^3.9.1',
+102 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+103 verbose dependencyIsSatisfied gulp false
+104 silly hasDependencyInstalled vqua-boilerplate-ssr gulp-concat
+105 silly dependencyIsSatisfied [ 'gulp-concat',
+105 silly dependencyIsSatisfied   '^2.6.1',
+105 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+106 verbose dependencyIsSatisfied gulp-concat false
+107 silly hasDependencyInstalled vqua-boilerplate-ssr gulp-concat
+108 silly dependencyIsSatisfied [ 'gulp-concat',
+108 silly dependencyIsSatisfied   '^2.6.1',
+108 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+109 verbose dependencyIsSatisfied gulp-concat false
+110 silly hasDependencyInstalled vqua-boilerplate-ssr gulp-sass
+111 silly dependencyIsSatisfied [ 'gulp-sass',
+111 silly dependencyIsSatisfied   '^3.1.0',
+111 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+112 verbose dependencyIsSatisfied gulp-sass false
+113 silly hasDependencyInstalled vqua-boilerplate-ssr gulp-sass
+114 silly dependencyIsSatisfied [ 'gulp-sass',
+114 silly dependencyIsSatisfied   '^3.1.0',
+114 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+115 verbose dependencyIsSatisfied gulp-sass false
+116 silly hasDependencyInstalled vqua-boilerplate-ssr merge-stream
+117 silly dependencyIsSatisfied [ 'merge-stream',
+117 silly dependencyIsSatisfied   '^1.0.1',
+117 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+118 verbose dependencyIsSatisfied merge-stream false
+119 silly hasDependencyInstalled vqua-boilerplate-ssr merge-stream
+120 silly dependencyIsSatisfied [ 'merge-stream',
+120 silly dependencyIsSatisfied   '^1.0.1',
+120 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr/node_modules' ]
+121 verbose dependencyIsSatisfied merge-stream false
+122 silly hasDependencyInstalled vqua-server mime-types
+123 silly dependencyIsSatisfied [ 'mime-types',
+123 silly dependencyIsSatisfied   '^2.1.16',
+123 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-server/node_modules' ]
+124 verbose dependencyIsSatisfied mime-types false
+125 silly hasDependencyInstalled vqua-server request
+126 silly dependencyIsSatisfied [ 'request',
+126 silly dependencyIsSatisfied   '^2.81.0',
+126 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua-server/node_modules' ]
+127 verbose dependencyIsSatisfied request false
+128 silly hasDependencyInstalled vqua ajv
+129 silly dependencyIsSatisfied [ 'ajv',
+129 silly dependencyIsSatisfied   '^5.2.0',
+129 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+130 verbose dependencyIsSatisfied ajv false
+131 silly hasDependencyInstalled vqua browserify
+132 silly dependencyIsSatisfied [ 'browserify',
+132 silly dependencyIsSatisfied   '^14.4.0',
+132 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+133 verbose dependencyIsSatisfied browserify false
+134 silly hasDependencyInstalled vqua css-loader
+135 silly dependencyIsSatisfied [ 'css-loader',
+135 silly dependencyIsSatisfied   '^0.28.4',
+135 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+136 verbose dependencyIsSatisfied css-loader false
+137 silly hasDependencyInstalled vqua jasmine-node
+138 silly dependencyIsSatisfied [ 'jasmine-node',
+138 silly dependencyIsSatisfied   '^1.14.5',
+138 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+139 verbose dependencyIsSatisfied jasmine-node false
+140 silly hasDependencyInstalled vqua karma-browserify
+141 silly dependencyIsSatisfied [ 'karma-browserify',
+141 silly dependencyIsSatisfied   '^5.1.1',
+141 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+142 verbose dependencyIsSatisfied karma-browserify false
+143 silly hasDependencyInstalled vqua karma-jasmine
+144 silly dependencyIsSatisfied [ 'karma-jasmine',
+144 silly dependencyIsSatisfied   '^1.1.0',
+144 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+145 verbose dependencyIsSatisfied karma-jasmine false
+146 silly hasDependencyInstalled vqua karma-phantomjs-launcher
+147 silly dependencyIsSatisfied [ 'karma-phantomjs-launcher',
+147 silly dependencyIsSatisfied   '^1.0.4',
+147 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+148 verbose dependencyIsSatisfied karma-phantomjs-launcher false
+149 silly hasDependencyInstalled vqua karma-webpack
+150 silly dependencyIsSatisfied [ 'karma-webpack',
+150 silly dependencyIsSatisfied   '^2.0.3',
+150 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+151 verbose dependencyIsSatisfied karma-webpack false
+152 silly hasDependencyInstalled vqua node-sass
+153 silly dependencyIsSatisfied [ 'node-sass',
+153 silly dependencyIsSatisfied   '^4.5.3',
+153 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+154 verbose dependencyIsSatisfied node-sass false
+155 silly hasDependencyInstalled vqua sass-loader
+156 silly dependencyIsSatisfied [ 'sass-loader',
+156 silly dependencyIsSatisfied   '^6.0.6',
+156 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+157 verbose dependencyIsSatisfied sass-loader false
+158 silly hasDependencyInstalled vqua style-loader
+159 silly dependencyIsSatisfied [ 'style-loader',
+159 silly dependencyIsSatisfied   '^0.18.2',
+159 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+160 verbose dependencyIsSatisfied style-loader false
+161 silly hasDependencyInstalled vqua watchify
+162 silly dependencyIsSatisfied [ 'watchify',
+162 silly dependencyIsSatisfied   '^3.9.0',
+162 silly dependencyIsSatisfied   '/Users/sterjakov/projects/vqua/packages/vqua/node_modules' ]
+163 verbose dependencyIsSatisfied watchify false
+164 silly root dependencies []
+165 silly leaf dependencies {
+165 silly leaf dependencies   "dom2vqua": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "jasmine@^2.6.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "webpack@^3.4.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "html2vqua": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "jasmine@^2.6.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "html2json@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "vqua-navigation": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "jasmine@^2.8.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "vqua": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "jasmine@^2.5.3",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "webpack@^2.6.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "ajv@^5.2.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "browserify@^14.4.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "css-loader@^0.28.4",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "jasmine-node@^1.14.5",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "karma-browserify@^5.1.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "karma-jasmine@^1.1.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "karma-phantomjs-launcher@^1.0.4",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "karma-webpack@^2.0.3",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "node-sass@^4.5.3",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "sass-loader@^6.0.6",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "style-loader@^0.18.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "watchify@^3.9.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "vqua-boilerplate-ssr": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "webpack@^3.5.5",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "webpack@^3.5.5",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "gulp@^3.9.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "gulp@^3.9.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "gulp-concat@^2.6.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "gulp-concat@^2.6.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "gulp-sass@^3.1.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "gulp-sass@^3.1.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "merge-stream@^1.0.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "merge-stream@^1.0.1",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "vqua-router": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "vqua-server": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "mime-types@^2.1.16",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     },
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "request@^2.81.0",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ],
+165 silly leaf dependencies   "vqua2string": [
+165 silly leaf dependencies     {
+165 silly leaf dependencies       "dependency": "berries@^1.0.2",
+165 silly leaf dependencies       "isSatisfied": false
+165 silly leaf dependencies     }
+165 silly leaf dependencies   ]
+165 silly leaf dependencies }
+166 info Installing external dependencies
+167 verbose actions 8 actions, concurrency 4
+168 silly installInDir dom2vqua [ 'jasmine@^2.6.0', 'webpack@^3.4.1', 'berries@^1.0.2' ]
+169 silly installInDir backup /Users/sterjakov/projects/vqua/packages/dom2vqua/package.json
+170 silly rename [ '/Users/sterjakov/projects/vqua/packages/dom2vqua/package.json',
+170 silly rename   '/Users/sterjakov/projects/vqua/packages/dom2vqua/package.json.lerna_backup' ]
+171 silly installInDir html2vqua [ 'jasmine@^2.6.0', 'berries@^1.0.2', 'html2json@^1.0.2' ]
+172 silly installInDir backup /Users/sterjakov/projects/vqua/packages/html2vqua/package.json
+173 silly rename [ '/Users/sterjakov/projects/vqua/packages/html2vqua/package.json',
+173 silly rename   '/Users/sterjakov/projects/vqua/packages/html2vqua/package.json.lerna_backup' ]
+174 silly installInDir vqua-navigation [ 'jasmine@^2.8.0', 'berries@^1.0.2' ]
+175 silly installInDir backup /Users/sterjakov/projects/vqua/packages/vqua-navigation/package.json
+176 silly rename [ '/Users/sterjakov/projects/vqua/packages/vqua-navigation/package.json',
+176 silly rename   '/Users/sterjakov/projects/vqua/packages/vqua-navigation/package.json.lerna_backup' ]
+177 silly installInDir vqua [ 'jasmine@^2.5.3',
+177 silly installInDir   'webpack@^2.6.1',
+177 silly installInDir   'berries@^1.0.2',
+177 silly installInDir   'ajv@^5.2.0',
+177 silly installInDir   'browserify@^14.4.0',
+177 silly installInDir   'css-loader@^0.28.4',
+177 silly installInDir   'jasmine-node@^1.14.5',
+177 silly installInDir   'karma-browserify@^5.1.1',
+177 silly installInDir   'karma-jasmine@^1.1.0',
+177 silly installInDir   'karma-phantomjs-launcher@^1.0.4',
+177 silly installInDir   'karma-webpack@^2.0.3',
+177 silly installInDir   'node-sass@^4.5.3',
+177 silly installInDir   'sass-loader@^6.0.6',
+177 silly installInDir   'style-loader@^0.18.2',
+177 silly installInDir   'watchify@^3.9.0' ]
+178 silly installInDir backup /Users/sterjakov/projects/vqua/packages/vqua/package.json
+179 silly rename [ '/Users/sterjakov/projects/vqua/packages/vqua/package.json',
+179 silly rename   '/Users/sterjakov/projects/vqua/packages/vqua/package.json.lerna_backup' ]
+180 silly installInDir writing tempJson { dependencies: { jasmine: '^2.6.0', webpack: '^3.4.1', berries: '^1.0.2' } }
+181 silly installInDir writing tempJson { dependencies: { jasmine: '^2.6.0', berries: '^1.0.2', html2json: '^1.0.2' } }
+182 silly installInDir writing tempJson { dependencies: { jasmine: '^2.8.0', berries: '^1.0.2' } }
+183 silly installInDir writing tempJson { dependencies:
+183 silly installInDir    { jasmine: '^2.5.3',
+183 silly installInDir      webpack: '^2.6.1',
+183 silly installInDir      berries: '^1.0.2',
+183 silly installInDir      ajv: '^5.2.0',
+183 silly installInDir      browserify: '^14.4.0',
+183 silly installInDir      'css-loader': '^0.28.4',
+183 silly installInDir      'jasmine-node': '^1.14.5',
+183 silly installInDir      'karma-browserify': '^5.1.1',
+183 silly installInDir      'karma-jasmine': '^1.1.0',
+183 silly installInDir      'karma-phantomjs-launcher': '^1.0.4',
+183 silly installInDir      'karma-webpack': '^2.0.3',
+183 silly installInDir      'node-sass': '^4.5.3',
+183 silly installInDir      'sass-loader': '^6.0.6',
+183 silly installInDir      'style-loader': '^0.18.2',
+183 silly installInDir      watchify: '^3.9.0' } }
+184 silly getExecOpts { cwd: '/Users/sterjakov/projects/vqua/packages/vqua' }
+185 silly installInDir [ 'npm', [ 'install' ] ]
+186 silly getExecOpts { cwd: '/Users/sterjakov/projects/vqua/packages/dom2vqua' }
+187 silly installInDir [ 'npm', [ 'install' ] ]
+188 silly getExecOpts { cwd: '/Users/sterjakov/projects/vqua/packages/html2vqua' }
+189 silly installInDir [ 'npm', [ 'install' ] ]
+190 silly getExecOpts { cwd: '/Users/sterjakov/projects/vqua/packages/vqua-navigation' }
+191 silly installInDir [ 'npm', [ 'install' ] ]
+192 silly installInDir cleanup /Users/sterjakov/projects/vqua/packages/vqua/package.json
+193 silly renameSync [ '/Users/sterjakov/projects/vqua/packages/vqua/package.json.lerna_backup',
+193 silly renameSync   '/Users/sterjakov/projects/vqua/packages/vqua/package.json' ]
+194 verbose installed leaf vqua
+195 error execute Error: Command failed: npm install
+195 error execute npm ERR! code ETARGET
+195 error execute npm ERR! notarget No matching version found for dom2vqua@1.0.0
+195 error execute npm ERR! notarget In most cases you or one of your dependencies are requesting
+195 error execute npm ERR! notarget a package version that doesn't exist.
+195 error execute
+195 error execute npm ERR! A complete log of this run can be found in:
+195 error execute npm ERR!     /Users/sterjakov/.npm/_logs/2017-11-18T14_06_04_005Z-debug.log
+195 error execute
+195 error execute     at Promise.all.then.arr (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:210:11)
+195 error execute     at <anonymous>
+195 error execute     at process._tickCallback (internal/process/next_tick.js:188:7)
+195 error execute  callback with error
+195 error execute  { Error: Command failed: npm install
+195 error execute npm ERR! code ETARGET
+195 error execute npm ERR! notarget No matching version found for dom2vqua@1.0.0
+195 error execute npm ERR! notarget In most cases you or one of your dependencies are requesting
+195 error execute npm ERR! notarget a package version that doesn't exist.
+195 error execute
+195 error execute npm ERR! A complete log of this run can be found in:
+195 error execute npm ERR!     /Users/sterjakov/.npm/_logs/2017-11-18T14_06_04_005Z-debug.log
+195 error execute
+195 error execute     at Promise.all.then.arr (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:210:11)
+195 error execute     at <anonymous>
+195 error execute     at process._tickCallback (internal/process/next_tick.js:188:7)
+195 error execute   stack: 'Error: Command failed: npm install\nnpm ERR! code ETARGET\nnpm ERR! notarget No matching version found for dom2vqua@1.0.0\nnpm ERR! notarget In most cases you or one of your dependencies are requesting\nnpm ERR! notarget a package version that doesn\'t exist.\n\nnpm ERR! A complete log of this run can be found in:\nnpm ERR!     /Users/sterjakov/.npm/_logs/2017-11-18T14_06_04_005Z-debug.log\n\n    at Promise.all.then.arr (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:210:11)\n    at <anonymous>\n    at process._tickCallback (internal/process/next_tick.js:188:7)',
+195 error execute   code: 1,
+195 error execute   killed: false,
+195 error execute   stdout: '',
+195 error execute   stderr: 'npm ERR! code ETARGET\nnpm ERR! notarget No matching version found for dom2vqua@1.0.0\nnpm ERR! notarget In most cases you or one of your dependencies are requesting\nnpm ERR! notarget a package version that doesn\'t exist.\n\nnpm ERR! A complete log of this run can be found in:\nnpm ERR!     /Users/sterjakov/.npm/_logs/2017-11-18T14_06_04_005Z-debug.log\n',
+195 error execute   failed: true,
+195 error execute   signal: null,
+195 error execute   cmd: 'npm install',
+195 error execute   timedOut: false }

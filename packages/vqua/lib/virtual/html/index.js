@@ -1,6 +1,6 @@
 const { TAG_TYPE, TEXT_TYPE } = require('../../constants/nodeTypes')
 const tags = require('./tags')
-const { flatten, include, omit } = require('vqua-utils')
+const { flatten, include, omit } = require('berries')
 
 const h = (tag, props = {}, childs) => {
 

@@ -6,7 +6,7 @@ It is a [monorepo](https://github.com/lerna/lerna) that includes packages:
 
 *Main:*
 - [vqua](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua) - virtual dom
-- [vqua-utils](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua-utils) - utils used by vqua
+- [berries](https://github.com/sterjakovigor/vqua/tree/master/packages/berries) - utils used by vqua
 
 *Server prerender:*
 - [vqua-router](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua-router) - universal router

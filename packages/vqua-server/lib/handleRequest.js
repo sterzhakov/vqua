@@ -1,6 +1,6 @@
 const url = require('url')
 const path = require('path')
-const { include } = require('vqua-utils')
+const { include } = require('berries')
 const { matchRoutes } = require('vqua-router')
 const handleAction = require('./handleAction')
 const handleNotFound = require('./handleNotFound')

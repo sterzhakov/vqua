@@ -1,4 +1,4 @@
-const { flatten, include } = require('vqua-utils')
+const { flatten, include } = require('berries')
 
 
 const isKeyedNode = node => {

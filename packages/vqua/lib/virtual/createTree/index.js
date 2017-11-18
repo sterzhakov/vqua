@@ -1,4 +1,4 @@
-const { flatten } = require('vqua-utils')
+const { flatten } = require('berries')
 const createNodes = require('./createNodes')
 const createCallback = require('./createCallback')
 const { sortLiveNodes, sortTemplateNodes } = require('../sortNodes')

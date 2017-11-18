@@ -1,4 +1,4 @@
-const { intersect } = require('vqua-utils')
+const { intersect } = require('berries')
 const countActionsScore = require('../../action/countActionsScore')
 const getNodeActions = require('../../action/getNodeActions')
 const { DELETE_NODE, REPLACE_NODE } = require('../../constants/actionTypes')

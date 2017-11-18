@@ -1,5 +1,5 @@
 const humanizeNodes = require('./humanizeNodes')
-const { flatten, omit, clone, pick } = require('vqua-utils')
+const { flatten, omit, clone, pick } = require('berries')
 const countDomNodes = require('./countDomNodes')
 const createLiveTree = require('./createTree')
 const filterDomNodes = require('./filterDomNodes')

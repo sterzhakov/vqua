@@ -1,4 +1,4 @@
-const { pick } = require('vqua-utils')
+const { pick } = require('berries')
 const createNode = require('../createNode')
 const hookNode = require('../hookNode')
 const getCreateAction = require('../getCreateAction')

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 72);
+/******/ 	return __webpack_require__(__webpack_require__.s = 59);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -84,23 +84,25 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-  asyncMap:       __webpack_require__(58),
-  clone:          __webpack_require__(61),
-  flatten:        __webpack_require__(25),
-  include:        __webpack_require__(13),
-  kindOf:         __webpack_require__(14),
-  pick:           __webpack_require__(69),
-  omit:           __webpack_require__(68),
-  union:          __webpack_require__(71),
-  capitalize:     __webpack_require__(59),
-  classNames:     __webpack_require__(60),
-  first:          __webpack_require__(64),
-  last:           __webpack_require__(67),
-  intersect:      __webpack_require__(66),
-  times:          __webpack_require__(70),
-  findRightIndex: __webpack_require__(63),
-  compose:        __webpack_require__(62),
-  htmlQuotes:     __webpack_require__(65),
+  asyncMap:       __webpack_require__(111),
+  clone:          __webpack_require__(114),
+  flatten:        __webpack_require__(53),
+  include:        __webpack_require__(23),
+  kindOf:         __webpack_require__(24),
+  pick:           __webpack_require__(123),
+  omit:           __webpack_require__(122),
+  union:          __webpack_require__(126),
+  capitalize:     __webpack_require__(112),
+  uncapitalize:   __webpack_require__(125),
+  classNames:     __webpack_require__(113),
+  first:          __webpack_require__(117),
+  last:           __webpack_require__(120),
+  intersect:      __webpack_require__(119),
+  times:          __webpack_require__(124),
+  findRightIndex: __webpack_require__(116),
+  compose:        __webpack_require__(115),
+  htmlQuotes:     __webpack_require__(118),
+  nth:            __webpack_require__(121),
 }
 
 
@@ -108,17 +110,17 @@ module.exports = {
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const humanizeNodes = __webpack_require__(22)
+const humanizeNodes = __webpack_require__(20)
 const { flatten, omit, clone, pick } = __webpack_require__(1)
-const countDomNodes = __webpack_require__(9)
-const createLiveTree = __webpack_require__(11)
-const filterDomNodes = __webpack_require__(21)
-const getParentNodes = __webpack_require__(47)
-const filterNodesOffsets = __webpack_require__(45)
-const createPatchTree = __webpack_require__(19)
-const findDomNode = __webpack_require__(31)
-const updateDomTree = __webpack_require__(17)
-const eachNodes = __webpack_require__(12)
+const countDomNodes = __webpack_require__(10)
+const createLiveTree = __webpack_require__(12)
+const filterDomNodes = __webpack_require__(19)
+const getParentNodes = __webpack_require__(46)
+const filterNodesOffsets = __webpack_require__(44)
+const createPatchTree = __webpack_require__(17)
+const findDomNode = __webpack_require__(30)
+const updateDomTree = __webpack_require__(15)
+const eachNodes = __webpack_require__(13)
 const { INSTANCE_TYPE, CLASS_TYPE } = __webpack_require__(0)
 const hookNode = __webpack_require__(7)
 const { AFTER_DOM_CREATE } = __webpack_require__(6)
@@ -342,8 +344,8 @@ module.exports = {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { removeRef } = __webpack_require__(23)
-const eachNodes = __webpack_require__(12)
+const { removeRef } = __webpack_require__(21)
+const eachNodes = __webpack_require__(13)
 const isNodeForUnmount = __webpack_require__(49)
 
 const { INSTANCE_TYPE } = __webpack_require__(0)
@@ -351,7 +353,7 @@ const { INSTANCE_TYPE } = __webpack_require__(0)
 const {
   callBeforeMount, callBeforeUnmount, callBeforeUpdate,
   callAfterUpdate, callAfterMount
-} = __webpack_require__(48)
+} = __webpack_require__(47)
 
 
 const {
@@ -497,239 +499,17 @@ module.exports = (leftProp, rightProp) => {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const {
-  TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
-} = __webpack_require__(0)
-
-module.exports = (nodes) => {
-
-  return nodes.reduce((counter, node) => {
-
-    if (node && node.type == INSTANCE_TYPE) {
-
-      return counter + node.childDomNodesCount
-
-    } else
-
-    if (node && node.type == TEXT_TYPE || node && node.type == TAG_TYPE) {
-
-      return counter + 1
-
-    } else {
-
-      return counter
-
-    }
-
-  }, 0)
-
-}
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const mapNodes = __webpack_require__(50)
-
-module.exports = (nodes, parentNode) => {
-
-  if (!nodes) return []
-
-  return mapNodes(nodes, (node) => {
-
-    const isNodeRefExist = node && typeof node.ref == 'string'
-    const isParentNodeHasInstance = parentNode && parentNode.instance
-
-    if (isNodeRefExist && isParentNodeHasInstance) {
-
-      return Object.assign({}, node, {
-        ref: {
-          instance: parentNode.instance,
-          name: node.ref,
-        }
-      })
-
-    }
-
-    return node
-
-  })
-
-}
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const { flatten } = __webpack_require__(1)
-const createNodes = __webpack_require__(44)
-const createCallback = __webpack_require__(43)
-const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(24)
-const decorateNodes = __webpack_require__(20)
-const createNodesWithRefs = __webpack_require__(10)
-const createTextNodes = __webpack_require__(42)
-const statistic = __webpack_require__(89)
-
-module.exports = (liveNodes, templateNodes, options) => {
-
-  const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
-
-    const textTemplateNodes =
-      createTextNodes(flatten([templateNodes]))
-
-    const refsTemplateNodes =
-      createNodesWithRefs(textTemplateNodes, liveParentInstanceNode)
-
-    const sortedTemplateNodes =
-      sortTemplateNodes(refsTemplateNodes)
-
-    const sortedLiveNodes =
-      sortLiveNodes(liveNodes, { templateNodes: sortedTemplateNodes })
-
-    return {
-      filteredLiveNodes: sortedLiveNodes,
-      filteredTemplateNodes: sortedTemplateNodes,
-    }
-
-  }
-
-  const nodes =
-    createNodes({
-      liveNodes,
-      templateNodes,
-      createNode: createCallback,
-      createOptions: {
-        hooks: options.hooks,
-        linkParent: true,
-        childDomNodesCount: true,
-        index: true,
-      },
-      liveParentNode: options.liveParentNode || null,
-      liveParentInstanceNode: options.liveParentInstanceNode || null,
-      createContext: options.context || {},
-      filterNodes,
-      statistic
-    })
-
-  return nodes
-
-}
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-const loop = (node, callback, level = 0, index = 0) => {
-
-  if (Array.isArray(node)) {
-
-    return node.reduce((lastIndex, _node, index) => {
-
-      return loop(_node, callback, level, lastIndex + 1)
-
-    }, index)
-
-  } else {
-
-    callback(node, level, index)
-
-    if (node && node.childs && node.childs.length > 0) {
-
-      return loop(node.childs, callback, level + 1, index)
-
-    } else {
-
-      return index
-
-    }
-
-  }
-
-}
-
-module.exports = loop
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-const include = (array, value) => {
-  return array.indexOf(value) > -1
-}
-
-module.exports = include
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-const checkers = {
-
-  string: (param) => {
-    return typeof param == 'string'
-  },
-
-  number: (param) => {
-    return typeof param == 'number'
-  },
-
-  null: (param) => {
-    return param === null
-  },
-
-  undefined: (param) => {
-    return typeof param === 'undefined'
-  },
-
-  boolean: (param) => {
-    return typeof param == 'boolean'
-  },
-
-  object: (param) => {
-    return (
-      typeof param == 'object' && !Array.isArray(param) && param != null
-    )
-  },
-
-  array: (param) => {
-    return Array.isArray(param)
-  },
-
-  function: (param) => {
-    return typeof param == 'function'
-  },
-
-}
-
-const kindOf = (param) => {
-  for (const type in checkers) {
-    if (checkers[type](param)) return type
-  }
-}
-
-module.exports = kindOf
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
 const { flatten } = __webpack_require__(1)
 const { ROOT_TYPE, INSTANCE_TYPE } = __webpack_require__(0)
-const createLiveTree = __webpack_require__(11)
-const filterDomNodes = __webpack_require__(21)
-const eachNodes = __webpack_require__(12)
+const createLiveTree = __webpack_require__(12)
+const filterDomNodes = __webpack_require__(19)
+const eachNodes = __webpack_require__(13)
 const hookNode = __webpack_require__(7)
 const { AFTER_DOM_CREATE } = __webpack_require__(6)
-const createPatchTree = __webpack_require__(19)
-const updateDomTree = __webpack_require__(17)
-const dom2vqua = __webpack_require__(56)
-const humanizeNodes = __webpack_require__(22)
+const createPatchTree = __webpack_require__(17)
+const updateDomTree = __webpack_require__(15)
+const dom2vqua = __webpack_require__(57)
+const humanizeNodes = __webpack_require__(20)
 
 module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 
@@ -783,10 +563,170 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 
 
 /***/ }),
-/* 16 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const events = __webpack_require__(30)
+const {
+  TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
+} = __webpack_require__(0)
+
+module.exports = (nodes) => {
+
+  return nodes.reduce((counter, node) => {
+
+    if (node && node.type == INSTANCE_TYPE) {
+
+      return counter + node.childDomNodesCount
+
+    } else
+
+    if (node && node.type == TEXT_TYPE || node && node.type == TAG_TYPE) {
+
+      return counter + 1
+
+    } else {
+
+      return counter
+
+    }
+
+  }, 0)
+
+}
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const mapNodes = __webpack_require__(50)
+
+module.exports = (nodes, parentNode) => {
+
+  if (!nodes) return []
+
+  return mapNodes(nodes, (node) => {
+
+    const isNodeRefExist = node && typeof node.ref == 'string'
+    const isParentNodeHasInstance = parentNode && parentNode.instance
+
+    if (isNodeRefExist && isParentNodeHasInstance) {
+
+      return Object.assign({}, node, {
+        ref: {
+          instance: parentNode.instance,
+          name: node.ref,
+        }
+      })
+
+    }
+
+    return node
+
+  })
+
+}
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { flatten } = __webpack_require__(1)
+const createNodes = __webpack_require__(43)
+const createCallback = __webpack_require__(42)
+const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(22)
+const decorateNodes = __webpack_require__(18)
+const createNodesWithRefs = __webpack_require__(11)
+const createTextNodes = __webpack_require__(41)
+const statistic = __webpack_require__(76)
+
+module.exports = (liveNodes, templateNodes, options) => {
+
+  const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
+
+    const textTemplateNodes =
+      createTextNodes(flatten([templateNodes]))
+
+    const refsTemplateNodes =
+      createNodesWithRefs(textTemplateNodes, liveParentInstanceNode)
+
+    const sortedTemplateNodes =
+      sortTemplateNodes(refsTemplateNodes)
+
+    const sortedLiveNodes =
+      sortLiveNodes(liveNodes, { templateNodes: sortedTemplateNodes })
+
+    return {
+      filteredLiveNodes: sortedLiveNodes,
+      filteredTemplateNodes: sortedTemplateNodes,
+    }
+
+  }
+
+  const nodes =
+    createNodes({
+      liveNodes,
+      templateNodes,
+      createNode: createCallback,
+      createOptions: {
+        hooks: options.hooks,
+        linkParent: true,
+        childDomNodesCount: true,
+        index: true,
+      },
+      liveParentNode: options.liveParentNode || null,
+      liveParentInstanceNode: options.liveParentInstanceNode || null,
+      createContext: options.context || {},
+      filterNodes,
+      statistic
+    })
+
+  return nodes
+
+}
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+const loop = (node, callback, level = 0, index = 0) => {
+
+  if (Array.isArray(node)) {
+
+    return node.reduce((lastIndex, _node, index) => {
+
+      return loop(_node, callback, level, lastIndex + 1)
+
+    }, index)
+
+  } else {
+
+    callback(node, level, index)
+
+    if (node && node.childs && node.childs.length > 0) {
+
+      return loop(node.childs, callback, level + 1, index)
+
+    } else {
+
+      return index
+
+    }
+
+  }
+
+}
+
+module.exports = loop
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const events = __webpack_require__(29)
 
 module.exports = (props) => {
 
@@ -828,11 +768,11 @@ module.exports = (props) => {
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const updateDomNode = __webpack_require__(32)
-const updateNodes = __webpack_require__(33)
+const updateDomNode = __webpack_require__(31)
+const updateNodes = __webpack_require__(32)
 
 module.exports = ({ parentDomNode, patchNodes }) => {
 
@@ -842,7 +782,7 @@ module.exports = ({ parentDomNode, patchNodes }) => {
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = (error, errorExists, errorNotExists) => {
@@ -861,15 +801,15 @@ module.exports = (error, errorExists, errorNotExists) => {
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { sortLiveNodes } = __webpack_require__(24)
+const { sortLiveNodes } = __webpack_require__(22)
 const reorderDeletedLiveNodes = __webpack_require__(52)
 const reorderAddedLiveNodes = __webpack_require__(51)
-const decorateNodes = __webpack_require__(20)
-const createNodes = __webpack_require__(35)
-const createCallback = __webpack_require__(34)
+const decorateNodes = __webpack_require__(18)
+const createNodes = __webpack_require__(34)
+const createCallback = __webpack_require__(33)
 
 module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
@@ -925,7 +865,7 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = (nodes, { dom = false, order = false }) => {
@@ -964,7 +904,7 @@ module.exports = (nodes, { dom = false, order = false }) => {
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit, flatten } = __webpack_require__(1)
@@ -1024,7 +964,7 @@ module.exports = loop
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { include, omit } = __webpack_require__(1)
@@ -1107,7 +1047,7 @@ module.exports = loop
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
@@ -1132,7 +1072,7 @@ module.exports = { addRef, removeRef }
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten, include } = __webpack_require__(1)
@@ -1267,35 +1207,69 @@ module.exports = {
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports) {
 
-const flatten = (items, newItems = []) => {
-
-  for (const item of items) {
-
-    if (Array.isArray(item)) {
-
-      const _items = item
-
-      newItems = flatten(_items, newItems)
-
-    } else {
-
-      newItems.push(item)
-
-    }
-
-  }
-
-  return newItems
+const include = (array, value) => {
+  return array.indexOf(value) > -1
 }
 
-module.exports = flatten
+module.exports = include
 
 
 /***/ }),
-/* 26 */
+/* 24 */
+/***/ (function(module, exports) {
+
+const checkers = {
+
+  string: (param) => {
+    return typeof param == 'string'
+  },
+
+  number: (param) => {
+    return typeof param == 'number'
+  },
+
+  null: (param) => {
+    return param === null
+  },
+
+  undefined: (param) => {
+    return typeof param === 'undefined'
+  },
+
+  boolean: (param) => {
+    return typeof param == 'boolean'
+  },
+
+  object: (param) => {
+    return (
+      typeof param == 'object' && !Array.isArray(param) && param != null
+    )
+  },
+
+  array: (param) => {
+    return Array.isArray(param)
+  },
+
+  function: (param) => {
+    return typeof param == 'function'
+  },
+
+}
+
+const kindOf = (param) => {
+  for (const type in checkers) {
+    if (checkers[type](param)) return type
+  }
+}
+
+module.exports = kindOf
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { CREATE_NODE, DELETE_NODE } = __webpack_require__(3)
@@ -1332,7 +1306,7 @@ module.exports = (actions) => {
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -1420,7 +1394,7 @@ module.exports = ({ liveNode, templateNode }) => {
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { union } = __webpack_require__(1)
@@ -1520,13 +1494,13 @@ module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
-const sortProps = __webpack_require__(16)
-const events = __webpack_require__(30)
-const diffProps = __webpack_require__(28)
+const sortProps = __webpack_require__(14)
+const events = __webpack_require__(29)
+const diffProps = __webpack_require__(27)
 
 const updateProps = (domNode, liveProps, templateProps, isPropsEqual) => {
 
@@ -1679,7 +1653,7 @@ module.exports = {
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports) {
 
 // https://www.w3schools.com/jsref/dom_obj_event.asp
@@ -1803,7 +1777,7 @@ module.exports = {
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports) {
 
 const loop = (node, offsets, index = 0) => {
@@ -1828,12 +1802,12 @@ module.exports = loop
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { addRef, removeRef } = __webpack_require__(23)
-const { createElement, insertAt, updateProps } = __webpack_require__(29)
-const sortProps = __webpack_require__(16)
+const { addRef, removeRef } = __webpack_require__(21)
+const { createElement, insertAt, updateProps } = __webpack_require__(28)
+const sortProps = __webpack_require__(14)
 const isPropsEqual = __webpack_require__(8)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
@@ -1979,7 +1953,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports) {
 
 const updateNodes = ({ patchNodes, parentDomNode, updateDomNode }) => {
@@ -2010,12 +1984,12 @@ module.exports = updateNodes
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { intersect } = __webpack_require__(1)
-const countActionsScore = __webpack_require__(26)
-const getNodeActions = __webpack_require__(27)
+const countActionsScore = __webpack_require__(25)
+const getNodeActions = __webpack_require__(26)
 const { DELETE_NODE, REPLACE_NODE } = __webpack_require__(3)
 
 module.exports = ({ liveNode, templateNode, limit }) => {
@@ -2048,7 +2022,7 @@ module.exports = ({ liveNode, templateNode, limit }) => {
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { times } = __webpack_require__(1)
@@ -2132,13 +2106,13 @@ module.exports = createNodes
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten, pick } = __webpack_require__(1)
 const hookNode = __webpack_require__(7)
 const { INSTANCE_TYPE } = __webpack_require__(0)
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(11)
 
 module.exports = ({
   templateNode,
@@ -2195,7 +2169,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = ({ templateNode, statistic }) => {
@@ -2216,7 +2190,7 @@ module.exports = ({ templateNode, statistic }) => {
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = ({ templateNode, statistic }) => {
@@ -2264,7 +2238,7 @@ module.exports = ({ templateNode, statistic }) => {
 
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = ({ templateNode, statistic }) => {
@@ -2284,15 +2258,15 @@ module.exports = ({ templateNode, statistic }) => {
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createRootNode = __webpack_require__(37)
-const createInstanceNode = __webpack_require__(36)
-const updateInstanceNode = __webpack_require__(41)
-const createTagNode = __webpack_require__(38)
-const createTextNode = __webpack_require__(39)
-const handleError = __webpack_require__(18)
+const createRootNode = __webpack_require__(36)
+const createInstanceNode = __webpack_require__(35)
+const updateInstanceNode = __webpack_require__(40)
+const createTagNode = __webpack_require__(37)
+const createTextNode = __webpack_require__(38)
+const handleError = __webpack_require__(16)
 
 const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
@@ -2393,11 +2367,11 @@ module.exports = ({
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten, pick } = __webpack_require__(1)
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(11)
 
 module.exports = ({
   liveNode,
@@ -2444,7 +2418,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten } = __webpack_require__(1)
@@ -2478,14 +2452,14 @@ module.exports = (childs) => {
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { pick } = __webpack_require__(1)
-const createNode = __webpack_require__(40)
+const createNode = __webpack_require__(39)
 const hookNode = __webpack_require__(7)
-const getCreateAction = __webpack_require__(46)
-const handleError = __webpack_require__(18)
+const getCreateAction = __webpack_require__(45)
+const handleError = __webpack_require__(16)
 
 const {
   BEFORE_EACH_ITERATION, BEFORE_INSTANCE_UPDATE, ON_INSTANCE_CREATE
@@ -2704,10 +2678,10 @@ module.exports = ({
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const countDomNodes = __webpack_require__(9)
+const countDomNodes = __webpack_require__(10)
 
 const createNodes = ({
   liveNodes = [],
@@ -2813,7 +2787,7 @@ module.exports = createNodes
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = (nodes) => {
@@ -2826,7 +2800,7 @@ module.exports = (nodes) => {
 
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -2901,10 +2875,10 @@ module.exports = (liveNode, templateNode, context) => {
 
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const countDomNodes = __webpack_require__(9)
+const countDomNodes = __webpack_require__(10)
 const { INSTANCE_TYPE } = __webpack_require__(0)
 
 const loop = (node, nodes = [], offset = 0) => {
@@ -2958,7 +2932,7 @@ module.exports = loop
 
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports) {
 
 // Before render dom
@@ -3023,6 +2997,51 @@ module.exports = {
   callAfterMount,
   callAfterUpdate
 }
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
+const tags = __webpack_require__(110)
+const { flatten, include, omit } = __webpack_require__(1)
+
+const h = (tag, props = {}, childs) => {
+
+  const refParams = props.ref
+    ? { ref: props.ref }
+    : {}
+
+  const keyParams = props.key
+    ? { key: props.key }
+    : {}
+
+  const newProps = omit(props, 'ref', 'key')
+
+  const baseParams = {
+    tag,
+    type: TAG_TYPE,
+    props: newProps,
+    childs
+  }
+
+  return Object.assign({}, baseParams, refParams, keyParams)
+
+
+}
+
+module.exports.h = h
+
+tags.forEach((tag) => {
+
+  module.exports[tag] = (props = {}, ...childs) => {
+
+    return h(tag, props, childs)
+
+  }
+
+})
 
 
 /***/ }),
@@ -3302,57 +3321,85 @@ module.exports = (liveNodes, { templateNodes, offset = 0 }) => {
 
 /***/ }),
 /* 53 */
+/***/ (function(module, exports) {
+
+const flatten = (items, newItems = []) => {
+
+  for (const item of items) {
+
+    if (Array.isArray(item)) {
+
+      const _items = item
+
+      newItems = flatten(_items, newItems)
+
+    } else {
+
+      newItems.push(item)
+
+    }
+
+  }
+
+  return newItems
+}
+
+module.exports = flatten
+
+
+/***/ }),
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./action/__tests/countActionsScore.spec.js": 73,
-	"./action/__tests/getNodeActions.spec.js": 74,
-	"./dom/__tests/diffProps.spec.js": 75,
-	"./dom/__tests/domActions.spec.js": 76,
-	"./dom/__tests/findDomNode.spec.js": 77,
-	"./dom/__tests/isPropsEqual.spec.js": 78,
-	"./dom/__tests/render.spec.js": 79,
-	"./dom/__tests/sortProps.spec.js": 80,
-	"./dom/__tests/updateTree/index.spec.js": 81,
-	"./dom/__tests/updateTree/updateCallback.spec.js": 82,
-	"./dom/__tests/updateTree/updateNodes.spec.js": 83,
-	"./helpers/__tests/handleError.spec.js": 84,
-	"./patch/createTree/__tests/createCallback.spec.js": 85,
-	"./patch/createTree/__tests/createNodes.spec.js": 86,
-	"./patch/createTree/__tests/index.spec.js": 87,
-	"./virtual/Statistic/__tests/Statistic.spec.js": 88,
-	"./virtual/__tests/Component.spec.js": 90,
-	"./virtual/__tests/assignDomNodes.spec.js": 91,
-	"./virtual/__tests/context.spec.js": 124,
-	"./virtual/__tests/countDomNodes.spec.js": 92,
-	"./virtual/__tests/createNodesWithRefs.spec.js": 93,
-	"./virtual/__tests/createTextNodes.spec.js": 94,
-	"./virtual/__tests/decorateNodes.spec.js": 95,
-	"./virtual/__tests/eachNodes.spec.js": 96,
-	"./virtual/__tests/filterDomNodes.spec.js": 97,
-	"./virtual/__tests/filterNodesOffsets.spec.js": 98,
-	"./virtual/__tests/getCreateAction.spec.js": 99,
-	"./virtual/__tests/getParentNodes.spec.js": 100,
-	"./virtual/__tests/humanizeNodes.spec.js": 101,
-	"./virtual/__tests/isNeedUpdate.spec.js": 102,
-	"./virtual/__tests/isNodeForUnmount.spec.js": 103,
-	"./virtual/__tests/mapNodes.spec.js": 104,
-	"./virtual/__tests/refs.spec.js": 105,
-	"./virtual/__tests/reorderAddedLiveNodes.spec.js": 106,
-	"./virtual/__tests/reorderDeletedLiveNodes.spec.js": 107,
-	"./virtual/__tests/sortNodes.spec.js": 108,
-	"./virtual/createNode/__tests/createInstanceNode.spec.js": 110,
-	"./virtual/createNode/__tests/createRootNode.spec.js": 111,
-	"./virtual/createNode/__tests/createTagNode.spec.js": 112,
-	"./virtual/createNode/__tests/createTextNode.spec.js": 113,
-	"./virtual/createNode/__tests/index.spec.js": 114,
-	"./virtual/createNode/__tests/updateInstanceNode.spec.js": 115,
-	"./virtual/createTree/__tests/createCallback.spec.js": 116,
-	"./virtual/createTree/__tests/createNodes.spec.js": 117,
-	"./virtual/createTree/__tests/index.spec.js": 118,
-	"./virtual/hookNode/__tests/hooks.spec.js": 119,
-	"./virtual/hookNode/__tests/index.spec.js": 120,
-	"./virtual/html/__tests/index.spec.js": 121
+	"./action/__tests/countActionsScore.spec.js": 60,
+	"./action/__tests/getNodeActions.spec.js": 61,
+	"./dom/__tests/diffProps.spec.js": 62,
+	"./dom/__tests/domActions.spec.js": 63,
+	"./dom/__tests/findDomNode.spec.js": 64,
+	"./dom/__tests/isPropsEqual.spec.js": 65,
+	"./dom/__tests/render.spec.js": 66,
+	"./dom/__tests/sortProps.spec.js": 67,
+	"./dom/__tests/updateTree/index.spec.js": 68,
+	"./dom/__tests/updateTree/updateCallback.spec.js": 69,
+	"./dom/__tests/updateTree/updateNodes.spec.js": 70,
+	"./helpers/__tests/handleError.spec.js": 71,
+	"./patch/createTree/__tests/createCallback.spec.js": 72,
+	"./patch/createTree/__tests/createNodes.spec.js": 73,
+	"./patch/createTree/__tests/index.spec.js": 74,
+	"./virtual/Statistic/__tests/Statistic.spec.js": 75,
+	"./virtual/__tests/Component.spec.js": 77,
+	"./virtual/__tests/assignDomNodes.spec.js": 78,
+	"./virtual/__tests/context.spec.js": 79,
+	"./virtual/__tests/countDomNodes.spec.js": 80,
+	"./virtual/__tests/createNodesWithRefs.spec.js": 81,
+	"./virtual/__tests/createTextNodes.spec.js": 82,
+	"./virtual/__tests/decorateNodes.spec.js": 83,
+	"./virtual/__tests/eachNodes.spec.js": 84,
+	"./virtual/__tests/filterDomNodes.spec.js": 85,
+	"./virtual/__tests/filterNodesOffsets.spec.js": 86,
+	"./virtual/__tests/getCreateAction.spec.js": 87,
+	"./virtual/__tests/getParentNodes.spec.js": 88,
+	"./virtual/__tests/humanizeNodes.spec.js": 89,
+	"./virtual/__tests/isNeedUpdate.spec.js": 90,
+	"./virtual/__tests/isNodeForUnmount.spec.js": 91,
+	"./virtual/__tests/mapNodes.spec.js": 92,
+	"./virtual/__tests/refs.spec.js": 93,
+	"./virtual/__tests/reorderAddedLiveNodes.spec.js": 94,
+	"./virtual/__tests/reorderDeletedLiveNodes.spec.js": 95,
+	"./virtual/__tests/sortNodes.spec.js": 96,
+	"./virtual/createNode/__tests/createInstanceNode.spec.js": 98,
+	"./virtual/createNode/__tests/createRootNode.spec.js": 99,
+	"./virtual/createNode/__tests/createTagNode.spec.js": 100,
+	"./virtual/createNode/__tests/createTextNode.spec.js": 101,
+	"./virtual/createNode/__tests/index.spec.js": 102,
+	"./virtual/createNode/__tests/updateInstanceNode.spec.js": 103,
+	"./virtual/createTree/__tests/createCallback.spec.js": 104,
+	"./virtual/createTree/__tests/createNodes.spec.js": 105,
+	"./virtual/createTree/__tests/index.spec.js": 106,
+	"./virtual/hookNode/__tests/hooks.spec.js": 107,
+	"./virtual/hookNode/__tests/index.spec.js": 108,
+	"./virtual/html/__tests/index.spec.js": 109
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -3368,10 +3415,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 53;
+webpackContext.id = 54;
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TAG_TYPE } = __webpack_require__(0)
@@ -3406,7 +3453,7 @@ module.exports = (node) => {
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE } = __webpack_require__(0)
@@ -3423,12 +3470,12 @@ module.exports = (node) => {
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const convertTag = __webpack_require__(54)
-const convertText = __webpack_require__(55)
-const mapNodes = __webpack_require__(57)
+const convertTag = __webpack_require__(55)
+const convertText = __webpack_require__(56)
+const mapNodes = __webpack_require__(58)
 
 module.exports = (nodes) => {
 
@@ -3459,7 +3506,7 @@ module.exports = (nodes) => {
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports) {
 
 const loop = (node, createNode) => {
@@ -3503,409 +3550,21 @@ module.exports = loop
 
 
 /***/ }),
-/* 58 */
-/***/ (function(module, exports) {
-
-module.exports = (items, mapper, callback) => {
-
-  if (items.length == 0) return callback(null, [])
-
-  let counter = 0
-
-  let results = []
-
-  items.forEach((item, index) => {
-
-    new Promise((resolve, reject) => {
-
-      mapper(item, index, (error, result) => {
-
-        if (error) {
-
-          reject(error)
-
-        } else {
-
-          resolve(result)
-
-        }
-
-      })
-
-    }).then((result) => {
-
-      results[index] = result
-
-      if (items.length == ++counter)
-        callback(null, results)
-
-    }).catch((error) => {
-
-      callback(error, null)
-
-    })
-
-  })
-
-}
-
-
-/***/ }),
 /* 59 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
+const context = __webpack_require__(54)
+context.keys().forEach(context)
 
 
 /***/ }),
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const flatten = __webpack_require__(25)
-const kindOf = __webpack_require__(14)
-const include = __webpack_require__(13)
-
-module.exports = (...args) => {
-
-  const unpackObjects = (args) => {
-
-    return args.map((arg) => {
-
-      const argType = kindOf(arg)
-
-      if (argType == 'array') {
-
-        return unpackObjects(arg)
-
-      } else
-
-      if (argType == 'object') {
-
-        return Object.keys(arg).map((key) => {
-
-          return arg[key] ? key : false
-
-        })
-
-      } else {
-
-        return arg
-
-      }
-
-    })
-
-  }
-
-  return (
-    flatten( unpackObjects(args) )
-      .filter((arg) => {
-        return include(['number', 'string'], typeof arg)
-      })
-      .join(' ')
-  )
-
-}
-
-
-// const flattenNames = flatten(args)
-//
-// const objectNames = flattenNames.map((arg) => {
-//
-//   if(kindOf(arg) == 'object') {
-//
-//     Object.keys(arg).map((key) => {
-//
-//       if (arg[key]) {
-//
-//         return key
-//
-//       }
-//
-//       return false
-//
-//     })
-//
-//   }
-//
-//   return arg
-//
-// })
-//
-// const cleanedClassNames =
-//
-// return classNames..join(' ')
-
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const kindOf = __webpack_require__(14)
-const include = __webpack_require__(13)
-
-const clone = (argument) => {
-
-  const argumentType = kindOf(argument)
-
-
-  if (argumentType == 'object') {
-
-    const object = argument
-
-    const newObject = {}
-
-    for (const key in object) {
-
-      const value = object[key]
-
-      const valueType = kindOf(value)
-
-      if (include(['array','object'], valueType)) {
-
-        newObject[key] = clone(value)
-
-      } else {
-
-        newObject[key] = value
-
-      }
-
-    }
-
-    return newObject
-
-  } else
-
-
-  if (argumentType == 'array') {
-
-    const array = argument
-
-    const newArray = []
-
-    for (const value of array) {
-
-      const valueType = kindOf(value)
-
-      if (include(['array','object'], valueType)) {
-
-        newArray.push(clone(value))
-
-      } else {
-
-        newArray.push(value)
-
-      }
-
-    }
-
-    return newArray
-
-
-  } else {
-
-    throw new Error('Cloned argument should be type of Array or Object.')
-
-  }
-
-}
-
-module.exports = clone
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = (...methods) => {
-
-  return (result) => {
-
-    return methods.reduceRight((result, method) => {
-
-      return method(result)
-
-    }, result)
-
-  }
-
-}
-
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports) {
-
-module.exports = (items, match) => {
-
-  const loop = (items, index) => {
-
-    if (index == -1) return -1
-
-    return match(items[index])
-      ? index
-      : loop(items, index - 1)
-  }
-
-  return loop(items, items.length - 1)
-
-}
-
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports) {
-
-module.exports = (array) => {
-
-  return array[0]
-
-}
-
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports) {
-
-const OPEN_QUOTE_SPECIAL = '&lt;'
-const CLOSE_QUOTE_SPECIAL = '&gt;'
-
-const OPEN_QUOTE_SIMPLE = '<'
-const CLOSE_QUOTE_SIMPLE = '>'
-
-const SPECIAL_TO_SIMPLE = {
-  [OPEN_QUOTE_SPECIAL]:  OPEN_QUOTE_SIMPLE,
-  [CLOSE_QUOTE_SPECIAL]: CLOSE_QUOTE_SIMPLE
-}
-
-const SIMPLE_TO_SPECIAL = {
-  [OPEN_QUOTE_SIMPLE]:  OPEN_QUOTE_SPECIAL,
-  [CLOSE_QUOTE_SIMPLE]: CLOSE_QUOTE_SPECIAL
-}
-
-const SIMPLE_QUOTES =
-  new RegExp(OPEN_QUOTE_SIMPLE + '|' + CLOSE_QUOTE_SIMPLE, 'g')
-
-const SPECIAL_QUOTES =
-  new RegExp(OPEN_QUOTE_SPECIAL + '|' + CLOSE_QUOTE_SPECIAL, 'g')
-
-const encode = (string) => (
-  string.replace(SIMPLE_QUOTES, match => SIMPLE_TO_SPECIAL[match])
-)
-
-const decode = (string) => (
-  string.replace(SPECIAL_QUOTES, match => SPECIAL_TO_SIMPLE[match])
-)
-
-module.exports = { encode, decode }
-
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports) {
-
-module.exports = (left, right) => {
-
-  if (!Array.isArray(left) || !Array.isArray(right)) return null
-
-  return left.reduce((values, value) => {
-
-    return right.indexOf(value) > -1
-      ? [ ...values, value ]
-      : values
-
-  }, [])
-
-}
-
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports) {
-
-module.exports = (array) => {
-
-  return array[array.length - 1]
-
-}
-
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports) {
-
-const omit = (object, ...keys) => {
-  const newObject = {}
-  Object.keys(object).forEach((key) => {
-    if (keys.indexOf(key) == -1)
-      newObject[key] = object[key]
-  })
-  return newObject
-
-}
-
-module.exports = omit
-
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports) {
-
-const pick = (object, ...keys) => {
-  const newObject = {}
-  keys.forEach((key) => {
-    if (key in object)
-      newObject[key] = object[key]
-  })
-  return newObject
-}
-
-module.exports = pick
-
-
-/***/ }),
-/* 70 */
-/***/ (function(module, exports) {
-
-module.exports = (count) => {
-
-  return [...Array(count).keys()]
-
-}
-
-
-/***/ }),
-/* 71 */
-/***/ (function(module, exports) {
-
-const union = (first, second) => {
-  return first.concat(
-    second.filter((key) => first.indexOf(key) == -1)
-  )
-}
-
-module.exports = union
-
-
-/***/ }),
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const context = __webpack_require__(53)
-context.keys().forEach(context)
-
-
-/***/ }),
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
-
 const {
   INSERT_NODE, CREATE_NODE, UPDATE_NODE, REPLACE_NODE, DELETE_NODE
 } = __webpack_require__(3)
-const countActionsScore = __webpack_require__(26)
+const countActionsScore = __webpack_require__(25)
 
 describe('Count actions score for', () => {
 
@@ -3931,10 +3590,10 @@ describe('Count actions score for', () => {
 
 
 /***/ }),
-/* 74 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const getNodeActions = __webpack_require__(27)
+const getNodeActions = __webpack_require__(26)
 const {
   INSERT_NODE, CREATE_NODE, UPDATE_NODE, REPLACE_NODE, DELETE_NODE
 } = __webpack_require__(3)
@@ -4028,10 +3687,10 @@ describe('Get node actions', () => {
 
 
 /***/ }),
-/* 75 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const diffProps = __webpack_require__(28)
+const diffProps = __webpack_require__(27)
 const isPropsEqual = __webpack_require__(8)
 
 describe('Get props diff for', () => {
@@ -4131,7 +3790,7 @@ describe('Get props diff for', () => {
 
 
 /***/ }),
-/* 76 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
@@ -4147,7 +3806,7 @@ const {
   removeEventProp,
   createElement,
   insertAt
-} = __webpack_require__(29)
+} = __webpack_require__(28)
 
 describe('Dom actions', () => {
 
@@ -4294,10 +3953,10 @@ describe('Dom actions', () => {
 
 
 /***/ }),
-/* 77 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const findDomNode = __webpack_require__(31)
+const findDomNode = __webpack_require__(30)
 
 describe('Find node by offset', () => {
 
@@ -4332,7 +3991,7 @@ describe('Find node by offset', () => {
 
 
 /***/ }),
-/* 78 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const isPropsEqual = __webpack_require__(8)
@@ -4447,10 +4106,10 @@ describe('Is props equal for', () => {
 
 
 /***/ }),
-/* 79 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const render = __webpack_require__(15)
+const render = __webpack_require__(9)
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
 
@@ -4509,10 +4168,10 @@ describe('Render dom', () => {
 
 
 /***/ }),
-/* 80 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const sortProps = __webpack_require__(16)
+const sortProps = __webpack_require__(14)
 
 describe('Sort props', () => {
 
@@ -4552,10 +4211,10 @@ describe('Sort props', () => {
 
 
 /***/ }),
-/* 81 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const updateDomTree = __webpack_require__(17)
+const updateDomTree = __webpack_require__(15)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(3)
@@ -4597,10 +4256,10 @@ describe('Update dom tree', () => {
 
 
 /***/ }),
-/* 82 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const updateNode = __webpack_require__(32)
+const updateNode = __webpack_require__(31)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(3)
@@ -4954,12 +4613,12 @@ describe('Update dom callback', () => {
 
 
 /***/ }),
-/* 83 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
 const { CREATE_NODE } = __webpack_require__(3)
-const updateNodes = __webpack_require__(33)
+const updateNodes = __webpack_require__(32)
 
 describe('Update dom nodes, call update callback', () => {
 
@@ -5017,10 +4676,10 @@ describe('Update dom nodes, call update callback', () => {
 
 
 /***/ }),
-/* 84 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const handleError = __webpack_require__(18)
+const handleError = __webpack_require__(16)
 
 describe('Handle error', () => {
 
@@ -5058,10 +4717,10 @@ describe('Handle error', () => {
 
 
 /***/ }),
-/* 85 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createNode = __webpack_require__(34)
+const createNode = __webpack_require__(33)
 const {
   TEXT_TYPE, TAG_TYPE
 } = __webpack_require__(0)
@@ -5121,11 +4780,11 @@ describe('Create patch node', () => {
 
 
 /***/ }),
-/* 86 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { omit } = __webpack_require__(1)
-const createNodes = __webpack_require__(35)
+const createNodes = __webpack_require__(34)
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
 
 describe('Create patch nodes', () => {
@@ -5335,10 +4994,10 @@ describe('Create patch nodes', () => {
 
 
 /***/ }),
-/* 87 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createTree = __webpack_require__(19)
+const createTree = __webpack_require__(17)
 const {
   TEXT_TYPE, TAG_TYPE
 } = __webpack_require__(0)
@@ -5446,7 +5105,7 @@ describe('Create patch tree', () => {
 
 
 /***/ }),
-/* 88 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Statistic = __webpack_require__(4)
@@ -5481,7 +5140,7 @@ describe('Statistic', () => {
 
 
 /***/ }),
-/* 89 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Statistic = __webpack_require__(4)
@@ -5490,14 +5149,14 @@ module.exports = new Statistic
 
 
 /***/ }),
-/* 90 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
   TEXT_TYPE, TAG_TYPE, INSTANCE_TYPE, CLASS_TYPE
 } = __webpack_require__(0)
 const Component = __webpack_require__(2)
-const render = __webpack_require__(15)
+const render = __webpack_require__(9)
 
 describe('Component', () => {
 
@@ -5576,10 +5235,10 @@ describe('Component', () => {
 
 
 /***/ }),
-/* 91 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const assignDomNodes = __webpack_require__(109)
+const assignDomNodes = __webpack_require__(97)
 
 describe('Assign dom nodes', () => {
 
@@ -5629,10 +5288,130 @@ describe('Assign dom nodes', () => {
 
 
 /***/ }),
-/* 92 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const countDomNodes = __webpack_require__(9)
+const render = __webpack_require__(9)
+const Component = __webpack_require__(2)
+const html = __webpack_require__(48)
+
+describe('Context', () => {
+
+  it('pass context to child component', () => {
+
+    class Hello extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      render() {
+
+        return 'Hello ' + this.context.name + '!'
+
+      }
+
+    }
+
+    class App extends Component {
+
+      passContext() {
+
+        return {
+          name: 'Igor'
+        }
+
+      }
+
+      render() {
+
+        return Hello.v()
+
+      }
+
+    }
+
+    const app = document.createElement('div')
+
+    render(app, [], [App.v()])
+
+    expect(app.textContent).toBe('Hello Igor!')
+
+  })
+
+  it('rewrite context', () => {
+
+    class Hello extends Component {
+
+      static injectContext() {
+
+        return ['name']
+
+      }
+
+      render() {
+
+        return 'Hello ' + this.context.name + '!'
+
+      }
+
+    }
+
+    class Rewriter extends Component {
+
+      passContext() {
+
+        return {
+          name: 'Igor Sterjakov'
+        }
+
+      }
+
+      render() {
+
+        return Hello.v()
+
+      }
+
+    }
+
+    class App extends Component {
+
+      passContext() {
+
+        return {
+          name: 'Igor'
+        }
+
+      }
+
+      render() {
+
+        return Rewriter.v()
+
+      }
+
+    }
+
+    const app = document.createElement('div')
+
+    render(app, [], [App.v()])
+
+    expect(app.textContent).toBe('Hello Igor Sterjakov!')
+
+  })
+
+
+})
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const countDomNodes = __webpack_require__(10)
 const {
   TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
@@ -5689,10 +5468,10 @@ describe('Count dom nodes for', () => {
 
 
 /***/ }),
-/* 93 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(11)
 
 describe('Create nodes with refs', () => {
 
@@ -5715,10 +5494,10 @@ describe('Create nodes with refs', () => {
 
 
 /***/ }),
-/* 94 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createTextNodes = __webpack_require__(42)
+const createTextNodes = __webpack_require__(41)
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
 
 describe('Create child nodes', () => {
@@ -5777,10 +5556,10 @@ describe('Create child nodes', () => {
 
 
 /***/ }),
-/* 95 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const decorateNodes = __webpack_require__(20)
+const decorateNodes = __webpack_require__(18)
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
 
 describe('Decorate live nodes', () => {
@@ -5901,10 +5680,10 @@ describe('Decorate live nodes', () => {
 
 
 /***/ }),
-/* 96 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const eachNodes = __webpack_require__(12)
+const eachNodes = __webpack_require__(13)
 
 describe('Virtual tree iterate', () => {
 
@@ -5963,10 +5742,10 @@ describe('Virtual tree iterate', () => {
 
 
 /***/ }),
-/* 97 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const filterDomNodes = __webpack_require__(21)
+const filterDomNodes = __webpack_require__(19)
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, INSTANCE_TYPE, CLASS_TYPE
 } = __webpack_require__(0)
@@ -6078,10 +5857,10 @@ describe('Get virtual DOM elements:', () => {
 
 
 /***/ }),
-/* 98 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const filterNodesOffsets = __webpack_require__(45)
+const filterNodesOffsets = __webpack_require__(44)
 
 describe('Filter nodes offsets', () => {
 
@@ -6101,10 +5880,10 @@ describe('Filter nodes offsets', () => {
 
 
 /***/ }),
-/* 99 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const getCreateAction = __webpack_require__(46)
+const getCreateAction = __webpack_require__(45)
 
 const {
   CREATE_ROOT, CREATE_TAG, CREATE_TEXT,
@@ -6191,7 +5970,7 @@ describe('Get create action:', () => {
 
 
 /***/ }),
-/* 100 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -6200,9 +5979,9 @@ const {
 
 const Component = __webpack_require__(2)
 
-const createLiveTree = __webpack_require__(11)
+const createLiveTree = __webpack_require__(12)
 
-const getParentNodes = __webpack_require__(47)
+const getParentNodes = __webpack_require__(46)
 
 describe('Get instance update info', () => {
 
@@ -6320,10 +6099,10 @@ describe('Get instance update info', () => {
 
 
 /***/ }),
-/* 101 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const humanizeNodes = __webpack_require__(22)
+const humanizeNodes = __webpack_require__(20)
 
 const {
   TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
@@ -6390,11 +6169,11 @@ describe('Humanize virtual tree', () => {
 
 
 /***/ }),
-/* 102 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const render = __webpack_require__(15)
+const render = __webpack_require__(9)
 
 describe('Lifecycle hooks: Component.isNeedUpdate()', () => {
 
@@ -6914,7 +6693,7 @@ describe('Lifecycle hooks: Component.isNeedUpdate()', () => {
 
 
 /***/ }),
-/* 103 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -7133,7 +6912,7 @@ describe('Is node for unmount for', () => {
 
 
 /***/ }),
-/* 104 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const mapNodes = __webpack_require__(50)
@@ -7188,10 +6967,10 @@ describe('Map nodes', () => {
 
 
 /***/ }),
-/* 105 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { addRef, removeRef } = __webpack_require__(23)
+const { addRef, removeRef } = __webpack_require__(21)
 
 describe('Ref', () => {
 
@@ -7238,7 +7017,7 @@ describe('Ref', () => {
 
 
 /***/ }),
-/* 106 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const reorderAddedLiveNodes = __webpack_require__(51)
@@ -7284,7 +7063,7 @@ describe('Reorder added live nodes', () => {
 
 
 /***/ }),
-/* 107 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const reorderDeletedLiveNodes = __webpack_require__(52)
@@ -7331,7 +7110,7 @@ describe('Reorder deleted live nodes', () => {
 
 
 /***/ }),
-/* 108 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -7343,7 +7122,7 @@ const {
   sortLiveNodes,
   sortTemplateNodes,
   separateLiveNodes,
-} = __webpack_require__(24)
+} = __webpack_require__(22)
 
 describe('Sort nodes:', () => {
 
@@ -7608,7 +7387,7 @@ describe('Sort nodes:', () => {
 
 
 /***/ }),
-/* 109 */
+/* 97 */
 /***/ (function(module, exports) {
 
 const loop = ({ liveNodes, domNodes }) => {
@@ -7634,11 +7413,11 @@ module.exports = loop
 
 
 /***/ }),
-/* 110 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const createInstanceNode = __webpack_require__(36)
+const createInstanceNode = __webpack_require__(35)
 const {
   TAG_TYPE, TEXT_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
@@ -7757,11 +7536,11 @@ describe('Create instance node', () => {
 
 
 /***/ }),
-/* 111 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const createRootNode = __webpack_require__(37)
+const createRootNode = __webpack_require__(36)
 const { ROOT_TYPE } = __webpack_require__(0)
 const Statistic = __webpack_require__(4)
 
@@ -7803,11 +7582,11 @@ describe('Create root node', () => {
 
 
 /***/ }),
-/* 112 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const createTagNode = __webpack_require__(38)
+const createTagNode = __webpack_require__(37)
 const { TAG_TYPE } = __webpack_require__(0)
 const Statistic = __webpack_require__(4)
 
@@ -7877,11 +7656,11 @@ describe('Create tag node', () => {
 
 
 /***/ }),
-/* 113 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const createTextNode = __webpack_require__(39)
+const createTextNode = __webpack_require__(38)
 const { TEXT_TYPE } = __webpack_require__(0)
 const Statistic = __webpack_require__(4)
 
@@ -7924,10 +7703,10 @@ describe('Create text node', () => {
 
 
 /***/ }),
-/* 114 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createNode = __webpack_require__(40)
+const createNode = __webpack_require__(39)
 const Component = __webpack_require__(2)
 const Statistic = __webpack_require__(4)
 
@@ -8144,11 +7923,11 @@ describe('Create node', () => {
 
 
 /***/ }),
-/* 115 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const updateInstanceNode = __webpack_require__(41)
+const updateInstanceNode = __webpack_require__(40)
 const { CLASS_TYPE } = __webpack_require__(0)
 const Statistic = __webpack_require__(4)
 
@@ -8281,13 +8060,13 @@ describe('Update instance', () => {
 
 
 /***/ }),
-/* 116 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
 const Statistic = __webpack_require__(4)
 
-const createCallback = __webpack_require__(43)
+const createCallback = __webpack_require__(42)
 
 const {
   CREATE_TEXT, CREATE_TAG, CREATE_INSTANCE, UPDATE_INSTANCE, RESUME_INSTANCE
@@ -8684,10 +8463,10 @@ describe('Create tree, create callback:', () => {
 
 
 /***/ }),
-/* 117 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createNodes = __webpack_require__(44)
+const createNodes = __webpack_require__(43)
 const { omit } = __webpack_require__(1)
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
@@ -9076,11 +8855,11 @@ describe('Create nodes:', () => {
 
 
 /***/ }),
-/* 118 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const createTree = __webpack_require__(11)
+const createTree = __webpack_require__(12)
 const Statistic = __webpack_require__(4)
 
 const {
@@ -9201,13 +8980,13 @@ describe('Create tree', () => {
 
 
 /***/ }),
-/* 119 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
   callBeforeMount, callBeforeUnmount, callBeforeUpdate,
   callAfterMount, callAfterUpdate
-} = __webpack_require__(48)
+} = __webpack_require__(47)
 
 const Component = __webpack_require__(2)
 
@@ -9291,7 +9070,7 @@ describe('Instance hooks', () => {
 
 
 /***/ }),
-/* 120 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
@@ -9602,11 +9381,11 @@ describe('Hook node', () => {
 
 
 /***/ }),
-/* 121 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
-const html = __webpack_require__(122)
+const html = __webpack_require__(48)
 
 describe('Html helpers', () => {
 
@@ -9650,52 +9429,7 @@ describe('Html helpers', () => {
 
 
 /***/ }),
-/* 122 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
-const tags = __webpack_require__(123)
-const { flatten, include, omit } = __webpack_require__(1)
-
-const h = (tag, props = {}, childs) => {
-
-  const refParams = props.ref
-    ? { ref: props.ref }
-    : {}
-
-  const keyParams = props.key
-    ? { key: props.key }
-    : {}
-
-  const newProps = omit(props, 'ref', 'key')
-
-  const baseParams = {
-    tag,
-    type: TAG_TYPE,
-    props: newProps,
-    childs
-  }
-
-  return Object.assign({}, baseParams, refParams, keyParams)
-
-
-}
-
-module.exports.h = h
-
-tags.forEach((tag) => {
-
-  module.exports[tag] = (props = {}, ...childs) => {
-
-    return h(tag, props, childs)
-
-  }
-
-})
-
-
-/***/ }),
-/* 123 */
+/* 110 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -9819,123 +9553,421 @@ module.exports = [
 
 
 /***/ }),
-/* 124 */
+/* 111 */
+/***/ (function(module, exports) {
+
+module.exports = (items, mapper, callback) => {
+
+  if (items.length == 0) return callback(null, [])
+
+  let counter = 0
+
+  let results = []
+
+  items.forEach((item, index) => {
+
+    new Promise((resolve, reject) => {
+
+      mapper(item, index, (error, result) => {
+
+        if (error) {
+
+          reject(error)
+
+        } else {
+
+          resolve(result)
+
+        }
+
+      })
+
+    }).then((result) => {
+
+      results[index] = result
+
+      if (items.length == ++counter)
+        callback(null, results)
+
+    }).catch((error) => {
+
+      callback(error, null)
+
+    })
+
+  })
+
+}
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports) {
+
+module.exports = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+
+/***/ }),
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const render = __webpack_require__(15)
-const Component = __webpack_require__(2)
-const html = __webpack_require__(122)
+const flatten = __webpack_require__(53)
+const kindOf = __webpack_require__(24)
+const include = __webpack_require__(23)
 
-describe('Context', () => {
+module.exports = (...args) => {
 
-  it('pass context to child component', () => {
+  const unpackObjects = (args) => {
 
-    class Hello extends Component {
+    return args.map((arg) => {
 
-      static injectContext() {
+      const argType = kindOf(arg)
 
-        return ['name']
+      if (argType == 'array') {
+
+        return unpackObjects(arg)
+
+      } else
+
+      if (argType == 'object') {
+
+        return Object.keys(arg).map((key) => {
+
+          return arg[key] ? key : false
+
+        })
+
+      } else {
+
+        return arg
 
       }
 
-      render() {
+    })
 
-        return 'Hello ' + this.context.name + '!'
+  }
+
+  return (
+    flatten( unpackObjects(args) )
+      .filter((arg) => {
+        return include(['number', 'string'], typeof arg)
+      })
+      .join(' ')
+  )
+
+}
+
+
+// const flattenNames = flatten(args)
+//
+// const objectNames = flattenNames.map((arg) => {
+//
+//   if(kindOf(arg) == 'object') {
+//
+//     Object.keys(arg).map((key) => {
+//
+//       if (arg[key]) {
+//
+//         return key
+//
+//       }
+//
+//       return false
+//
+//     })
+//
+//   }
+//
+//   return arg
+//
+// })
+//
+// const cleanedClassNames =
+//
+// return classNames..join(' ')
+
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const kindOf = __webpack_require__(24)
+const include = __webpack_require__(23)
+
+const clone = (argument) => {
+
+  const argumentType = kindOf(argument)
+
+
+  if (argumentType == 'object') {
+
+    const object = argument
+
+    const newObject = {}
+
+    for (const key in object) {
+
+      const value = object[key]
+
+      const valueType = kindOf(value)
+
+      if (include(['array','object'], valueType)) {
+
+        newObject[key] = clone(value)
+
+      } else {
+
+        newObject[key] = value
 
       }
 
     }
 
-    class App extends Component {
+    return newObject
 
-      passContext() {
+  } else
 
-        return {
-          name: 'Igor'
-        }
 
-      }
+  if (argumentType == 'array') {
 
-      render() {
+    const array = argument
 
-        return Hello.v()
+    const newArray = []
+
+    for (const value of array) {
+
+      const valueType = kindOf(value)
+
+      if (include(['array','object'], valueType)) {
+
+        newArray.push(clone(value))
+
+      } else {
+
+        newArray.push(value)
 
       }
 
     }
 
-    const app = document.createElement('div')
+    return newArray
 
-    render(app, [], [App.v()])
 
-    expect(app.textContent).toBe('Hello Igor!')
+  } else {
 
+    throw new Error('Cloned argument should be type of Array or Object.')
+
+  }
+
+}
+
+module.exports = clone
+
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports) {
+
+module.exports = (...methods) => {
+
+  return (result) => {
+
+    return methods.reduceRight((result, method) => {
+
+      return method(result)
+
+    }, result)
+
+  }
+
+}
+
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports) {
+
+module.exports = (items, match) => {
+
+  const loop = (items, index) => {
+
+    if (index == -1) return -1
+
+    return match(items[index])
+      ? index
+      : loop(items, index - 1)
+  }
+
+  return loop(items, items.length - 1)
+
+}
+
+
+/***/ }),
+/* 117 */
+/***/ (function(module, exports) {
+
+module.exports = (array) => {
+
+  return array[0]
+
+}
+
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports) {
+
+const OPEN_QUOTE_SPECIAL = '&lt;'
+const CLOSE_QUOTE_SPECIAL = '&gt;'
+
+const OPEN_QUOTE_SIMPLE = '<'
+const CLOSE_QUOTE_SIMPLE = '>'
+
+const SPECIAL_TO_SIMPLE = {
+  [OPEN_QUOTE_SPECIAL]:  OPEN_QUOTE_SIMPLE,
+  [CLOSE_QUOTE_SPECIAL]: CLOSE_QUOTE_SIMPLE
+}
+
+const SIMPLE_TO_SPECIAL = {
+  [OPEN_QUOTE_SIMPLE]:  OPEN_QUOTE_SPECIAL,
+  [CLOSE_QUOTE_SIMPLE]: CLOSE_QUOTE_SPECIAL
+}
+
+const SIMPLE_QUOTES =
+  new RegExp(OPEN_QUOTE_SIMPLE + '|' + CLOSE_QUOTE_SIMPLE, 'g')
+
+const SPECIAL_QUOTES =
+  new RegExp(OPEN_QUOTE_SPECIAL + '|' + CLOSE_QUOTE_SPECIAL, 'g')
+
+const encode = (string) => (
+  string.replace(SIMPLE_QUOTES, match => SIMPLE_TO_SPECIAL[match])
+)
+
+const decode = (string) => (
+  string.replace(SPECIAL_QUOTES, match => SPECIAL_TO_SIMPLE[match])
+)
+
+module.exports = { encode, decode }
+
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports) {
+
+module.exports = (left, right) => {
+
+  if (!Array.isArray(left) || !Array.isArray(right)) return null
+
+  return left.reduce((values, value) => {
+
+    return right.indexOf(value) > -1
+      ? [ ...values, value ]
+      : values
+
+  }, [])
+
+}
+
+
+/***/ }),
+/* 120 */
+/***/ (function(module, exports) {
+
+module.exports = (array) => {
+
+  return array[array.length - 1]
+
+}
+
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports) {
+
+module.exports = (items, index) => {
+
+  if (index >= 0) {
+
+    return items[index]
+
+  } else {
+
+    return items[items.length + index]
+
+  }
+
+}
+
+
+/***/ }),
+/* 122 */
+/***/ (function(module, exports) {
+
+const omit = (object, ...keys) => {
+  const newObject = {}
+  Object.keys(object).forEach((key) => {
+    if (keys.indexOf(key) == -1)
+      newObject[key] = object[key]
   })
+  return newObject
 
-  it('rewrite context', () => {
+}
 
-    class Hello extends Component {
+module.exports = omit
 
-      static injectContext() {
 
-        return ['name']
+/***/ }),
+/* 123 */
+/***/ (function(module, exports) {
 
-      }
-
-      render() {
-
-        return 'Hello ' + this.context.name + '!'
-
-      }
-
-    }
-
-    class Rewriter extends Component {
-
-      passContext() {
-
-        return {
-          name: 'Igor Sterjakov'
-        }
-
-      }
-
-      render() {
-
-        return Hello.v()
-
-      }
-
-    }
-
-    class App extends Component {
-
-      passContext() {
-
-        return {
-          name: 'Igor'
-        }
-
-      }
-
-      render() {
-
-        return Rewriter.v()
-
-      }
-
-    }
-
-    const app = document.createElement('div')
-
-    render(app, [], [App.v()])
-
-    expect(app.textContent).toBe('Hello Igor Sterjakov!')
-
+const pick = (object, ...keys) => {
+  const newObject = {}
+  keys.forEach((key) => {
+    if (key in object)
+      newObject[key] = object[key]
   })
+  return newObject
+}
+
+module.exports = pick
 
 
-})
+/***/ }),
+/* 124 */
+/***/ (function(module, exports) {
+
+module.exports = (count) => {
+
+  return [...Array(count).keys()]
+
+}
+
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports) {
+
+module.exports = (string) => {
+
+  return string.charAt(0).toLowerCase() + string.slice(1)
+
+}
+
+
+/***/ }),
+/* 126 */
+/***/ (function(module, exports) {
+
+const union = (first, second) => {
+  return first.concat(
+    second.filter((key) => first.indexOf(key) == -1)
+  )
+}
+
+module.exports = union
 
 
 /***/ })

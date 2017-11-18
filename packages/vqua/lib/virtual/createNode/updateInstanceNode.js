@@ -1,4 +1,4 @@
-const { flatten, pick } = require('vqua-utils')
+const { flatten, pick } = require('berries')
 const createNodesWithRefs = require('../createNodesWithRefs')
 
 module.exports = ({

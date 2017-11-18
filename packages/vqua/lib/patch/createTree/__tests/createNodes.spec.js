@@ -1,4 +1,4 @@
-const { omit } = require('vqua-utils')
+const { omit } = require('berries')
 const createNodes = require('../createNodes')
 const { TEXT_TYPE, TAG_TYPE } = require('../../../constants/nodeTypes')
 

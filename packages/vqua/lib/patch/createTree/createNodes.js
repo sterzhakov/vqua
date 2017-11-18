@@ -1,4 +1,4 @@
-const { times } = require('vqua-utils')
+const { times } = require('berries')
 
 const createNodes = ({
   offset = 0,

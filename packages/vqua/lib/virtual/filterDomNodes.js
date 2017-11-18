@@ -1,4 +1,4 @@
-const { omit, flatten } = require('vqua-utils')
+const { omit, flatten } = require('berries')
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = require('../constants/nodeTypes')

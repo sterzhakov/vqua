@@ -1,4 +1,4 @@
-const { include } = require('vqua-utils')
+const { include } = require('berries')
 const singleTags = require('./singleTags')
 
 module.exports = (node) => {

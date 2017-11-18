@@ -1,4 +1,4 @@
-const { kindOf } = require('vqua-utils')
+const { kindOf } = require('berries')
 
 module.exports = (leftProp, rightProp) => {
 

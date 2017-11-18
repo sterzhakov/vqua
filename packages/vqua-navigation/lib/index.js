@@ -1,6 +1,6 @@
-const { htmlQuotes } = require('vqua-utils')
+const { htmlQuotes } = require('berries')
 const { matchRoutes } = require('vqua-router')
-const { include } = require('vqua-utils')
+const { include } = require('berries')
 
 class Navigation {
 

@@ -1,4 +1,4 @@
-const { flatten } = require('vqua-utils')
+const { flatten } = require('berries')
 const { ROOT_TYPE, INSTANCE_TYPE } = require('../constants/nodeTypes')
 const createLiveTree = require('../virtual/createTree')
 const filterDomNodes = require('../virtual/filterDomNodes')

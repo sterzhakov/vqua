@@ -3,7 +3,7 @@ const { route, initRoutes } = require('vqua-router')
 
 describe('Navigation', () => {
 
-  fit('on redirect', (done) => {
+  it('on redirect', (done) => {
 
     class PostsController {
 

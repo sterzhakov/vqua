@@ -1,4 +1,4 @@
-const { flatten, pick } = require('vqua-utils')
+const { flatten, pick } = require('berries')
 const hookNode = require('../hookNode')
 const { INSTANCE_TYPE } = require('../../constants/nodeTypes')
 const createNodesWithRefs = require('../createNodesWithRefs')

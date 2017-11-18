@@ -1,4 +1,4 @@
-const { omit } = require('vqua-utils')
+const { omit } = require('berries')
 
 const separateRoutes = (nestedRoutes, segments = []) => {
 

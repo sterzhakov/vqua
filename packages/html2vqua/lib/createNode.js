@@ -1,4 +1,4 @@
-const { compose } = require('vqua-utils')
+const { compose } = require('berries')
 const { TAG_TYPE } = require('vqua/lib/constants/nodeTypes')
 const { filterSpaces } = require('./filterText')
 

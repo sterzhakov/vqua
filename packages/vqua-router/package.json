@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "vqua": "^1.0.21",
-    "vqua-utils": "^1.0.21"
+    "berries": "^1.0.2"
   },
   "author": "Igor Sterjakov",
   "license": "ISC",

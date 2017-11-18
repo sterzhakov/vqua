@@ -1,4 +1,4 @@
-const { omit } = require('vqua-utils')
+const { omit } = require('berries')
 const { CREATE_NODE } = require('../../../constants/actionTypes')
 const updateNodes = require('../../updateTree/updateNodes')
 

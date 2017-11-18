@@ -1,4 +1,4 @@
-const { union } = require('vqua-utils')
+const { union } = require('berries')
 
 module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
