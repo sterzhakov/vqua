@@ -31,6 +31,7 @@ it('initRoutes()', () => {
   expect(newRoutes[1].controller instanceof SampleController).toBeTruthy()
   expect(newRoutes[1].action).toEqual(sampleController.index)
   expect(newRoutes[1].index).toEqual(1)
+  expect(newRoutes[1].segments).toEqual([''])
 
   expect(newRoutes.length).toBe(2)
 
