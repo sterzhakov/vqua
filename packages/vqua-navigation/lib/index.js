@@ -114,8 +114,8 @@ class Navigation {
         send: (statusCode, componentName, params = {}) => {
           callback({ statusCode, componentName, params })
         },
-        redirect: (statusCode, redirectPath, params = {}) => {
-          callback({ statusCode, redirectPath, params })
+        redirect: (statusCode, path, params = {}) => {
+          callback({ statusCode, path, params })
         }
       }
 

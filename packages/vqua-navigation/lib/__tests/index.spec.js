@@ -31,7 +31,6 @@ describe('Navigation', () => {
 
       expect(params).toEqual({
         path: '/posts',
-        redirectPath: '/home',
         statusCode: 301,
         params: {}
       })
