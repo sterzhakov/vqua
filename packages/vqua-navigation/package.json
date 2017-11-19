@@ -1,12 +1,12 @@
 {
   "name": "vqua-navigation",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Navigation for vqua.",
   "main": "lib/index.js",
   "dependencies": {
     "berries": "^1.0.2",
     "vqua": "^1.0.22",
-    "vqua-router": "^1.0.22"
+    "vqua-router": "^1.0.23"
   },
   "devDependencies": {
     "jasmine": "^2.8.0"
