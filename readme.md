@@ -15,7 +15,6 @@ It is a [monorepo](https://github.com/lerna/lerna) that includes packages:
 - [vqua-todo-ssr](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua-todo-ssr) - vqua todo example
 
 *Other:*
-- [berries](https://github.com/sterjakovigor/berries) - set of utils
 - [dom2vqua](https://github.com/sterjakovigor/vqua/tree/master/packages/dom2vqua) - transfrom dom nodes to vqua nodes
 - [html2vqua](https://github.com/sterjakovigor/vqua/tree/master/packages/html2vqua) - transfrom html string to vqua nodes
 - [vqua2string](https://github.com/sterjakovigor/vqua/tree/master/packages/vqua2string) - tranform vqua nodes to string
