@@ -16,7 +16,10 @@ module.exports = ({
   liveInstance.prevState = liveInstance.state
   liveInstance.prevContext = liveInstance.context
 
-  liveInstance.props = templateNode.props
+  const defaultProps = templateNode.class.defaultProps()
+  const mergedProps = Object.assign({}, defaultProps, templateNode.props)
+
+  liveInstance.props = mergedProps
   liveInstance.state = liveInstance.state
 
   liveInstance.context = injectedContext

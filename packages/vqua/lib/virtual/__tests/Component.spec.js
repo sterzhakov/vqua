@@ -3,8 +3,51 @@ const {
 } = require('../../constants/nodeTypes')
 const Component = require('../Component')
 const render = require('../../dom/render')
+const html = require('../html')
 
 describe('Component', () => {
+
+  it('setState()', () => {
+
+    const app = document.createElement('div')
+
+    class App extends Component {
+
+      constructor(props, context) {
+
+        super(props, context)
+
+        this.state = { counter: 0 }
+
+      }
+
+      increaseCounter() {
+
+        this.setState({ counter: this.state.counter + 1 })
+
+      }
+
+      render() {
+
+        const { div } = html
+
+        return div({ id: 'Counter: ' + this.state.counter })
+
+      }
+
+    }
+
+    const virtual = render(app, [], [App.v()], {})
+
+    const { instance } = virtual[0].childs[0]
+
+    expect(app.childNodes[0].id).toBe('Counter: 0')
+
+    instance.increaseCounter()
+
+    expect(app.childNodes[0].id).toBe('Counter: 1')
+
+  })
 
   it('v() helper create node', () => {
 
