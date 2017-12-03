@@ -5,7 +5,6 @@ const Statistic = require('../../Statistic')
 
 describe('Update instance', () => {
 
-
   it('create node with statistic param', () => {
 
     class App extends Component {
@@ -20,6 +19,7 @@ describe('Update instance', () => {
       type: CLASS_TYPE,
       props: {},
       childs: [],
+      class: App,
     }
 
     const liveNode = {
@@ -66,7 +66,8 @@ describe('Update instance', () => {
     const templateNode = {
       type: CLASS_TYPE,
       props: { id: 2 },
-      childs: []
+      childs: [],
+      class: App,
     }
 
     const liveNode = {
@@ -114,7 +115,8 @@ describe('Update instance', () => {
     const templateNode = {
       type: CLASS_TYPE,
       props: { id: 2 },
-      childs: [ 2 ]
+      childs: [ 2 ],
+      class: App,
     }
 
     const newNode =

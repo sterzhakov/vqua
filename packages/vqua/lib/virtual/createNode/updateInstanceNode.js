@@ -1,5 +1,4 @@
 const { flatten, pick } = require('berries')
-const createNodesWithRefs = require('../createNodesWithRefs')
 
 module.exports = ({
   liveNode,
@@ -17,6 +16,7 @@ module.exports = ({
   liveInstance.prevContext = liveInstance.context
 
   const defaultProps = templateNode.class.defaultProps()
+
   const mergedProps = Object.assign({}, defaultProps, templateNode.props)
 
   liveInstance.props = mergedProps

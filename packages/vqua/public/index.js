@@ -113,14 +113,14 @@ module.exports = {
 const humanizeNodes = __webpack_require__(21)
 const { flatten, omit, clone, pick } = __webpack_require__(1)
 const countDomNodes = __webpack_require__(10)
-const createLiveTree = __webpack_require__(12)
+const createLiveTree = __webpack_require__(11)
 const filterDomNodes = __webpack_require__(19)
 const getParentNodes = __webpack_require__(47)
 const filterNodesOffsets = __webpack_require__(45)
-const createPatchTree = __webpack_require__(17)
+const createPatchTree = __webpack_require__(16)
 const findDomNode = __webpack_require__(31)
-const updateDomTree = __webpack_require__(15)
-const eachNodes = __webpack_require__(13)
+const updateDomTree = __webpack_require__(14)
+const eachNodes = __webpack_require__(12)
 const { INSTANCE_TYPE, CLASS_TYPE } = __webpack_require__(0)
 const hookNode = __webpack_require__(7)
 const { AFTER_DOM_CREATE } = __webpack_require__(6)
@@ -345,7 +345,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 const { removeRef } = __webpack_require__(22)
-const eachNodes = __webpack_require__(13)
+const eachNodes = __webpack_require__(12)
 const isNodeForUnmount = __webpack_require__(49)
 
 const { INSTANCE_TYPE } = __webpack_require__(0)
@@ -501,13 +501,13 @@ module.exports = (leftProp, rightProp) => {
 
 const { flatten } = __webpack_require__(1)
 const { ROOT_TYPE, INSTANCE_TYPE } = __webpack_require__(0)
-const createLiveTree = __webpack_require__(12)
+const createLiveTree = __webpack_require__(11)
 const filterDomNodes = __webpack_require__(19)
-const eachNodes = __webpack_require__(13)
+const eachNodes = __webpack_require__(12)
 const hookNode = __webpack_require__(7)
 const { AFTER_DOM_CREATE } = __webpack_require__(6)
-const createPatchTree = __webpack_require__(17)
-const updateDomTree = __webpack_require__(15)
+const createPatchTree = __webpack_require__(16)
+const updateDomTree = __webpack_require__(14)
 const dom2vqua = __webpack_require__(57)
 const humanizeNodes = __webpack_require__(21)
 
@@ -599,45 +599,12 @@ module.exports = (nodes) => {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const mapNodes = __webpack_require__(50)
-
-module.exports = (nodes, parentNode) => {
-
-  if (!nodes) return []
-
-  return mapNodes(nodes, (node) => {
-
-    const isNodeRefExist = node && typeof node.ref == 'string'
-    const isParentNodeHasInstance = parentNode && parentNode.instance
-
-    if (isNodeRefExist && isParentNodeHasInstance) {
-
-      return Object.assign({}, node, {
-        ref: {
-          instance: parentNode.instance,
-          name: node.ref,
-        }
-      })
-
-    }
-
-    return node
-
-  })
-
-}
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
 const { flatten } = __webpack_require__(1)
 const createNodes = __webpack_require__(44)
 const createCallback = __webpack_require__(43)
 const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(23)
 const decorateNodes = __webpack_require__(18)
-const createNodesWithRefs = __webpack_require__(11)
+const createNodesWithRefs = __webpack_require__(17)
 const createTextNodes = __webpack_require__(42)
 const statistic = __webpack_require__(76)
 
@@ -688,7 +655,7 @@ module.exports = (liveNodes, templateNodes, options) => {
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports) {
 
 const loop = (node, callback, level = 0, index = 0) => {
@@ -723,7 +690,7 @@ module.exports = loop
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const events = __webpack_require__(30)
@@ -768,7 +735,7 @@ module.exports = (props) => {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const updateDomNode = __webpack_require__(32)
@@ -782,7 +749,7 @@ module.exports = ({ parentDomNode, patchNodes }) => {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = (error, errorExists, errorNotExists) => {
@@ -801,7 +768,7 @@ module.exports = (error, errorExists, errorNotExists) => {
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { sortLiveNodes } = __webpack_require__(23)
@@ -860,6 +827,39 @@ module.exports = ({ offset, liveNodes, templateNodes, domNodes }) => {
   )
 
   return patchNodes
+
+}
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const mapNodes = __webpack_require__(50)
+
+module.exports = (nodes, parentNode) => {
+
+  if (!nodes) return []
+
+  return mapNodes(nodes, (node) => {
+
+    const isNodeRefExist = node && typeof node.ref == 'string'
+    const isParentNodeHasInstance = parentNode && parentNode.instance
+
+    if (isNodeRefExist && isParentNodeHasInstance) {
+
+      return Object.assign({}, node, {
+        ref: {
+          instance: parentNode.instance,
+          name: node.ref,
+        }
+      })
+
+    }
+
+    return node
+
+  })
 
 }
 
@@ -1543,7 +1543,7 @@ module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
-const sortProps = __webpack_require__(14)
+const sortProps = __webpack_require__(13)
 const events = __webpack_require__(30)
 const diffProps = __webpack_require__(28)
 
@@ -1852,7 +1852,7 @@ module.exports = loop
 
 const { addRef, removeRef } = __webpack_require__(22)
 const { createElement, insertAt, updateProps } = __webpack_require__(29)
-const sortProps = __webpack_require__(14)
+const sortProps = __webpack_require__(13)
 const isPropsEqual = __webpack_require__(8)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
@@ -2157,7 +2157,7 @@ module.exports = createNodes
 const { flatten, pick } = __webpack_require__(1)
 const hookNode = __webpack_require__(7)
 const { INSTANCE_TYPE } = __webpack_require__(0)
-const createNodesWithRefs = __webpack_require__(11)
+const createNodesWithRefs = __webpack_require__(17)
 
 module.exports = ({
   templateNode,
@@ -2311,7 +2311,7 @@ const createInstanceNode = __webpack_require__(36)
 const updateInstanceNode = __webpack_require__(41)
 const createTagNode = __webpack_require__(38)
 const createTextNode = __webpack_require__(39)
-const handleError = __webpack_require__(16)
+const handleError = __webpack_require__(15)
 
 const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
@@ -2416,7 +2416,6 @@ module.exports = ({
 /***/ (function(module, exports, __webpack_require__) {
 
 const { flatten, pick } = __webpack_require__(1)
-const createNodesWithRefs = __webpack_require__(11)
 
 module.exports = ({
   liveNode,
@@ -2434,6 +2433,7 @@ module.exports = ({
   liveInstance.prevContext = liveInstance.context
 
   const defaultProps = templateNode.class.defaultProps()
+
   const mergedProps = Object.assign({}, defaultProps, templateNode.props)
 
   liveInstance.props = mergedProps
@@ -2507,7 +2507,7 @@ const { pick } = __webpack_require__(1)
 const createNode = __webpack_require__(40)
 const hookNode = __webpack_require__(7)
 const getCreateAction = __webpack_require__(46)
-const handleError = __webpack_require__(16)
+const handleError = __webpack_require__(15)
 
 const {
   BEFORE_EACH_ITERATION, BEFORE_INSTANCE_UPDATE, ON_INSTANCE_CREATE
@@ -4174,7 +4174,7 @@ describe('Render dom', () => {
 /* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const sortProps = __webpack_require__(14)
+const sortProps = __webpack_require__(13)
 
 describe('Sort props', () => {
 
@@ -4217,7 +4217,7 @@ describe('Sort props', () => {
 /* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const updateDomTree = __webpack_require__(15)
+const updateDomTree = __webpack_require__(14)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(3)
@@ -4682,7 +4682,7 @@ describe('Update dom nodes, call update callback', () => {
 /* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const handleError = __webpack_require__(16)
+const handleError = __webpack_require__(15)
 
 describe('Handle error', () => {
 
@@ -5000,7 +5000,7 @@ describe('Create patch nodes', () => {
 /* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createTree = __webpack_require__(17)
+const createTree = __webpack_require__(16)
 const {
   TEXT_TYPE, TAG_TYPE
 } = __webpack_require__(0)
@@ -5517,7 +5517,7 @@ describe('Count dom nodes for', () => {
 /* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createNodesWithRefs = __webpack_require__(11)
+const createNodesWithRefs = __webpack_require__(17)
 
 describe('Create nodes with refs', () => {
 
@@ -5729,7 +5729,7 @@ describe('Decorate live nodes', () => {
 /* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const eachNodes = __webpack_require__(13)
+const eachNodes = __webpack_require__(12)
 
 describe('Virtual tree iterate', () => {
 
@@ -6025,7 +6025,7 @@ const {
 
 const Component = __webpack_require__(2)
 
-const createLiveTree = __webpack_require__(12)
+const createLiveTree = __webpack_require__(11)
 
 const getParentNodes = __webpack_require__(47)
 
@@ -7979,7 +7979,6 @@ const Statistic = __webpack_require__(4)
 
 describe('Update instance', () => {
 
-
   it('create node with statistic param', () => {
 
     class App extends Component {
@@ -7994,6 +7993,7 @@ describe('Update instance', () => {
       type: CLASS_TYPE,
       props: {},
       childs: [],
+      class: App,
     }
 
     const liveNode = {
@@ -8040,7 +8040,8 @@ describe('Update instance', () => {
     const templateNode = {
       type: CLASS_TYPE,
       props: { id: 2 },
-      childs: []
+      childs: [],
+      class: App,
     }
 
     const liveNode = {
@@ -8088,7 +8089,8 @@ describe('Update instance', () => {
     const templateNode = {
       type: CLASS_TYPE,
       props: { id: 2 },
-      childs: [ 2 ]
+      childs: [ 2 ],
+      class: App,
     }
 
     const newNode =
@@ -8905,7 +8907,7 @@ describe('Create nodes:', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const createTree = __webpack_require__(12)
+const createTree = __webpack_require__(11)
 const Statistic = __webpack_require__(4)
 
 const {
