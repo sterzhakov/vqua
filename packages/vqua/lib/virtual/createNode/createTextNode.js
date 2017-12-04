@@ -1,14 +1,8 @@
-module.exports = ({ templateNode, statistic }) => {
+module.exports = ({ templateNode }) => {
 
-  const statisticParams = statistic
-    ? { statistic }
-    : {}
-
-  const newTagNode = {
+  return {
     type: templateNode.type,
     text: templateNode.text,
   }
-
-  return Object.assign({}, newTagNode, statisticParams)
 
 }

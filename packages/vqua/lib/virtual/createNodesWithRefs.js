@@ -1,24 +1,25 @@
 const mapNodes = require('./mapNodes')
 
-module.exports = (nodes, instance) => {
+module.exports = (nodes, parentNodeInstance, coreInstance) => {
 
-  if (!nodes) return []
+    return mapNodes(nodes, node => {
 
-  return mapNodes(nodes, (node) => {
+      if (
+        node && typeof node.ref == 'string' &&
+        coreInstance.updateId == node.lastUpdateId
+      ) {
 
-    if (node && typeof node.ref == 'string') {
+        return Object.assign({}, node, {
+          ref: {
+            name: node.ref,
+            instance: parentNodeInstance,
+          }
+        })
 
-      return Object.assign({}, node, {
-        ref: {
-          instance,
-          name: node.ref,
-        }
-      })
+      }
 
-    }
+      return node
 
-    return node
-
-  })
+    })
 
 }

@@ -2,15 +2,19 @@ const createNodesWithRefs = require('../createNodesWithRefs')
 
 describe('Create nodes with refs', () => {
 
-  it('return new array ob ojects with asigned instance and ref name', () => {
+  it('return new array of objects with assigned refs', () => {
 
     expect(
-      createNodesWithRefs([{ ref: 'test' }], 'instance')
+      createNodesWithRefs(
+        [{ ref: 'test' }],
+        'parentNodInstance',
+        'coreInstance'
+      )
     ).toEqual([
       {
         ref: {
           name: 'test',
-          instance: 'instance'
+          instance: 'parentNodInstance'
         },
       }
     ])

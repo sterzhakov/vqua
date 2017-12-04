@@ -8,8 +8,7 @@ module.exports = ({
   context,
   injectedContext = {},
   afterRender,
-  beforeRender,
-  statistic
+  beforeRender
 } = {}) => {
 
   const newProps =

@@ -6,7 +6,6 @@ module.exports = ({
   templateNode,
   context,
   injectedContext,
-  statistic
 }) => {
 
   const liveType = liveNode.type

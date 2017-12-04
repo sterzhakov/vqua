@@ -1,7 +1,6 @@
 const Component = require('../../Component')
 const createRootNode = require('../../createNode/createRootNode')
 const { ROOT_TYPE } = require('../../../constants/nodeTypes')
-const Statistic = require('../../Statistic')
 
 describe('Create root node', () => {
 

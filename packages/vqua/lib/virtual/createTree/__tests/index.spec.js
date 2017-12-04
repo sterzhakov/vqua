@@ -1,6 +1,5 @@
 const Component = require('../../Component')
 const createTree = require('../../createTree')
-const Statistic = require('../../Statistic')
 const render = require('../../../dom/render')
 
 const {
@@ -91,7 +90,6 @@ describe('Create tree', () => {
         templateNodes,
         {
           context: { id: 'context' },
-          statistic: new Statistic,
         }
       )
 
@@ -157,14 +155,7 @@ describe('Create tree', () => {
 
     const templateNodes = [App.v()]
 
-    const newLiveNodes =
-      createTree(
-        liveNodes,
-        templateNodes,
-        {
-          statistic: new Statistic,
-        }
-      )
+    const newLiveNodes = createTree(liveNodes, templateNodes)
 
     expect(
       newLiveNodes[0].instance.refs.Form instanceof Form

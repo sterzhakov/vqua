@@ -1,5 +1,4 @@
 const Component = require('../../Component')
-const Statistic = require('../../Statistic')
 
 const createCallback = require('../../createTree/createCallback')
 
@@ -200,7 +199,6 @@ describe('Create tree, create callback:', () => {
           liveNode,
           templateNode,
           context,
-          statistic: new Statistic
         })
 
       const {
@@ -252,7 +250,6 @@ describe('Create tree, create callback:', () => {
           liveNode,
           templateNode,
           context,
-          statistic: new Statistic
         })
 
       const {
@@ -288,7 +285,6 @@ describe('Create tree, create callback:', () => {
         type: INSTANCE_TYPE,
         instance: new App({ id: 1 }, { id: 1 }),
         childs: [],
-        statistic: new Statistic
       }
 
       const templateNode = {
@@ -338,7 +334,6 @@ describe('Create tree, create callback:', () => {
           liveNode: null,
           context: true,
           liveParentInstanceNode: null,
-          statistic: new Statistic
         })
 
       const {

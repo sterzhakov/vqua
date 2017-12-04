@@ -1,7 +1,6 @@
 const Component = require('../../Component')
 const updateInstanceNode = require('../../createNode/updateInstanceNode')
 const { CLASS_TYPE } = require('../../../constants/nodeTypes')
-const Statistic = require('../../Statistic')
 
 describe('Update instance', () => {
 

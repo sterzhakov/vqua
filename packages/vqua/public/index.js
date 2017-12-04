@@ -299,31 +299,7 @@ module.exports = {
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-class Statistic {
-
-  constructor() {
-
-    this.lastInstanceId = 0
-
-  }
-
-  getLastInstanceId() {
-    return this.lastInstanceId
-  }
-
-  increaseLastInstanceId() {
-    return this.lastInstanceId = this.lastInstanceId + 1
-  }
-
-}
-
-module.exports = Statistic
-
-
-/***/ }),
+/* 4 */,
 /* 5 */
 /***/ (function(module, exports) {
 
@@ -615,9 +591,9 @@ const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(22)
 const decorateNodes = __webpack_require__(17)
 const createNodesWithRefs = __webpack_require__(41)
 const createTextNodes = __webpack_require__(42)
-const statistic = __webpack_require__(76)
+const core = __webpack_require__(129)
 
-module.exports = (liveNodes, templateNodes, options) => {
+module.exports = (liveNodes, templateNodes, options = {}) => {
 
   const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
 
@@ -652,7 +628,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       liveParentInstanceNode: options.liveParentInstanceNode || null,
       createContext: options.context || {},
       filterNodes,
-      statistic
+      core
     })
 
   return nodes
@@ -2123,8 +2099,7 @@ module.exports = ({
   context,
   injectedContext = {},
   afterRender,
-  beforeRender,
-  statistic
+  beforeRender
 } = {}) => {
 
   const newProps =
@@ -2173,19 +2148,13 @@ module.exports = ({
 /* 36 */
 /***/ (function(module, exports) {
 
-module.exports = ({ templateNode, statistic }) => {
+module.exports = ({ templateNode }) => {
 
-  const statisticParams = statistic
-    ? { statistic }
-    : {}
-
-  const newRootNode = {
+  return {
     type: templateNode.type,
     dom: templateNode.dom,
     childs: templateNode.childs,
   }
-
-  return Object.assign({}, newRootNode, statisticParams)
 
 }
 
@@ -2194,7 +2163,7 @@ module.exports = ({ templateNode, statistic }) => {
 /* 37 */
 /***/ (function(module, exports) {
 
-module.exports = ({ templateNode, statistic }) => {
+module.exports = ({ templateNode }) => {
 
   const keyParams =
     templateNode.key
@@ -2205,10 +2174,6 @@ module.exports = ({ templateNode, statistic }) => {
     templateNode.ref
       ? { ref: templateNode.ref }
       : {}
-
-  const statisticParams = statistic
-    ? { statistic }
-    : {}
 
   const newTagNode = {
     type: templateNode.type,
@@ -2230,7 +2195,6 @@ module.exports = ({ templateNode, statistic }) => {
   return Object.assign({},
     newTagNode,
     refParams,
-    statisticParams,
     keyParams,
     propsParams,
   )
@@ -2242,18 +2206,12 @@ module.exports = ({ templateNode, statistic }) => {
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = ({ templateNode, statistic }) => {
+module.exports = ({ templateNode }) => {
 
-  const statisticParams = statistic
-    ? { statistic }
-    : {}
-
-  const newTagNode = {
+  return {
     type: templateNode.type,
     text: templateNode.text,
   }
-
-  return Object.assign({}, newTagNode, statisticParams)
 
 }
 
@@ -2281,14 +2239,13 @@ module.exports = ({
   context = null,
   injectedContext = null,
   beforeRender = null,
-  statistic = null,
 }, callback) => {
 
   switch (type) {
 
     case CREATE_ROOT: {
 
-      const newRootNode = createRootNode({ templateNode, statistic })
+      const newRootNode = createRootNode({ templateNode })
 
       return newRootNode
 
@@ -2302,7 +2259,6 @@ module.exports = ({
           context,
           injectedContext,
           beforeRender,
-          statistic,
         })
 
       if (templateNode.ref) {
@@ -2325,8 +2281,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
-          injectedContext,
-          statistic
+          injectedContext
         })
 
       return newLiveNode
@@ -2341,7 +2296,7 @@ module.exports = ({
 
     case CREATE_TAG: {
 
-      const newTagNode = createTagNode({ templateNode, statistic })
+      const newTagNode = createTagNode({ templateNode })
 
       return newTagNode
 
@@ -2349,7 +2304,7 @@ module.exports = ({
 
     case CREATE_TEXT: {
 
-      const newTextNode = createTextNode({ templateNode, statistic })
+      const newTextNode = createTextNode({ templateNode })
 
       return newTextNode
 
@@ -2379,7 +2334,6 @@ module.exports = ({
   templateNode,
   context,
   injectedContext,
-  statistic
 }) => {
 
   const liveType = liveNode.type
@@ -2438,26 +2392,27 @@ module.exports = ({
 
 const mapNodes = __webpack_require__(50)
 
-module.exports = (nodes, instance) => {
+module.exports = (nodes, parentNodeInstance, coreInstance) => {
 
-  if (!nodes) return []
+    return mapNodes(nodes, node => {
 
-  return mapNodes(nodes, (node) => {
+      if (
+        node && typeof node.ref == 'string' &&
+        coreInstance.updateId == node.lastUpdateId
+      ) {
 
-    if (node && typeof node.ref == 'string') {
+        return Object.assign({}, node, {
+          ref: {
+            name: node.ref,
+            instance: parentNodeInstance,
+          }
+        })
 
-      return Object.assign({}, node, {
-        ref: {
-          instance,
-          name: node.ref,
-        }
-      })
+      }
 
-    }
+      return node
 
-    return node
-
-  })
+    })
 
 }
 
@@ -2524,7 +2479,6 @@ module.exports = ({
     hooks: false,
   },
   context = {},
-  statistic = null,
 }) => {
 
   const injectedContext =
@@ -2552,7 +2506,6 @@ module.exports = ({
           type: CREATE_ROOT,
           liveNode,
           templateNode,
-          statistic,
         })
 
       return {
@@ -2575,7 +2528,6 @@ module.exports = ({
           templateNode,
           context,
           injectedContext,
-          statistic,
           beforeRender: (instance) => {
 
             if (options.hooks) {
@@ -2624,7 +2576,6 @@ module.exports = ({
           templateNode,
           injectedContext,
           context,
-          statistic,
         })
 
       const newContext =
@@ -2652,7 +2603,6 @@ module.exports = ({
           type: RESUME_INSTANCE,
           liveNode,
           templateNode,
-          statistic,
         })
 
       return {
@@ -2671,7 +2621,6 @@ module.exports = ({
           type: CREATE_TAG,
           liveNode,
           templateNode,
-          statistic,
         })
 
       return {
@@ -2692,7 +2641,6 @@ module.exports = ({
           type: CREATE_TEXT,
           liveNode,
           templateNode,
-          statistic
         })
 
       return {
@@ -2736,7 +2684,6 @@ const createNodes = ({
   createContext = {},
   liveParentNode = null,
   liveParentInstanceNode = null,
-  statistic = null,
   filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
     return {
       filteredLiveNodes: liveNodes,
@@ -2770,7 +2717,6 @@ const createNodes = ({
       options: createOptions,
       context: createContext,
       liveParentInstanceNode,
-      statistic
     })
 
     if (!newLiveNode) return newLiveNodes
@@ -2804,8 +2750,7 @@ const createNodes = ({
         createOptions,
         createContext: newContext,
         filterNodes,
-        index,
-        statistic
+        index
       })
 
     const childDomNodesCount  =
@@ -3367,7 +3312,7 @@ var map = {
 	"./patch/createTree/__tests/createCallback.spec.js": 72,
 	"./patch/createTree/__tests/createNodes.spec.js": 73,
 	"./patch/createTree/__tests/index.spec.js": 74,
-	"./virtual/Statistic/__tests/Statistic.spec.js": 75,
+	"./virtual/Core/__tests/Core.spec.js": 130,
 	"./virtual/__tests/Component.spec.js": 77,
 	"./virtual/__tests/assignDomNodes.spec.js": 78,
 	"./virtual/__tests/context.spec.js": 79,
@@ -5105,50 +5050,8 @@ describe('Create patch tree', () => {
 
 
 /***/ }),
-/* 75 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Statistic = __webpack_require__(4)
-
-describe('Statistic', () => {
-
-  it('default last id is 0', () => {
-
-    const statistic = new Statistic
-
-    expect(
-      statistic.getLastInstanceId()
-    ).toBe(0)
-
-  })
-
-  it('increase last id 3 times', () => {
-
-    const statistic = new Statistic
-
-    statistic.increaseLastInstanceId()
-    statistic.increaseLastInstanceId()
-    statistic.increaseLastInstanceId()
-
-    expect(
-      statistic.getLastInstanceId()
-    ).toBe(3)
-
-  })
-
-})
-
-
-/***/ }),
-/* 76 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Statistic = __webpack_require__(4)
-
-module.exports = new Statistic
-
-
-/***/ }),
+/* 75 */,
+/* 76 */,
 /* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5520,15 +5423,19 @@ const createNodesWithRefs = __webpack_require__(41)
 
 describe('Create nodes with refs', () => {
 
-  it('return new array ob ojects with asigned instance and ref name', () => {
+  it('return new array of objects with assigned refs', () => {
 
     expect(
-      createNodesWithRefs([{ ref: 'test' }], 'instance')
+      createNodesWithRefs(
+        [{ ref: 'test' }],
+        'parentNodInstance',
+        'coreInstance'
+      )
     ).toEqual([
       {
         ref: {
           name: 'test',
-          instance: 'instance'
+          instance: 'parentNodInstance'
         },
       }
     ])
@@ -7466,7 +7373,7 @@ const createInstanceNode = __webpack_require__(35)
 const {
   TAG_TYPE, TEXT_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
-const Statistic = __webpack_require__(4)
+const Core = __webpack_require__(127)
 
 describe('Create instance node', () => {
 
@@ -7565,7 +7472,6 @@ describe('Create instance node', () => {
 const Component = __webpack_require__(2)
 const createRootNode = __webpack_require__(36)
 const { ROOT_TYPE } = __webpack_require__(0)
-const Statistic = __webpack_require__(4)
 
 describe('Create root node', () => {
 
@@ -7593,7 +7499,6 @@ describe('Create root node', () => {
 const Component = __webpack_require__(2)
 const createTagNode = __webpack_require__(37)
 const { TAG_TYPE } = __webpack_require__(0)
-const Statistic = __webpack_require__(4)
 
 describe('Create tag node', () => {
 
@@ -7886,7 +7791,6 @@ describe('Create node', () => {
 const Component = __webpack_require__(2)
 const updateInstanceNode = __webpack_require__(40)
 const { CLASS_TYPE } = __webpack_require__(0)
-const Statistic = __webpack_require__(4)
 
 describe('Update instance', () => {
 
@@ -7988,7 +7892,6 @@ describe('Update instance', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const Statistic = __webpack_require__(4)
 
 const createCallback = __webpack_require__(43)
 
@@ -8189,7 +8092,6 @@ describe('Create tree, create callback:', () => {
           liveNode,
           templateNode,
           context,
-          statistic: new Statistic
         })
 
       const {
@@ -8241,7 +8143,6 @@ describe('Create tree, create callback:', () => {
           liveNode,
           templateNode,
           context,
-          statistic: new Statistic
         })
 
       const {
@@ -8277,7 +8178,6 @@ describe('Create tree, create callback:', () => {
         type: INSTANCE_TYPE,
         instance: new App({ id: 1 }, { id: 1 }),
         childs: [],
-        statistic: new Statistic
       }
 
       const templateNode = {
@@ -8327,7 +8227,6 @@ describe('Create tree, create callback:', () => {
           liveNode: null,
           context: true,
           liveParentInstanceNode: null,
-          statistic: new Statistic
         })
 
       const {
@@ -8744,7 +8643,6 @@ describe('Create nodes:', () => {
 
 const Component = __webpack_require__(2)
 const createTree = __webpack_require__(11)
-const Statistic = __webpack_require__(4)
 const render = __webpack_require__(7)
 
 const {
@@ -8835,7 +8733,6 @@ describe('Create tree', () => {
         templateNodes,
         {
           context: { id: 'context' },
-          statistic: new Statistic,
         }
       )
 
@@ -8901,14 +8798,7 @@ describe('Create tree', () => {
 
     const templateNodes = [App.v()]
 
-    const newLiveNodes =
-      createTree(
-        liveNodes,
-        templateNodes,
-        {
-          statistic: new Statistic,
-        }
-      )
+    const newLiveNodes = createTree(liveNodes, templateNodes)
 
     expect(
       newLiveNodes[0].instance.refs.Form instanceof Form
@@ -9910,6 +9800,76 @@ const union = (first, second) => {
 }
 
 module.exports = union
+
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports) {
+
+class Core {
+
+  constructor() {
+
+    this.lastUpdateId = 0
+
+  }
+
+  getLastUpdateId() {
+    return this.lastUpdateId
+  }
+
+  increaseLastUpdateId() {
+    return this.lastUpdateId = this.lastUpdateId + 1
+  }
+
+}
+
+module.exports = Core
+
+
+/***/ }),
+/* 128 */,
+/* 129 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Core = __webpack_require__(127)
+
+module.exports = new Core
+
+
+/***/ }),
+/* 130 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Core = __webpack_require__(127)
+
+describe('Core', () => {
+
+  it('default last id is 0', () => {
+
+    const core = new Core
+
+    expect(
+      core.getLastUpdateId()
+    ).toBe(0)
+
+  })
+
+  it('increase last id 3 times', () => {
+
+    const core = new Core
+
+    core.increaseLastUpdateId()
+    core.increaseLastUpdateId()
+    core.increaseLastUpdateId()
+
+    expect(
+      core.getLastUpdateId()
+    ).toBe(3)
+
+  })
+
+})
 
 
 /***/ })

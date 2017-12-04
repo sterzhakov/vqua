@@ -17,14 +17,13 @@ module.exports = ({
   context = null,
   injectedContext = null,
   beforeRender = null,
-  statistic = null,
 }, callback) => {
 
   switch (type) {
 
     case CREATE_ROOT: {
 
-      const newRootNode = createRootNode({ templateNode, statistic })
+      const newRootNode = createRootNode({ templateNode })
 
       return newRootNode
 
@@ -38,7 +37,6 @@ module.exports = ({
           context,
           injectedContext,
           beforeRender,
-          statistic,
         })
 
       if (templateNode.ref) {
@@ -61,8 +59,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
-          injectedContext,
-          statistic
+          injectedContext
         })
 
       return newLiveNode
@@ -77,7 +74,7 @@ module.exports = ({
 
     case CREATE_TAG: {
 
-      const newTagNode = createTagNode({ templateNode, statistic })
+      const newTagNode = createTagNode({ templateNode })
 
       return newTagNode
 
@@ -85,7 +82,7 @@ module.exports = ({
 
     case CREATE_TEXT: {
 
-      const newTextNode = createTextNode({ templateNode, statistic })
+      const newTextNode = createTextNode({ templateNode })
 
       return newTextNode
 

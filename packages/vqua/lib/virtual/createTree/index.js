@@ -5,9 +5,9 @@ const { sortLiveNodes, sortTemplateNodes } = require('../sortNodes')
 const decorateNodes = require('../decorateNodes')
 const createNodesWithRefs = require('../createNodesWithRefs')
 const createTextNodes = require('../createTextNodes')
-const statistic = require('../Statistic/singleton')
+const core = require('../Core/singleton')
 
-module.exports = (liveNodes, templateNodes, options) => {
+module.exports = (liveNodes, templateNodes, options = {}) => {
 
   const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
 
@@ -42,7 +42,7 @@ module.exports = (liveNodes, templateNodes, options) => {
       liveParentInstanceNode: options.liveParentInstanceNode || null,
       createContext: options.context || {},
       filterNodes,
-      statistic
+      core
     })
 
   return nodes
