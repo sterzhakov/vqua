@@ -1,4 +1,5 @@
-const { flatten, pick } = require('berries')
+const B = require('berries')
+const createNodesWithRefs = require('../createNodesWithRefs')
 
 module.exports = ({
   liveNode,
@@ -15,23 +16,30 @@ module.exports = ({
   liveInstance.prevState = liveInstance.state
   liveInstance.prevContext = liveInstance.context
 
-  const defaultProps = templateNode.class.defaultProps()
+  const newProps =
+    Object.assign({},
+      templateNode.class.defaultProps(),
+      templateNode.props
+    )
 
-  const mergedProps = Object.assign({}, defaultProps, templateNode.props)
-
-  liveInstance.props = mergedProps
+  liveInstance.props = newProps
   liveInstance.state = liveInstance.state
-
   liveInstance.context = injectedContext
 
-  const childs = flatten([liveInstance.render() || null])
+  const keyParams =
+    templateNode.key
+      ? { key: templateNode.key }
+      : {}
 
-  const statisticParams = statistic
-    ? {
-        statistic,
-        instanceId: statistic.getLastInstanceId(),
-      }
-    : {}
+  const refParams =
+    templateNode.ref
+      ? { ref: templateNode.ref }
+      : {}
+
+  const childs = createNodesWithRefs(
+    B.flatten([ liveInstance.render() || null ]),
+    liveInstance
+  )
 
   const newInstanceNode =
     Object.assign({}, {
@@ -39,7 +47,10 @@ module.exports = ({
       type: liveType,
       instance: liveInstance,
       childs,
-    }, statisticParams)
+    },
+      keyParams,
+      refParams
+    )
 
   liveInstance.node = newInstanceNode
 

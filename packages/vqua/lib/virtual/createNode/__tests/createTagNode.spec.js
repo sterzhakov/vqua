@@ -27,24 +27,6 @@ describe('Create tag node', () => {
 
   })
 
-  it('create node with statistic params', () => {
-
-    const templateNode = {
-      type: TAG_TYPE,
-      tag: 'div',
-      props: {},
-      childs: [],
-    }
-
-    const newNode =
-      createTagNode({
-        templateNode,
-        statistic: new Statistic
-      })
-
-    expect(newNode.statistic instanceof Statistic).toBe(true)
-
-  })
 
   it('return clone of template node', () => {
 

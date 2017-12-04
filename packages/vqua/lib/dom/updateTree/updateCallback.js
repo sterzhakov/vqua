@@ -45,27 +45,13 @@ module.exports = ({
 
         } else {
 
-          const liveInstanceId = (
-            liveNode &&
-            liveNode.instance &&
-            liveNode.instance.node.instanceId
-          )
-
-          const templateInstanceId = (
-            templateNode &&
-            templateNode.instance &&
-            templateNode.instance.node.instanceId
-          )
-
           updateProps(
             liveNode.dom,
             liveNode.props,
             templateNode.props,
             (leftValue, rightValue, isFunctions) => {
 
-              return (isFunctions && liveInstanceId != templateInstanceId)
-                ? false
-                : isPropsEqual(leftValue, rightValue)
+              return isPropsEqual(leftValue, rightValue)
 
             }
           )

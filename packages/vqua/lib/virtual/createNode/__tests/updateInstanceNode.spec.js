@@ -5,41 +5,6 @@ const Statistic = require('../../Statistic')
 
 describe('Update instance', () => {
 
-  it('create node with statistic param', () => {
-
-    class App extends Component {
-
-      render() {
-        return this.props.id
-      }
-
-    }
-
-    const templateNode = {
-      type: CLASS_TYPE,
-      props: {},
-      childs: [],
-      class: App,
-    }
-
-    const liveNode = {
-      type: CLASS_TYPE,
-      instance: new App,
-    }
-
-    const newNode =
-      updateInstanceNode({
-        liveNode,
-        templateNode,
-        statistic: new Statistic,
-        context: {},
-      })
-
-    expect(newNode.statistic instanceof Statistic).toBe(true)
-    expect(newNode.instanceId).toBe(0)
-
-  })
-
   it('create node with new instance params', () => {
 
     class App extends Component {

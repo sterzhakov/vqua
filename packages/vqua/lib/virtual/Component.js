@@ -23,13 +23,16 @@ class Base {
 
   static v(props = {}, ...childs) {
 
-    const newProps = Object.assign({}, omit(props, 'ref', 'key'), { childs })
+    const newProps =
+      Object.assign({},
+        omit(props, 'ref', 'key'),
+        { childs }
+      )
 
     const refParams =
       props.ref
         ? { ref: props.ref }
         : {}
-
 
     const keyParams = props.key
       ? { key: props.key }
@@ -72,6 +75,12 @@ class Base {
   passContext() {
 
     return {}
+
+  }
+
+  render() {
+
+    return null
 
   }
 

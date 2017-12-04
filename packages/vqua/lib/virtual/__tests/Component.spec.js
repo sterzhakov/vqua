@@ -54,7 +54,9 @@ describe('Component', () => {
     class App extends Component {}
 
     expect(
-      App.v({ id: 1, ref: 'app' }, 'test')
+      App.v({ id: 1, ref: 'app' },
+        'test'
+      )
     ).toEqual({
       type: CLASS_TYPE,
       props: {
@@ -64,7 +66,7 @@ describe('Component', () => {
         ]
       },
       class: App,
-      ref: 'app'
+      ref: 'app',
     })
 
   })

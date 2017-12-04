@@ -1,5 +1,10 @@
 module.exports = ({ templateNode, statistic }) => {
 
+  const keyParams =
+    templateNode.key
+      ? { key: templateNode.key }
+      : {}
+
   const refParams =
     templateNode.ref
       ? { ref: templateNode.ref }
@@ -8,11 +13,6 @@ module.exports = ({ templateNode, statistic }) => {
   const statisticParams = statistic
     ? { statistic }
     : {}
-
-  const keyParams =
-    templateNode.key
-      ? { key: templateNode.key }
-      : {}
 
   const newTagNode = {
     type: templateNode.type,

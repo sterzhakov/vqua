@@ -14,11 +14,8 @@ module.exports = (liveNodes, templateNodes, options) => {
     const textTemplateNodes =
       createTextNodes(flatten([templateNodes]))
 
-    const refsTemplateNodes =
-      createNodesWithRefs(textTemplateNodes, liveParentInstanceNode)
-
     const sortedTemplateNodes =
-      sortTemplateNodes(refsTemplateNodes)
+      sortTemplateNodes(textTemplateNodes)
 
     const sortedLiveNodes =
       sortLiveNodes(liveNodes, { templateNodes: sortedTemplateNodes })

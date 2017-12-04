@@ -1,4 +1,4 @@
-const { flatten, pick } = require('berries')
+const B = require('berries')
 const hookNode = require('../hookNode')
 const { INSTANCE_TYPE } = require('../../constants/nodeTypes')
 const createNodesWithRefs = require('../createNodesWithRefs')
@@ -12,15 +12,15 @@ module.exports = ({
   statistic
 } = {}) => {
 
-  const defaultProps = templateNode.class.defaultProps()
+  const newProps =
+    Object.assign({},
+      templateNode.class.defaultProps(),
+      templateNode.props
+    )
 
-  const mergedProps = Object.assign({}, defaultProps, templateNode.props)
-
-  const instance = new templateNode.class(mergedProps, injectedContext)
+  const instance = new templateNode.class(newProps, injectedContext)
 
   if (beforeRender) beforeRender(instance)
-
-  const childs = 'render' in instance && flatten([instance.render()]) || []
 
   const refParams = templateNode.ref
     ? { ref: templateNode.ref }
@@ -30,12 +30,10 @@ module.exports = ({
     ? { key: templateNode.key }
     : {}
 
-  const statisticParams = statistic
-    ? {
-        instanceId: statistic.increaseLastInstanceId(),
-        statistic,
-      }
-    : {}
+  const childs = createNodesWithRefs(
+    B.flatten([ instance.render() || null ]),
+    instance
+  )
 
   const newInstanceNode =
     Object.assign({}, {
@@ -46,8 +44,7 @@ module.exports = ({
       childs,
     },
       refParams,
-      keyParams,
-      statisticParams
+      keyParams
     )
 
   instance.node = newInstanceNode

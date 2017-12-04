@@ -210,7 +210,6 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
-      expect(newLiveNode.statistic).toBeDefined()
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.instance instanceof App).toBe(true)
       expect(newLiveNode.instance.props).toEqual({ id: 1 })
@@ -264,7 +263,6 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
-      expect(newLiveNode.statistic).toBeDefined()
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.childs).toEqual([ null ])
       expect(newContext).toEqual({ id: 2 })
@@ -316,7 +314,6 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
-      expect(newLiveNode.statistic).toBeDefined()
       expect(isNeedChilds).toBe(false)
       expect(newLiveNode.childs).toEqual([])
       expect(newLiveNode.instance.nextProps).toEqual({})
@@ -351,7 +348,6 @@ describe('Create tree, create callback:', () => {
         newLiveParentInstanceNode
       } = newLiveNodeParams
 
-      expect(newLiveNode.statistic).toBeDefined()
       expect(newLiveNode.type).toEqual(templateNode.type)
       expect(newLiveNode.tag).toEqual(templateNode.tag)
       expect(newLiveNode.props).toEqual(templateNode.props)

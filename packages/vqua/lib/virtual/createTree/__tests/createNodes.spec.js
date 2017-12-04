@@ -6,42 +6,6 @@ const {
 
 describe('Create nodes:', () => {
 
-  it('pass statistic', () => {
-
-    const templateNodes = [
-      {
-        tag: 'div',
-        childs: [
-          {
-            tag: 'div',
-            childs: []
-          },
-        ]
-      }
-    ]
-
-    const statistic = 'statistic'
-
-    const nodes =
-      createNodes({
-        statistic,
-        liveNodes: templateNodes,
-        templateNodes,
-        createNode: ({ templateNode, statistic }, callback) => {
-          return {
-            newLiveNode: { tag: templateNode.tag, statistic },
-            isNeedChilds: true,
-            liveChilds: templateNode.childs,
-            templateChilds: templateNode.childs,
-          }
-        }
-      })
-
-    expect(nodes[0].statistic).toBe(statistic)
-    expect(nodes[0].childs[0].statistic).toBe(statistic)
-
-  })
-
   it('link parent nodes', () => {
 
     const templateNodes = [

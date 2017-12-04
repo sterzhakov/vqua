@@ -1,6 +1,6 @@
 const createNode = require('../../createNode/index')
 const Component = require('../../Component')
-const Statistic = require('../../Statistic')
+
 
 const {
   ROOT_TYPE, CLASS_TYPE, INSTANCE_TYPE, TAG_TYPE, TEXT_TYPE
@@ -36,13 +36,11 @@ describe('Create node', () => {
         type: CREATE_INSTANCE,
         templateNode,
         context: {},
-        statistic: new Statistic,
       })
 
-    expect(node.childs).toEqual([])
+    expect(node.childs).toEqual([null])
     expect(node.type).toEqual(INSTANCE_TYPE)
     expect(node.instance instanceof templateNode.class).toBe(true)
-    expect(node.statistic).toBeDefined()
 
   })
 
@@ -112,10 +110,8 @@ describe('Create node', () => {
         liveNode,
         templateNode,
         context,
-        statistic: new Statistic,
       })
 
-    expect(node.statistic).toBeDefined()
     expect(node.type).toEqual(INSTANCE_TYPE)
     expect(node.instance instanceof templateNode.class).toBe(true)
 
@@ -127,7 +123,6 @@ describe('Create node', () => {
       type: INSTANCE_TYPE,
       instance: {},
       childs: [],
-      statistic: new Statistic,
     }
 
     const node =
@@ -137,7 +132,6 @@ describe('Create node', () => {
         context: {},
       })
 
-    expect(node.statistic).toBeDefined()
     expect(node).toEqual(liveNode)
 
   })
@@ -156,10 +150,8 @@ describe('Create node', () => {
         type: CREATE_TAG,
         templateNode,
         context: {},
-        statistic: new Statistic,
       })
 
-    expect(node.statistic).toBeDefined()
     expect(node.type).toEqual(templateNode.type)
     expect(node.tag).toEqual(templateNode.tag)
     expect(node.props).toEqual(templateNode.props)
@@ -179,10 +171,8 @@ describe('Create node', () => {
         type: CREATE_TEXT,
         templateNode,
         context: {},
-        statistic: new Statistic,
       })
 
-    expect(node.statistic).toBeDefined()
     expect(node.type).toEqual(templateNode.type)
     expect(node.text).toEqual(templateNode.text)
 
@@ -201,10 +191,8 @@ describe('Create node', () => {
         type: CREATE_ROOT,
         templateNode,
         context: {},
-        statistic: new Statistic,
       })
 
-    expect(node.statistic).toBeDefined()
     expect(node.type).toEqual(templateNode.type)
     expect(node.dom).toEqual(templateNode.dom)
     expect(node.childs).toEqual(templateNode.childs)
