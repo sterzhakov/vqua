@@ -5216,7 +5216,6 @@ describe('Component', () => {
       rootDomNode.childNodes[0].childNodes[0].textContent
     ).toBe('1')
 
-
   })
 
 })
