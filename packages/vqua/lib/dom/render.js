@@ -1,4 +1,4 @@
-const { flatten } = require('berries')
+const B = require('berries')
 const { ROOT_TYPE, INSTANCE_TYPE } = require('../constants/nodeTypes')
 const createLiveTree = require('../virtual/createTree')
 const filterDomNodes = require('../virtual/filterDomNodes')
@@ -16,7 +16,7 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
     {
       type: ROOT_TYPE,
       dom: parentDomNode,
-      childs: flatten([templateNodes]),
+      childs: B.flatten([templateNodes]),
     }
   ]
 

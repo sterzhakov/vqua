@@ -1,4 +1,4 @@
-const { omit } = require('berries')
+const B = require('berries')
 
 const addRef = (node, payload) => {
 
@@ -12,7 +12,7 @@ const addRef = (node, payload) => {
 const removeRef = (node) => {
 
   node.ref.instance.refs =
-    omit(node.ref.instance.refs, node.ref.name)
+    B.omit(node.ref.instance.refs, node.ref.name)
 
 }
 

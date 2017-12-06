@@ -1,6 +1,6 @@
 const { TAG_TYPE, TEXT_TYPE } = require('../../constants/nodeTypes')
 const tags = require('./tags')
-const { flatten, include, omit } = require('berries')
+const B = require('berries')
 
 const h = (tag, props = {}, childs) => {
 
@@ -12,7 +12,7 @@ const h = (tag, props = {}, childs) => {
     ? { key: props.key }
     : {}
 
-  const newProps = omit(props, 'ref', 'key')
+  const newProps = B.omit(props, 'ref', 'key')
 
   const baseParams = {
     tag,

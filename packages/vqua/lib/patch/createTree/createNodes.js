@@ -1,4 +1,4 @@
-const { times } = require('berries')
+const B = require('berries')
 
 const createNodes = ({
   offset = 0,
@@ -24,7 +24,7 @@ const createNodes = ({
     filteredTemplateNodes.length
   )
 
-  return times(maxLength).reduce((patchNodes, index) => {
+  return B.times(maxLength).reduce((patchNodes, index) => {
 
     const templateNode = filteredTemplateNodes[index] || null
     const liveNode = filteredLiveNodes[index] || null

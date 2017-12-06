@@ -1,4 +1,3 @@
-const { flatten } = require('berries')
 const { TEXT_TYPE } = require('../constants/nodeTypes')
 
 module.exports = (childs) => {

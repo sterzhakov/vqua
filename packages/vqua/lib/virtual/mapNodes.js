@@ -1,8 +1,8 @@
-const { kindOf } = require('berries')
+const B = require('berries')
 
 const loop = (node, callback) => {
 
-  const nodeType = kindOf(node)
+  const nodeType = B.kindOf(node)
 
   if (nodeType == 'array') {
 

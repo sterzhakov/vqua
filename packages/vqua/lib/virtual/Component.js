@@ -1,5 +1,5 @@
+const B = require('berries')
 const humanizeNodes = require('./humanizeNodes')
-const { flatten, omit, clone, pick } = require('berries')
 const countDomNodes = require('./countDomNodes')
 const createLiveTree = require('./createTree')
 const filterDomNodes = require('./filterDomNodes')
@@ -25,7 +25,7 @@ class Base {
 
   static v(props = {}, ...childs) {
 
-    const newProps = omit(props, 'ref', 'key')
+    const newProps = B.omit(props, 'ref', 'key')
 
     const baseParams = {
       type: CLASS_TYPE,
@@ -88,10 +88,10 @@ class Base {
 
     const newMergedState = Object.assign({}, this.state, newState)
 
-    const newContext = clone(this.node.context)
+    const newContext = B.clone(this.node.context)
 
     const injectedContext = this.constructor.injectContext
-      ? pick(newContext, ...this.constructor.injectContext())
+      ? B.pick(newContext, ...this.constructor.injectContext())
       : {}
 
     if (
@@ -111,7 +111,7 @@ class Base {
     const liveNodes = this.node.childs
 
     const templateNodes = createNodesWithRefs(
-      flatten([ this.render() ]),
+      B.flatten([ this.render() ]),
       this
     )
 

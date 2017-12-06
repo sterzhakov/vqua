@@ -1,8 +1,8 @@
-const { union } = require('berries')
+const B = require('berries')
 
 module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
-  const keys = union(
+  const keys = B.union(
     Object.keys(leftProps),
     Object.keys(rightProps)
   )

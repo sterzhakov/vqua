@@ -1,4 +1,4 @@
-const { include, omit } = require('berries')
+const B = require('berries')
 const {
   TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = require('../constants/nodeTypes')
@@ -25,7 +25,7 @@ const loop = (node, level = 0) => {
   if (node.type == TAG_TYPE) {
 
     const childs = node.childs ? loop(node.childs, level + 1) : ''
-    const props = omit(node.props, 'childs')
+    const props = B.omit(node.props, 'childs')
 
     return (
       INDENT +
@@ -41,7 +41,7 @@ const loop = (node, level = 0) => {
   if (node.type == CLASS_TYPE) {
 
     const childs = node.childs ? loop(node.childs, level + 1) : ''
-    const props = omit(node.props, 'childs')
+    const props = B.omit(node.props, 'childs')
 
     return (
       INDENT +
@@ -56,7 +56,7 @@ const loop = (node, level = 0) => {
   if (node.type == INSTANCE_TYPE) {
 
     const childs = node.childs ? loop(node.childs, level + 1) : ''
-    const props = omit(node.instance.props, 'childs')
+    const props = B.omit(node.instance.props, 'childs')
 
     return (
       INDENT +

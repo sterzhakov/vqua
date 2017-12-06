@@ -1,4 +1,4 @@
-const { omit, flatten } = require('berries')
+const B = require('berries')
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = require('../constants/nodeTypes')
@@ -13,14 +13,14 @@ const loop = (node, instance = null) => {
       return (newNode) ? [ ...newNodes,  newNode] : newNodes
     }, [])
 
-    return flatten(newNodes)
+    return B.flatten(newNodes)
 
   } else
 
   if (node.type == TAG_TYPE) {
 
     return Object.assign({},
-      omit(node, 'childs'),
+      B.omit(node, 'childs'),
       { instance },
       { childs: loop(node.childs, instance) }
     )

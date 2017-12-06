@@ -1,15 +1,15 @@
-const { kindOf } = require('berries')
+const B = require('berries')
 
 module.exports = (leftProp, rightProp) => {
 
   const left = {
     prop: leftProp,
-    type: kindOf(leftProp)
+    type: B.kindOf(leftProp)
   }
 
   const right = {
     prop: rightProp,
-    type: kindOf(rightProp)
+    type: B.kindOf(rightProp)
   }
 
   if (left.type == right.type) {

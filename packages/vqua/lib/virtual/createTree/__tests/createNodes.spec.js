@@ -1,5 +1,5 @@
 const createNodes = require('../../createTree/createNodes')
-const { omit } = require('berries')
+const B = require('berries')
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = require('../../../constants/nodeTypes')
@@ -223,7 +223,7 @@ describe('Create nodes:', () => {
           return {
             newLiveNode: node,
             isNeedChilds: templateNode.hasOwnProperty('childs'),
-            newContext: omit(node, 'childs'),
+            newContext: B.omit(node, 'childs'),
             liveChilds: liveNode.childs,
             templateChilds: templateNode.childs,
           }

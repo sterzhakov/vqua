@@ -1,4 +1,4 @@
-const { flatten, include } = require('berries')
+const B = require('berries')
 
 
 const isKeyedNode = node => {
@@ -62,7 +62,7 @@ const sortUnusedLiveNodes = ({ liveNodes, usedLiveIds }) => {
 
   return liveNodes.filter((liveNode, index) => {
 
-    return !include(usedLiveIds, liveNode.id)
+    return !B.include(usedLiveIds, liveNode.id)
 
   })
 
@@ -113,7 +113,7 @@ const sortLiveNodes = (liveNodes = [], { templateNodes = [] }) => {
 
 const sortTemplateNodes = (templateNodes = []) => {
 
-  return flatten([templateNodes]).filter(node => node != null)
+  return B.flatten([templateNodes]).filter(node => node != null)
 
 }
 

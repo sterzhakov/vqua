@@ -1,4 +1,4 @@
-const { intersect } = require('berries')
+const B = require('berries')
 const countActionsScore = require('../../action/countActionsScore')
 const getNodeActions = require('../../action/getNodeActions')
 const { DELETE_NODE, REPLACE_NODE } = require('../../constants/actionTypes')
@@ -12,12 +12,12 @@ module.exports = ({ liveNode, templateNode, limit }) => {
   const nextLimit = limit + actionsScore
 
   const newLiveNode =
-    intersect(actions, [ DELETE_NODE, REPLACE_NODE ]).length
+    B.intersect(actions, [ DELETE_NODE, REPLACE_NODE ]).length
       ? Object.assign({}, liveNode, { childs: [] })
       : liveNode
 
   const newTemplateNode =
-    intersect(actions, [ DELETE_NODE ]).length
+    B.intersect(actions, [ DELETE_NODE ]).length
       ? Object.assign({}, templateNode, { childs: [] })
       : templateNode
 

@@ -110,8 +110,8 @@ module.exports = {
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
+const B = __webpack_require__(1)
 const humanizeNodes = __webpack_require__(22)
-const { flatten, omit, clone, pick } = __webpack_require__(1)
 const countDomNodes = __webpack_require__(9)
 const createLiveTree = __webpack_require__(11)
 const filterDomNodes = __webpack_require__(21)
@@ -137,7 +137,7 @@ class Base {
 
   static v(props = {}, ...childs) {
 
-    const newProps = omit(props, 'ref', 'key')
+    const newProps = B.omit(props, 'ref', 'key')
 
     const baseParams = {
       type: CLASS_TYPE,
@@ -200,10 +200,10 @@ class Base {
 
     const newMergedState = Object.assign({}, this.state, newState)
 
-    const newContext = clone(this.node.context)
+    const newContext = B.clone(this.node.context)
 
     const injectedContext = this.constructor.injectContext
-      ? pick(newContext, ...this.constructor.injectContext())
+      ? B.pick(newContext, ...this.constructor.injectContext())
       : {}
 
     if (
@@ -223,7 +223,7 @@ class Base {
     const liveNodes = this.node.childs
 
     const templateNodes = createNodesWithRefs(
-      flatten([ this.render() ]),
+      B.flatten([ this.render() ]),
       this
     )
 
@@ -331,7 +331,7 @@ module.exports = {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { flatten } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const { ROOT_TYPE, INSTANCE_TYPE } = __webpack_require__(0)
 const createLiveTree = __webpack_require__(11)
 const filterDomNodes = __webpack_require__(21)
@@ -349,7 +349,7 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
     {
       type: ROOT_TYPE,
       dom: parentDomNode,
-      childs: flatten([templateNodes]),
+      childs: B.flatten([templateNodes]),
     }
   ]
 
@@ -506,18 +506,18 @@ module.exports = (action, liveNode, templateNode, context) => {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { kindOf } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 module.exports = (leftProp, rightProp) => {
 
   const left = {
     prop: leftProp,
-    type: kindOf(leftProp)
+    type: B.kindOf(leftProp)
   }
 
   const right = {
     prop: rightProp,
-    type: kindOf(rightProp)
+    type: B.kindOf(rightProp)
   }
 
   if (left.type == right.type) {
@@ -702,7 +702,7 @@ module.exports = loop
 
 const { TAG_TYPE, TEXT_TYPE } = __webpack_require__(0)
 const tags = __webpack_require__(107)
-const { flatten, include, omit } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 const h = (tag, props = {}, childs) => {
 
@@ -714,7 +714,7 @@ const h = (tag, props = {}, childs) => {
     ? { key: props.key }
     : {}
 
-  const newProps = omit(props, 'ref', 'key')
+  const newProps = B.omit(props, 'ref', 'key')
 
   const baseParams = {
     tag,
@@ -745,11 +745,11 @@ tags.forEach((tag) => {
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { kindOf } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 const loop = (node, callback) => {
 
-  const nodeType = kindOf(node)
+  const nodeType = B.kindOf(node)
 
   if (nodeType == 'array') {
 
@@ -787,7 +787,7 @@ module.exports = loop
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { omit } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 const addRef = (node, payload) => {
 
@@ -801,7 +801,7 @@ const addRef = (node, payload) => {
 const removeRef = (node) => {
 
   node.ref.instance.refs =
-    omit(node.ref.instance.refs, node.ref.name)
+    B.omit(node.ref.instance.refs, node.ref.name)
 
 }
 
@@ -993,7 +993,7 @@ module.exports = (nodes, { dom = false, order = false }) => {
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { omit, flatten } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
@@ -1008,14 +1008,14 @@ const loop = (node, instance = null) => {
       return (newNode) ? [ ...newNodes,  newNode] : newNodes
     }, [])
 
-    return flatten(newNodes)
+    return B.flatten(newNodes)
 
   } else
 
   if (node.type == TAG_TYPE) {
 
     return Object.assign({},
-      omit(node, 'childs'),
+      B.omit(node, 'childs'),
       { instance },
       { childs: loop(node.childs, instance) }
     )
@@ -1053,7 +1053,7 @@ module.exports = loop
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { include, omit } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const {
   TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
@@ -1080,7 +1080,7 @@ const loop = (node, level = 0) => {
   if (node.type == TAG_TYPE) {
 
     const childs = node.childs ? loop(node.childs, level + 1) : ''
-    const props = omit(node.props, 'childs')
+    const props = B.omit(node.props, 'childs')
 
     return (
       INDENT +
@@ -1096,7 +1096,7 @@ const loop = (node, level = 0) => {
   if (node.type == CLASS_TYPE) {
 
     const childs = node.childs ? loop(node.childs, level + 1) : ''
-    const props = omit(node.props, 'childs')
+    const props = B.omit(node.props, 'childs')
 
     return (
       INDENT +
@@ -1111,7 +1111,7 @@ const loop = (node, level = 0) => {
   if (node.type == INSTANCE_TYPE) {
 
     const childs = node.childs ? loop(node.childs, level + 1) : ''
-    const props = omit(node.instance.props, 'childs')
+    const props = B.omit(node.instance.props, 'childs')
 
     return (
       INDENT +
@@ -1136,7 +1136,7 @@ module.exports = loop
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { flatten, include } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 
 const isKeyedNode = node => {
@@ -1200,7 +1200,7 @@ const sortUnusedLiveNodes = ({ liveNodes, usedLiveIds }) => {
 
   return liveNodes.filter((liveNode, index) => {
 
-    return !include(usedLiveIds, liveNode.id)
+    return !B.include(usedLiveIds, liveNode.id)
 
   })
 
@@ -1251,7 +1251,7 @@ const sortLiveNodes = (liveNodes = [], { templateNodes = [] }) => {
 
 const sortTemplateNodes = (templateNodes = []) => {
 
-  return flatten([templateNodes]).filter(node => node != null)
+  return B.flatten([templateNodes]).filter(node => node != null)
 
 }
 
@@ -1458,11 +1458,11 @@ module.exports = ({ liveNode, templateNode }) => {
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { union } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 module.exports = (leftProps = {}, rightProps = {}, isPropsEqual) => {
 
-  const keys = union(
+  const keys = B.union(
     Object.keys(leftProps),
     Object.keys(rightProps)
   )
@@ -2034,7 +2034,7 @@ module.exports = updateNodes
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { intersect } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const countActionsScore = __webpack_require__(26)
 const getNodeActions = __webpack_require__(27)
 const { DELETE_NODE, REPLACE_NODE } = __webpack_require__(3)
@@ -2048,12 +2048,12 @@ module.exports = ({ liveNode, templateNode, limit }) => {
   const nextLimit = limit + actionsScore
 
   const newLiveNode =
-    intersect(actions, [ DELETE_NODE, REPLACE_NODE ]).length
+    B.intersect(actions, [ DELETE_NODE, REPLACE_NODE ]).length
       ? Object.assign({}, liveNode, { childs: [] })
       : liveNode
 
   const newTemplateNode =
-    intersect(actions, [ DELETE_NODE ]).length
+    B.intersect(actions, [ DELETE_NODE ]).length
       ? Object.assign({}, templateNode, { childs: [] })
       : templateNode
 
@@ -2072,7 +2072,7 @@ module.exports = ({ liveNode, templateNode, limit }) => {
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { times } = __webpack_require__(1)
+const B = __webpack_require__(1)
 
 const createNodes = ({
   offset = 0,
@@ -2098,7 +2098,7 @@ const createNodes = ({
     filteredTemplateNodes.length
   )
 
-  return times(maxLength).reduce((patchNodes, index) => {
+  return B.times(maxLength).reduce((patchNodes, index) => {
 
     const templateNode = filteredTemplateNodes[index] || null
     const liveNode = filteredLiveNodes[index] || null
@@ -2452,7 +2452,6 @@ module.exports = ({
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { flatten } = __webpack_require__(1)
 const { TEXT_TYPE } = __webpack_require__(0)
 
 module.exports = (childs) => {
@@ -2486,7 +2485,7 @@ module.exports = (childs) => {
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { pick } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const createNode = __webpack_require__(40)
 const hookNode = __webpack_require__(7)
 const getCreateAction = __webpack_require__(46)
@@ -2537,7 +2536,7 @@ module.exports = ({
     newTemplateNode &&
     newTemplateNode.type == CLASS_TYPE &&
     newTemplateNode.class.injectContext
-  ) ? pick(context, ... newTemplateNode.class.injectContext())
+  ) ? B.pick(context, ... newTemplateNode.class.injectContext())
     : {}
 
   if (options.hooks) {
@@ -4606,7 +4605,6 @@ describe('Update dom callback', () => {
 /* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { omit } = __webpack_require__(1)
 const { CREATE_NODE } = __webpack_require__(3)
 const updateNodes = __webpack_require__(33)
 
@@ -4773,7 +4771,6 @@ describe('Create patch node', () => {
 /* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { omit } = __webpack_require__(1)
 const createNodes = __webpack_require__(35)
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
 
@@ -8324,7 +8321,7 @@ describe('Create tree, create callback:', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const createNodes = __webpack_require__(44)
-const { omit } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const {
   ROOT_TYPE, TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
@@ -8548,7 +8545,7 @@ describe('Create nodes:', () => {
           return {
             newLiveNode: node,
             isNeedChilds: templateNode.hasOwnProperty('childs'),
-            newContext: omit(node, 'childs'),
+            newContext: B.omit(node, 'childs'),
             liveChilds: liveNode.childs,
             templateChilds: templateNode.childs,
           }

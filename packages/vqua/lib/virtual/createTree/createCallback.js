@@ -1,4 +1,4 @@
-const { pick } = require('berries')
+const B = require('berries')
 const createNode = require('../createNode')
 const hookNode = require('../hookNode')
 const getCreateAction = require('../getCreateAction')
@@ -49,7 +49,7 @@ module.exports = ({
     newTemplateNode &&
     newTemplateNode.type == CLASS_TYPE &&
     newTemplateNode.class.injectContext
-  ) ? pick(context, ... newTemplateNode.class.injectContext())
+  ) ? B.pick(context, ... newTemplateNode.class.injectContext())
     : {}
 
   if (options.hooks) {
