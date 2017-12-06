@@ -2087,7 +2087,6 @@ const B = __webpack_require__(1)
 const hookNode = __webpack_require__(8)
 const { INSTANCE_TYPE } = __webpack_require__(0)
 const createNodesWithRefs = __webpack_require__(41)
-const mapNodes = __webpack_require__(50)
 
 module.exports = ({
   templateNode,
@@ -2097,20 +2096,12 @@ module.exports = ({
   beforeRender,
 } = {}) => {
 
-  const newChilds = mapNodes(templateNode.childs, node => {
-
-    return Object.assign({}, node, { isChildFromProps: true })
-
-  })
-
   const newProps = Object.assign({},
     templateNode.class.defaultProps(),
-    templateNode.props,
-    { childs: newChilds }
+    templateNode.props
   )
 
   const instance = new templateNode.class(newProps, injectedContext)
-
 
   if (beforeRender) beforeRender(instance)
 
@@ -2167,15 +2158,13 @@ module.exports = ({ templateNode }) => {
 
 module.exports = ({ templateNode }) => {
 
-  const keyParams =
-    templateNode.key
-      ? { key: templateNode.key }
-      : {}
+  const keyParams = templateNode.key
+    ? { key: templateNode.key }
+    : {}
 
-  const refParams =
-    templateNode.ref
-      ? { ref: templateNode.ref }
-      : {}
+  const refParams = templateNode.ref
+    ? { ref: templateNode.ref }
+    : {}
 
   const newTagNode = {
     type: templateNode.type,
@@ -2184,15 +2173,13 @@ module.exports = ({ templateNode }) => {
     childs: templateNode.childs,
   }
 
-  const propsParams =
-    templateNode.key
-      ? {
-          props: Object.assign({}, templateNode.props, {
-            'data-vqua-key': templateNode.key
-          })
-        }
-      : {}
-
+  const propsParams = templateNode.key
+    ? {
+        props: Object.assign({}, templateNode.props, {
+          'data-vqua-key': templateNode.key
+        })
+      }
+    : {}
 
   return Object.assign({},
     newTagNode,
@@ -2228,6 +2215,7 @@ const updateInstanceNode = __webpack_require__(40)
 const createTagNode = __webpack_require__(37)
 const createTextNode = __webpack_require__(38)
 const handleError = __webpack_require__(15)
+const { addRef } = __webpack_require__(21)
 
 const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
@@ -2265,8 +2253,7 @@ module.exports = ({
 
       if (newLiveNode.ref) {
 
-        newLiveNode.ref.instance
-          .refs[newLiveNode.ref.name] = newLiveNode.instance
+        addRef(newLiveNode, newLiveNode.instance)
 
       }
 
@@ -2283,6 +2270,12 @@ module.exports = ({
           context,
           injectedContext,
         })
+
+      if (newLiveNode.ref) {
+
+        addRef(newLiveNode, newLiveNode.instance)
+
+      }
 
       return newLiveNode
 
@@ -2343,12 +2336,10 @@ module.exports = ({
   liveInstance.prevState = liveInstance.state
   liveInstance.prevContext = liveInstance.context
 
-  const newProps =
-    Object.assign({},
-      templateNode.class.defaultProps(),
-      templateNode.props,
-      { childs: templateNode.childs || [] }      
-    )
+  const newProps = Object.assign({},
+    templateNode.class.defaultProps(),
+    templateNode.props,
+  )
 
   liveInstance.props = newProps
   liveInstance.state = liveInstance.state
@@ -2456,6 +2447,7 @@ const createNode = __webpack_require__(39)
 const hookNode = __webpack_require__(8)
 const getCreateAction = __webpack_require__(46)
 const handleError = __webpack_require__(15)
+const mapNodes = __webpack_require__(50)
 
 const {
   BEFORE_EACH_ITERATION, BEFORE_INSTANCE_UPDATE, ON_INSTANCE_CREATE
@@ -2465,6 +2457,8 @@ const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
   CREATE_INSTANCE, UPDATE_INSTANCE, RESUME_INSTANCE
 } = __webpack_require__(5)
+
+const { CLASS_TYPE } = __webpack_require__(0)
 
 module.exports = ({
   index,
@@ -2477,21 +2471,41 @@ module.exports = ({
   context = {},
 }) => {
 
-  const injectedContext =
-    templateNode && templateNode.class && templateNode.class.injectContext
-      ? pick(context, ... templateNode.class.injectContext())
-      : {}
+  const newTemplateNode = templateNode.type == CLASS_TYPE
+    ? Object.assign({},
+        templateNode,
+        {
+          props: Object.assign({},
+            templateNode.props,
+            {
+              childs: mapNodes(templateNode.childs, node => {
+
+                return Object.assign({}, node, { isChildFromProps: true })
+
+              }) || []
+            }
+          )
+        }
+      )
+    : templateNode
+
+  const injectedContext = (
+    newTemplateNode &&
+    newTemplateNode.class &&
+    newTemplateNode.class.injectContext
+  ) ? pick(context, ... newTemplateNode.class.injectContext())
+    : {}
 
   if (options.hooks) {
     hookNode(
       BEFORE_EACH_ITERATION,
       liveNode,
-      templateNode,
+      newTemplateNode,
       injectedContext
     )
   }
 
-  const createAction = getCreateAction(liveNode, templateNode, injectedContext)
+  const createAction = getCreateAction(liveNode, newTemplateNode, injectedContext)
 
   switch (createAction) {
 
@@ -2501,7 +2515,7 @@ module.exports = ({
         createNode({
           type: CREATE_ROOT,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -2521,7 +2535,7 @@ module.exports = ({
         createNode({
           type: CREATE_INSTANCE,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
           context,
           injectedContext,
           beforeRender: (instance) => {
@@ -2560,7 +2574,7 @@ module.exports = ({
         hookNode(
           BEFORE_INSTANCE_UPDATE,
           liveNode,
-          templateNode,
+          newTemplateNode,
           injectedContext
         )
       }
@@ -2569,7 +2583,7 @@ module.exports = ({
         createNode({
           type: UPDATE_INSTANCE,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
           injectedContext,
           context,
         })
@@ -2598,7 +2612,7 @@ module.exports = ({
         createNode({
           type: RESUME_INSTANCE,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -2616,7 +2630,7 @@ module.exports = ({
         createNode({
           type: CREATE_TAG,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -2624,7 +2638,7 @@ module.exports = ({
         newContext: context,
         isNeedChilds: true,
         liveChilds: liveNode ? liveNode.childs : [],
-        templateChilds: templateNode ? templateNode.childs : [],
+        templateChilds: newTemplateNode ? newTemplateNode.childs : [],
         newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
@@ -2636,7 +2650,7 @@ module.exports = ({
         createNode({
           type: CREATE_TEXT,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -5112,10 +5126,7 @@ describe('Component', () => {
     ).toEqual({
       type: CLASS_TYPE,
       props: {
-        id: 1,
-        childs: [
-          'test'
-        ]
+        id: 1
       },
       class: App,
       ref: 'app',
@@ -8048,7 +8059,7 @@ describe('Create tree, create callback:', () => {
       expect(
         app.beforeUpdate.calls.allArgs()
       ).toEqual([
-        [{ id: 1 }, {}, { id: 1 }],
+        [{ id: 1, childs: [] }, {}, { id: 1 }],
       ])
 
       app.beforeUpdate.calls.reset()
@@ -8098,7 +8109,7 @@ describe('Create tree, create callback:', () => {
 
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.instance instanceof App).toBe(true)
-      expect(newLiveNode.instance.props).toEqual({ id: 1 })
+      expect(newLiveNode.instance.props).toEqual({ id: 1, childs: [] })
       expect(newContext).toEqual({ id: 1 })
       expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
@@ -8734,7 +8745,7 @@ describe('Create tree', () => {
 
     expect(newLiveNodes[0].childs[0].type).toBe(INSTANCE_TYPE)
     expect(newLiveNodes[0].childs[0].instance instanceof App).toBe(true)
-    expect(newLiveNodes[0].childs[0].instance.props).toEqual({ id: 2 })
+    expect(newLiveNodes[0].childs[0].instance.props.id).toBe(2)
     expect(
       newLiveNodes[0].childs[0].instance.context
     ).toEqual({ id: 'context' })
@@ -8751,7 +8762,7 @@ describe('Create tree', () => {
 
   })
 
-  fit('with instance refs', () => {
+  it('with instance refs', () => {
 
     class Modal extends Component {
 
@@ -8796,8 +8807,6 @@ describe('Create tree', () => {
     expect(
       newLiveNodes[0].instance.refs.Form instanceof Form
     ).toBe(true)
-
-    // console.log(newLiveNodes[0].childs[0].childs[0].ref)
 
   })
 

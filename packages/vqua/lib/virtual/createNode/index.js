@@ -4,6 +4,7 @@ const updateInstanceNode = require('./updateInstanceNode')
 const createTagNode = require('./createTagNode')
 const createTextNode = require('./createTextNode')
 const handleError = require('../../helpers/handleError')
+const { addRef } = require('../refs')
 
 const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
@@ -41,8 +42,7 @@ module.exports = ({
 
       if (newLiveNode.ref) {
 
-        newLiveNode.ref.instance
-          .refs[newLiveNode.ref.name] = newLiveNode.instance
+        addRef(newLiveNode, newLiveNode.instance)
 
       }
 
@@ -59,6 +59,12 @@ module.exports = ({
           context,
           injectedContext,
         })
+
+      if (newLiveNode.ref) {
+
+        addRef(newLiveNode, newLiveNode.instance)
+
+      }
 
       return newLiveNode
 

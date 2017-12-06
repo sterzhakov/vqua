@@ -15,12 +15,10 @@ module.exports = ({
   liveInstance.prevState = liveInstance.state
   liveInstance.prevContext = liveInstance.context
 
-  const newProps =
-    Object.assign({},
-      templateNode.class.defaultProps(),
-      templateNode.props,
-      { childs: templateNode.childs || [] }      
-    )
+  const newProps = Object.assign({},
+    templateNode.class.defaultProps(),
+    templateNode.props,
+  )
 
   liveInstance.props = newProps
   liveInstance.state = liveInstance.state

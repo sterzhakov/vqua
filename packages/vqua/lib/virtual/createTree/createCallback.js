@@ -3,6 +3,7 @@ const createNode = require('../createNode')
 const hookNode = require('../hookNode')
 const getCreateAction = require('../getCreateAction')
 const handleError = require('../../helpers/handleError')
+const mapNodes = require('../mapNodes')
 
 const {
   BEFORE_EACH_ITERATION, BEFORE_INSTANCE_UPDATE, ON_INSTANCE_CREATE
@@ -12,6 +13,8 @@ const {
   CREATE_ROOT, CREATE_TEXT, CREATE_TAG,
   CREATE_INSTANCE, UPDATE_INSTANCE, RESUME_INSTANCE
 } = require('../../constants/createNodeTypes')
+
+const { CLASS_TYPE } = require('../../constants/nodeTypes')
 
 module.exports = ({
   index,
@@ -24,21 +27,41 @@ module.exports = ({
   context = {},
 }) => {
 
-  const injectedContext =
-    templateNode && templateNode.class && templateNode.class.injectContext
-      ? pick(context, ... templateNode.class.injectContext())
-      : {}
+  const newTemplateNode = templateNode.type == CLASS_TYPE
+    ? Object.assign({},
+        templateNode,
+        {
+          props: Object.assign({},
+            templateNode.props,
+            {
+              childs: mapNodes(templateNode.childs, node => {
+
+                return Object.assign({}, node, { isChildFromProps: true })
+
+              }) || []
+            }
+          )
+        }
+      )
+    : templateNode
+
+  const injectedContext = (
+    newTemplateNode &&
+    newTemplateNode.class &&
+    newTemplateNode.class.injectContext
+  ) ? pick(context, ... newTemplateNode.class.injectContext())
+    : {}
 
   if (options.hooks) {
     hookNode(
       BEFORE_EACH_ITERATION,
       liveNode,
-      templateNode,
+      newTemplateNode,
       injectedContext
     )
   }
 
-  const createAction = getCreateAction(liveNode, templateNode, injectedContext)
+  const createAction = getCreateAction(liveNode, newTemplateNode, injectedContext)
 
   switch (createAction) {
 
@@ -48,7 +71,7 @@ module.exports = ({
         createNode({
           type: CREATE_ROOT,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -68,7 +91,7 @@ module.exports = ({
         createNode({
           type: CREATE_INSTANCE,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
           context,
           injectedContext,
           beforeRender: (instance) => {
@@ -107,7 +130,7 @@ module.exports = ({
         hookNode(
           BEFORE_INSTANCE_UPDATE,
           liveNode,
-          templateNode,
+          newTemplateNode,
           injectedContext
         )
       }
@@ -116,7 +139,7 @@ module.exports = ({
         createNode({
           type: UPDATE_INSTANCE,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
           injectedContext,
           context,
         })
@@ -145,7 +168,7 @@ module.exports = ({
         createNode({
           type: RESUME_INSTANCE,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -163,7 +186,7 @@ module.exports = ({
         createNode({
           type: CREATE_TAG,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {
@@ -171,7 +194,7 @@ module.exports = ({
         newContext: context,
         isNeedChilds: true,
         liveChilds: liveNode ? liveNode.childs : [],
-        templateChilds: templateNode ? templateNode.childs : [],
+        templateChilds: newTemplateNode ? newTemplateNode.childs : [],
         newLiveParentInstanceNode: liveParentInstanceNode,
       }
 
@@ -183,7 +206,7 @@ module.exports = ({
         createNode({
           type: CREATE_TEXT,
           liveNode,
-          templateNode,
+          templateNode: newTemplateNode,
         })
 
       return {

@@ -98,7 +98,7 @@ describe('Create tree', () => {
 
     expect(newLiveNodes[0].childs[0].type).toBe(INSTANCE_TYPE)
     expect(newLiveNodes[0].childs[0].instance instanceof App).toBe(true)
-    expect(newLiveNodes[0].childs[0].instance.props).toEqual({ id: 2 })
+    expect(newLiveNodes[0].childs[0].instance.props.id).toBe(2)
     expect(
       newLiveNodes[0].childs[0].instance.context
     ).toEqual({ id: 'context' })
@@ -115,7 +115,7 @@ describe('Create tree', () => {
 
   })
 
-  fit('with instance refs', () => {
+  it('with instance refs', () => {
 
     class Modal extends Component {
 
@@ -160,8 +160,6 @@ describe('Create tree', () => {
     expect(
       newLiveNodes[0].instance.refs.Form instanceof Form
     ).toBe(true)
-
-    // console.log(newLiveNodes[0].childs[0].childs[0].ref)
 
   })
 

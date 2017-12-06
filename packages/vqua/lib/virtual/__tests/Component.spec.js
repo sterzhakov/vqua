@@ -60,10 +60,7 @@ describe('Component', () => {
     ).toEqual({
       type: CLASS_TYPE,
       props: {
-        id: 1,
-        childs: [
-          'test'
-        ]
+        id: 1
       },
       class: App,
       ref: 'app',

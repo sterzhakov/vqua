@@ -160,7 +160,7 @@ describe('Create tree, create callback:', () => {
       expect(
         app.beforeUpdate.calls.allArgs()
       ).toEqual([
-        [{ id: 1 }, {}, { id: 1 }],
+        [{ id: 1, childs: [] }, {}, { id: 1 }],
       ])
 
       app.beforeUpdate.calls.reset()
@@ -210,7 +210,7 @@ describe('Create tree, create callback:', () => {
 
       expect(isNeedChilds).toBe(true)
       expect(newLiveNode.instance instanceof App).toBe(true)
-      expect(newLiveNode.instance.props).toEqual({ id: 1 })
+      expect(newLiveNode.instance.props).toEqual({ id: 1, childs: [] })
       expect(newContext).toEqual({ id: 1 })
       expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
