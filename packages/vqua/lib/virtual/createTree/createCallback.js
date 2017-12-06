@@ -27,7 +27,7 @@ module.exports = ({
   context = {},
 }) => {
 
-  const newTemplateNode = templateNode.type == CLASS_TYPE
+  const newTemplateNode = templateNode && templateNode.type == CLASS_TYPE
     ? Object.assign({},
         templateNode,
         {
@@ -47,7 +47,7 @@ module.exports = ({
 
   const injectedContext = (
     newTemplateNode &&
-    newTemplateNode.class &&
+    newTemplateNode.type == CLASS_TYPE &&
     newTemplateNode.class.injectContext
   ) ? pick(context, ... newTemplateNode.class.injectContext())
     : {}

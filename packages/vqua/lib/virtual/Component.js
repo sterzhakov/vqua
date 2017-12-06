@@ -13,6 +13,7 @@ const { INSTANCE_TYPE, CLASS_TYPE } = require('../constants/nodeTypes')
 const hookNode = require('./hookNode')
 const { AFTER_DOM_CREATE } = require('../constants/hookTypes')
 const mapNodes = require('./mapNodes')
+const createNodesWithRefs = require('./createNodesWithRefs')
 
 class Base {
 
@@ -109,7 +110,10 @@ class Base {
 
     const liveNodes = this.node.childs
 
-    const templateNodes = flatten([ this.render() ])
+    const templateNodes = createNodesWithRefs(
+      flatten([ this.render() ]),
+      this
+    )
 
     const newLiveNodes =
       createLiveTree(liveNodes, templateNodes, {

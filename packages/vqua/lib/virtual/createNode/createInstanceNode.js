@@ -20,7 +20,7 @@ module.exports = ({
 
   if (beforeRender) beforeRender(instance)
 
-  const refParams = typeof templateNode.ref == 'string'
+  const refParams = templateNode.ref
     ? { ref: templateNode.ref }
     : {}
 
@@ -38,7 +38,6 @@ module.exports = ({
       context,
       instance,
       type: INSTANCE_TYPE,
-      ref: templateNode.ref,
       childs,
     },
       refParams,
