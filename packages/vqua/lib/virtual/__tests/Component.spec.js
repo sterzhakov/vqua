@@ -67,6 +67,9 @@ describe('Component', () => {
       },
       class: App,
       ref: 'app',
+      childs: [
+        'test'
+      ]
     })
 
   })

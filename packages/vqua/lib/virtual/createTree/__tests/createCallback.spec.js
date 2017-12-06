@@ -312,8 +312,6 @@ describe('Create tree, create callback:', () => {
 
       expect(isNeedChilds).toBe(false)
       expect(newLiveNode.childs).toEqual([])
-      expect(newLiveNode.instance.nextProps).toEqual({})
-      expect(newLiveNode.instance.nextContext).toEqual({})
       expect(newContext).toEqual({ id: 2 })
       expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 

@@ -39,12 +39,10 @@ module.exports = ({
           beforeRender,
         })
 
-      if (templateNode.ref) {
+      if (newLiveNode.ref) {
 
-        templateNode.ref.instance.refs =
-          Object.assign({}, templateNode.ref.instance.refs, {
-            [templateNode.ref.name]: newLiveNode.instance
-          })
+        newLiveNode.ref.instance
+          .refs[newLiveNode.ref.name] = newLiveNode.instance
 
       }
 
@@ -59,7 +57,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
-          injectedContext
+          injectedContext,
         })
 
       return newLiveNode

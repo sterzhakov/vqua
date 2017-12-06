@@ -1,18 +1,17 @@
-const { flatten } = require('berries')
+const B = require('berries')
 const createNodes = require('./createNodes')
 const createCallback = require('./createCallback')
 const { sortLiveNodes, sortTemplateNodes } = require('../sortNodes')
 const decorateNodes = require('../decorateNodes')
 const createNodesWithRefs = require('../createNodesWithRefs')
 const createTextNodes = require('../createTextNodes')
-const core = require('../Core/singleton')
 
 module.exports = (liveNodes, templateNodes, options = {}) => {
 
   const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
 
     const textTemplateNodes =
-      createTextNodes(flatten([templateNodes]))
+      createTextNodes(B.flatten([templateNodes]))
 
     const sortedTemplateNodes =
       sortTemplateNodes(textTemplateNodes)
@@ -27,24 +26,20 @@ module.exports = (liveNodes, templateNodes, options = {}) => {
 
   }
 
-  const nodes =
-    createNodes({
-      liveNodes,
-      templateNodes,
-      createNode: createCallback,
-      createOptions: {
-        hooks: options.hooks,
-        linkParent: true,
-        childDomNodesCount: true,
-        index: true,
-      },
-      liveParentNode: options.liveParentNode || null,
-      liveParentInstanceNode: options.liveParentInstanceNode || null,
-      createContext: options.context || {},
-      filterNodes,
-      core
-    })
-
-  return nodes
+  return createNodes({
+    liveNodes,
+    templateNodes,
+    createNode: createCallback,
+    createOptions: {
+      hooks: options.hooks,
+      linkParent: true,
+      childDomNodesCount: true,
+      index: true,
+    },
+    liveParentNode: options.liveParentNode || null,
+    liveParentInstanceNode: options.liveParentInstanceNode || null,
+    createContext: options.context || {},
+    filterNodes
+  })
 
 }

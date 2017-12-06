@@ -12,6 +12,7 @@ const eachNodes = require('./eachNodes')
 const { INSTANCE_TYPE, CLASS_TYPE } = require('../constants/nodeTypes')
 const hookNode = require('./hookNode')
 const { AFTER_DOM_CREATE } = require('../constants/hookTypes')
+const mapNodes = require('./mapNodes')
 
 class Base {
 
@@ -23,45 +24,43 @@ class Base {
 
   static v(props = {}, ...childs) {
 
-    const newProps =
-      Object.assign({},
-        omit(props, 'ref', 'key'),
-        { childs }
-      )
+    const newProps = omit(props, 'ref', 'key')
 
-    const refParams =
-      props.ref
-        ? { ref: props.ref }
-        : {}
+    const baseParams = {
+      type: CLASS_TYPE,
+      class: this,
+      props: newProps,
+      childs,
+    }
+
+    const refParams = props.ref
+      ? { ref: props.ref }
+      : {}
 
     const keyParams = props.key
       ? { key: props.key }
       : {}
 
-    const baseParams = {
-      type: CLASS_TYPE,
-      class: this,
-      props: newProps
-    }
-
-    return Object.assign({}, baseParams, refParams, keyParams)
+    return Object.assign({},
+      baseParams,
+      refParams,
+      keyParams
+    )
 
   }
 
   constructor(props, context) {
 
+    this.node = null
+    this.refs = {}
+
     this.props = props
     this.state = {}
     this.context = context
-    this.nextProps = {}
-    this.nextState = {}
-    this.nextContext = {}
+
     this.prevProps = {}
     this.prevState = {}
     this.prevContext = {}
-    this.parentRef = null
-    this.parentInstance = null
-    this.refs = {}
 
   }
 

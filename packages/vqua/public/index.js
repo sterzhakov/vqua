@@ -124,6 +124,7 @@ const eachNodes = __webpack_require__(12)
 const { INSTANCE_TYPE, CLASS_TYPE } = __webpack_require__(0)
 const hookNode = __webpack_require__(8)
 const { AFTER_DOM_CREATE } = __webpack_require__(6)
+const mapNodes = __webpack_require__(50)
 
 class Base {
 
@@ -135,45 +136,43 @@ class Base {
 
   static v(props = {}, ...childs) {
 
-    const newProps =
-      Object.assign({},
-        omit(props, 'ref', 'key'),
-        { childs }
-      )
+    const newProps = omit(props, 'ref', 'key')
 
-    const refParams =
-      props.ref
-        ? { ref: props.ref }
-        : {}
+    const baseParams = {
+      type: CLASS_TYPE,
+      class: this,
+      props: newProps,
+      childs,
+    }
+
+    const refParams = props.ref
+      ? { ref: props.ref }
+      : {}
 
     const keyParams = props.key
       ? { key: props.key }
       : {}
 
-    const baseParams = {
-      type: CLASS_TYPE,
-      class: this,
-      props: newProps
-    }
-
-    return Object.assign({}, baseParams, refParams, keyParams)
+    return Object.assign({},
+      baseParams,
+      refParams,
+      keyParams
+    )
 
   }
 
   constructor(props, context) {
 
+    this.node = null
+    this.refs = {}
+
     this.props = props
     this.state = {}
     this.context = context
-    this.nextProps = {}
-    this.nextState = {}
-    this.nextContext = {}
+
     this.prevProps = {}
     this.prevState = {}
     this.prevContext = {}
-    this.parentRef = null
-    this.parentInstance = null
-    this.refs = {}
 
   }
 
@@ -584,21 +583,20 @@ module.exports = (nodes) => {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { flatten } = __webpack_require__(1)
+const B = __webpack_require__(1)
 const createNodes = __webpack_require__(44)
 const createCallback = __webpack_require__(43)
 const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(22)
 const decorateNodes = __webpack_require__(17)
 const createNodesWithRefs = __webpack_require__(41)
 const createTextNodes = __webpack_require__(42)
-const core = __webpack_require__(129)
 
 module.exports = (liveNodes, templateNodes, options = {}) => {
 
   const filterNodes = (liveNodes, templateNodes, liveParentInstanceNode) => {
 
     const textTemplateNodes =
-      createTextNodes(flatten([templateNodes]))
+      createTextNodes(B.flatten([templateNodes]))
 
     const sortedTemplateNodes =
       sortTemplateNodes(textTemplateNodes)
@@ -613,25 +611,21 @@ module.exports = (liveNodes, templateNodes, options = {}) => {
 
   }
 
-  const nodes =
-    createNodes({
-      liveNodes,
-      templateNodes,
-      createNode: createCallback,
-      createOptions: {
-        hooks: options.hooks,
-        linkParent: true,
-        childDomNodesCount: true,
-        index: true,
-      },
-      liveParentNode: options.liveParentNode || null,
-      liveParentInstanceNode: options.liveParentInstanceNode || null,
-      createContext: options.context || {},
-      filterNodes,
-      core
-    })
-
-  return nodes
+  return createNodes({
+    liveNodes,
+    templateNodes,
+    createNode: createCallback,
+    createOptions: {
+      hooks: options.hooks,
+      linkParent: true,
+      childDomNodesCount: true,
+      index: true,
+    },
+    liveParentNode: options.liveParentNode || null,
+    liveParentInstanceNode: options.liveParentInstanceNode || null,
+    createContext: options.context || {},
+    filterNodes
+  })
 
 }
 
@@ -2093,26 +2087,34 @@ const B = __webpack_require__(1)
 const hookNode = __webpack_require__(8)
 const { INSTANCE_TYPE } = __webpack_require__(0)
 const createNodesWithRefs = __webpack_require__(41)
+const mapNodes = __webpack_require__(50)
 
 module.exports = ({
   templateNode,
   context,
   injectedContext = {},
   afterRender,
-  beforeRender
+  beforeRender,
 } = {}) => {
 
-  const newProps =
-    Object.assign({},
-      templateNode.class.defaultProps(),
-      templateNode.props
-    )
+  const newChilds = mapNodes(templateNode.childs, node => {
+
+    return Object.assign({}, node, { isChildFromProps: true })
+
+  })
+
+  const newProps = Object.assign({},
+    templateNode.class.defaultProps(),
+    templateNode.props,
+    { childs: newChilds }
+  )
 
   const instance = new templateNode.class(newProps, injectedContext)
 
+
   if (beforeRender) beforeRender(instance)
 
-  const refParams = templateNode.ref
+  const refParams = typeof templateNode.ref == 'string'
     ? { ref: templateNode.ref }
     : {}
 
@@ -2122,7 +2124,7 @@ module.exports = ({
 
   const childs = createNodesWithRefs(
     B.flatten([ instance.render() || null ]),
-    instance
+    instance,
   )
 
   const newInstanceNode =
@@ -2261,12 +2263,10 @@ module.exports = ({
           beforeRender,
         })
 
-      if (templateNode.ref) {
+      if (newLiveNode.ref) {
 
-        templateNode.ref.instance.refs =
-          Object.assign({}, templateNode.ref.instance.refs, {
-            [templateNode.ref.name]: newLiveNode.instance
-          })
+        newLiveNode.ref.instance
+          .refs[newLiveNode.ref.name] = newLiveNode.instance
 
       }
 
@@ -2281,7 +2281,7 @@ module.exports = ({
           liveNode,
           templateNode,
           context,
-          injectedContext
+          injectedContext,
         })
 
       return newLiveNode
@@ -2333,7 +2333,7 @@ module.exports = ({
   liveNode,
   templateNode,
   context,
-  injectedContext,
+  injectedContext
 }) => {
 
   const liveType = liveNode.type
@@ -2346,26 +2346,25 @@ module.exports = ({
   const newProps =
     Object.assign({},
       templateNode.class.defaultProps(),
-      templateNode.props
+      templateNode.props,
+      { childs: templateNode.childs || [] }      
     )
 
   liveInstance.props = newProps
   liveInstance.state = liveInstance.state
   liveInstance.context = injectedContext
 
-  const keyParams =
-    templateNode.key
-      ? { key: templateNode.key }
-      : {}
+  const keyParams = templateNode.key
+    ? { key: templateNode.key }
+    : {}
 
-  const refParams =
-    templateNode.ref
-      ? { ref: templateNode.ref }
-      : {}
+  const refParams = templateNode.ref
+    ? { ref: templateNode.ref }
+    : {}
 
   const childs = createNodesWithRefs(
     B.flatten([ liveInstance.render() || null ]),
-    liveInstance
+    liveInstance,
   )
 
   const newInstanceNode =
@@ -2392,19 +2391,16 @@ module.exports = ({
 
 const mapNodes = __webpack_require__(50)
 
-module.exports = (nodes, parentNodeInstance, coreInstance) => {
+module.exports = (nodes, instance) => {
 
     return mapNodes(nodes, node => {
 
-      if (
-        node && typeof node.ref == 'string' &&
-        coreInstance.updateId == node.lastUpdateId
-      ) {
+      if (node && 'ref' in node && !node.isChildFromProps) {
 
         return Object.assign({}, node, {
           ref: {
             name: node.ref,
-            instance: parentNodeInstance,
+            instance,
           }
         })
 
@@ -2750,10 +2746,10 @@ const createNodes = ({
         createOptions,
         createContext: newContext,
         filterNodes,
-        index
+        index,
       })
 
-    const childDomNodesCount  =
+    const childDomNodesCount =
       createOptions.childDomNodesCount
         ? { childDomNodesCount: countDomNodes(childs) }
         : {}
@@ -3312,7 +3308,6 @@ var map = {
 	"./patch/createTree/__tests/createCallback.spec.js": 72,
 	"./patch/createTree/__tests/createNodes.spec.js": 73,
 	"./patch/createTree/__tests/index.spec.js": 74,
-	"./virtual/Core/__tests/Core.spec.js": 130,
 	"./virtual/__tests/Component.spec.js": 77,
 	"./virtual/__tests/assignDomNodes.spec.js": 78,
 	"./virtual/__tests/context.spec.js": 79,
@@ -4220,7 +4215,7 @@ describe('Update dom callback', () => {
 
     const actions = [ CREATE_NODE ]
 
-    let instance = { refs: {} }
+    const instance = { refs: {} }
 
     const templateNode = {
       type: TAG_TYPE,
@@ -4276,7 +4271,7 @@ describe('Update dom callback', () => {
 
   it('update tag node', () => {
 
-    let instance = { refs: {} }
+    const instance = { refs: {} }
 
     const actions = [ UPDATE_NODE ]
 
@@ -4343,7 +4338,7 @@ describe('Update dom callback', () => {
 
   it('delete node with it ref', () => {
 
-    let instance = { refs: { span: {} } }
+    const instance = { refs: { span: {} } }
 
     const actions = [ DELETE_NODE ]
 
@@ -4416,7 +4411,7 @@ describe('Update dom callback', () => {
 
     parentDomNode.appendChild( oldDomNode )
 
-    let instance = { ref: {} }
+    const instance = { ref: {} }
 
     const actions = [ REPLACE_NODE ]
 
@@ -4461,7 +4456,7 @@ describe('Update dom callback', () => {
 
     parentDomNode.appendChild( oldDomNode )
 
-    let instance = { refs: { div: document.createElement('div') } }
+    const instance = { refs: { div: document.createElement('div') } }
 
     const actions = [ REPLACE_NODE ]
 
@@ -5124,6 +5119,9 @@ describe('Component', () => {
       },
       class: App,
       ref: 'app',
+      childs: [
+        'test'
+      ]
     })
 
   })
@@ -5428,14 +5426,14 @@ describe('Create nodes with refs', () => {
     expect(
       createNodesWithRefs(
         [{ ref: 'test' }],
-        'parentNodInstance',
+        'parentNodeInstance',
         'coreInstance'
       )
     ).toEqual([
       {
         ref: {
           name: 'test',
-          instance: 'parentNodInstance'
+          instance: 'parentNodeInstance'
         },
       }
     ])
@@ -7373,10 +7371,8 @@ const createInstanceNode = __webpack_require__(35)
 const {
   TAG_TYPE, TEXT_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
-const Core = __webpack_require__(127)
 
 describe('Create instance node', () => {
-
 
   it('merge default props with template props', () => {
 
@@ -7582,7 +7578,6 @@ describe('Create text node', () => {
 
 const createNode = __webpack_require__(39)
 const Component = __webpack_require__(2)
-
 
 const {
   ROOT_TYPE, CLASS_TYPE, INSTANCE_TYPE, TAG_TYPE, TEXT_TYPE
@@ -8205,8 +8200,6 @@ describe('Create tree, create callback:', () => {
 
       expect(isNeedChilds).toBe(false)
       expect(newLiveNode.childs).toEqual([])
-      expect(newLiveNode.instance.nextProps).toEqual({})
-      expect(newLiveNode.instance.nextContext).toEqual({})
       expect(newContext).toEqual({ id: 2 })
       expect(newLiveParentInstanceNode.instance instanceof App).toBe(true)
 
@@ -8758,7 +8751,7 @@ describe('Create tree', () => {
 
   })
 
-  it('with instance refs', () => {
+  fit('with instance refs', () => {
 
     class Modal extends Component {
 
@@ -9800,76 +9793,6 @@ const union = (first, second) => {
 }
 
 module.exports = union
-
-
-/***/ }),
-/* 127 */
-/***/ (function(module, exports) {
-
-class Core {
-
-  constructor() {
-
-    this.lastUpdateId = 0
-
-  }
-
-  getLastUpdateId() {
-    return this.lastUpdateId
-  }
-
-  increaseLastUpdateId() {
-    return this.lastUpdateId = this.lastUpdateId + 1
-  }
-
-}
-
-module.exports = Core
-
-
-/***/ }),
-/* 128 */,
-/* 129 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Core = __webpack_require__(127)
-
-module.exports = new Core
-
-
-/***/ }),
-/* 130 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Core = __webpack_require__(127)
-
-describe('Core', () => {
-
-  it('default last id is 0', () => {
-
-    const core = new Core
-
-    expect(
-      core.getLastUpdateId()
-    ).toBe(0)
-
-  })
-
-  it('increase last id 3 times', () => {
-
-    const core = new Core
-
-    core.increaseLastUpdateId()
-    core.increaseLastUpdateId()
-    core.increaseLastUpdateId()
-
-    expect(
-      core.getLastUpdateId()
-    ).toBe(3)
-
-  })
-
-})
 
 
 /***/ })

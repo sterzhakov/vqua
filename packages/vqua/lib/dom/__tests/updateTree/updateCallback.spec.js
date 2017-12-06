@@ -14,7 +14,7 @@ describe('Update dom callback', () => {
 
     const actions = [ CREATE_NODE ]
 
-    let instance = { refs: {} }
+    const instance = { refs: {} }
 
     const templateNode = {
       type: TAG_TYPE,
@@ -70,7 +70,7 @@ describe('Update dom callback', () => {
 
   it('update tag node', () => {
 
-    let instance = { refs: {} }
+    const instance = { refs: {} }
 
     const actions = [ UPDATE_NODE ]
 
@@ -137,7 +137,7 @@ describe('Update dom callback', () => {
 
   it('delete node with it ref', () => {
 
-    let instance = { refs: { span: {} } }
+    const instance = { refs: { span: {} } }
 
     const actions = [ DELETE_NODE ]
 
@@ -210,7 +210,7 @@ describe('Update dom callback', () => {
 
     parentDomNode.appendChild( oldDomNode )
 
-    let instance = { ref: {} }
+    const instance = { ref: {} }
 
     const actions = [ REPLACE_NODE ]
 
@@ -255,7 +255,7 @@ describe('Update dom callback', () => {
 
     parentDomNode.appendChild( oldDomNode )
 
-    let instance = { refs: { div: document.createElement('div') } }
+    const instance = { refs: { div: document.createElement('div') } }
 
     const actions = [ REPLACE_NODE ]
 

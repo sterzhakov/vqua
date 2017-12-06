@@ -115,7 +115,7 @@ describe('Create tree', () => {
 
   })
 
-  it('with instance refs', () => {
+  fit('with instance refs', () => {
 
     class Modal extends Component {
 

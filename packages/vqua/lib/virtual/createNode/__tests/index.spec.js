@@ -1,7 +1,6 @@
 const createNode = require('../../createNode/index')
 const Component = require('../../Component')
 
-
 const {
   ROOT_TYPE, CLASS_TYPE, INSTANCE_TYPE, TAG_TYPE, TEXT_TYPE
 } = require('../../../constants/nodeTypes')

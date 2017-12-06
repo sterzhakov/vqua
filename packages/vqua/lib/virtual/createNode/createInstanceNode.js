@@ -2,26 +2,34 @@ const B = require('berries')
 const hookNode = require('../hookNode')
 const { INSTANCE_TYPE } = require('../../constants/nodeTypes')
 const createNodesWithRefs = require('../createNodesWithRefs')
+const mapNodes = require('../mapNodes')
 
 module.exports = ({
   templateNode,
   context,
   injectedContext = {},
   afterRender,
-  beforeRender
+  beforeRender,
 } = {}) => {
 
-  const newProps =
-    Object.assign({},
-      templateNode.class.defaultProps(),
-      templateNode.props
-    )
+  const newChilds = mapNodes(templateNode.childs, node => {
+
+    return Object.assign({}, node, { isChildFromProps: true })
+
+  })
+
+  const newProps = Object.assign({},
+    templateNode.class.defaultProps(),
+    templateNode.props,
+    { childs: newChilds }
+  )
 
   const instance = new templateNode.class(newProps, injectedContext)
 
+
   if (beforeRender) beforeRender(instance)
 
-  const refParams = templateNode.ref
+  const refParams = typeof templateNode.ref == 'string'
     ? { ref: templateNode.ref }
     : {}
 
@@ -31,7 +39,7 @@ module.exports = ({
 
   const childs = createNodesWithRefs(
     B.flatten([ instance.render() || null ]),
-    instance
+    instance,
   )
 
   const newInstanceNode =

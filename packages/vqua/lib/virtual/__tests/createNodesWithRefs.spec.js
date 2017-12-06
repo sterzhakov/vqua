@@ -7,14 +7,14 @@ describe('Create nodes with refs', () => {
     expect(
       createNodesWithRefs(
         [{ ref: 'test' }],
-        'parentNodInstance',
+        'parentNodeInstance',
         'coreInstance'
       )
     ).toEqual([
       {
         ref: {
           name: 'test',
-          instance: 'parentNodInstance'
+          instance: 'parentNodeInstance'
         },
       }
     ])

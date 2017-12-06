@@ -1,18 +1,15 @@
 const mapNodes = require('./mapNodes')
 
-module.exports = (nodes, parentNodeInstance, coreInstance) => {
+module.exports = (nodes, instance) => {
 
     return mapNodes(nodes, node => {
 
-      if (
-        node && typeof node.ref == 'string' &&
-        coreInstance.updateId == node.lastUpdateId
-      ) {
+      if (node && 'ref' in node && !node.isChildFromProps) {
 
         return Object.assign({}, node, {
           ref: {
             name: node.ref,
-            instance: parentNodeInstance,
+            instance,
           }
         })
 

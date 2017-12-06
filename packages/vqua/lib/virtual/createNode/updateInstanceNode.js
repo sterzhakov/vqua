@@ -5,7 +5,7 @@ module.exports = ({
   liveNode,
   templateNode,
   context,
-  injectedContext,
+  injectedContext
 }) => {
 
   const liveType = liveNode.type
@@ -18,26 +18,25 @@ module.exports = ({
   const newProps =
     Object.assign({},
       templateNode.class.defaultProps(),
-      templateNode.props
+      templateNode.props,
+      { childs: templateNode.childs || [] }      
     )
 
   liveInstance.props = newProps
   liveInstance.state = liveInstance.state
   liveInstance.context = injectedContext
 
-  const keyParams =
-    templateNode.key
-      ? { key: templateNode.key }
-      : {}
+  const keyParams = templateNode.key
+    ? { key: templateNode.key }
+    : {}
 
-  const refParams =
-    templateNode.ref
-      ? { ref: templateNode.ref }
-      : {}
+  const refParams = templateNode.ref
+    ? { ref: templateNode.ref }
+    : {}
 
   const childs = createNodesWithRefs(
     B.flatten([ liveInstance.render() || null ]),
-    liveInstance
+    liveInstance,
   )
 
   const newInstanceNode =

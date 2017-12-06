@@ -3,10 +3,8 @@ const createInstanceNode = require('../../createNode/createInstanceNode')
 const {
   TAG_TYPE, TEXT_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = require('../../../constants/nodeTypes')
-const Core = require('../../Core')
 
 describe('Create instance node', () => {
-
 
   it('merge default props with template props', () => {
 

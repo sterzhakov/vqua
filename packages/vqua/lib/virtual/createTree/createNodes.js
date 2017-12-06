@@ -74,10 +74,10 @@ const createNodes = ({
         createOptions,
         createContext: newContext,
         filterNodes,
-        index
+        index,
       })
 
-    const childDomNodesCount  =
+    const childDomNodesCount =
       createOptions.childDomNodesCount
         ? { childDomNodesCount: countDomNodes(childs) }
         : {}
