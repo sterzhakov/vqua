@@ -1,6 +1,5 @@
-const { htmlQuotes } = require('berries')
+const B = require('berries')
 const { matchRoutes } = require('vqua-router')
-const { include } = require('berries')
 
 class Navigation {
 
@@ -75,7 +74,7 @@ class Navigation {
 
       const redirectCodes = [ 301, 302, 303, 305, 307 ]
 
-      if (include(redirectCodes, params.statusCode)) {
+      if (B.include(redirectCodes, params.statusCode)) {
 
         this.onRedirectCallback(params)
 

@@ -8,10 +8,7 @@ module.exports = (request, response, next, callback) => {
     const newParams = Object.assign({}, params, {
       statusCode,
       componentName,
-      params: Object.assign({},
-        params.props || { props:   {} },
-        params.context || { context: {} }
-      )
+      params
     })
 
     responseSend(request, response, newParams)

@@ -6,7 +6,15 @@ module.exports = (config) => {
 
   const componentPath = path.join(process.cwd(), config.componentPath)
 
-  return Object.assign({}, config, {
+  const componentLayoutPath = config.componentLayoutPath
+    ? {
+        componentLayoutPath: (
+          path.join(process.cwd(), config.componentLayoutPath)
+        )
+      }
+    : {}
+
+  return Object.assign({}, config, componentLayoutPath, {
     publicPath,
     componentPath,
     routes: config.routes,

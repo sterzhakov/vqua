@@ -6,33 +6,33 @@
 5 silly isInitialized true
 6 silly existsSync /Users/sterjakov/projects/vqua/VERSION
 7 silly initialize attempt
-8 info current version undefined
+8 info current version 1.0.29
 9 silly getUpdates
 10 info Checking for updated packages...
 11 silly hasTags
 12 verbose hasTags true
 13 silly getLastTag
-14 verbose getLastTag vundefined
-15 info Comparing with vundefined.
-16 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/dom2vqua
+14 verbose getLastTag v1.0.28
+15 info Comparing with v1.0.28.
+16 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/dom2vqua
 17 silly diff
-18 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/html2vqua
+18 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/html2vqua
 19 silly diff
-20 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr
+20 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua-boilerplate-ssr
 21 silly diff
-22 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua-interpolate
+22 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua-interpolate
 23 silly diff
-24 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua-navigation
+24 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua-navigation
 25 silly diff
-26 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua-router
+26 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua-router
 27 silly diff
-28 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua-server
+28 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua-server
 29 silly diff
-30 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua-todo-ssr
+30 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua-todo-ssr
 31 silly diff
-32 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua
+32 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua
 33 silly diff
-34 silly diffSinceIn vundefined /Users/sterjakov/projects/vqua/packages/vqua2string
+34 silly diffSinceIn v1.0.28 /Users/sterjakov/projects/vqua/packages/vqua2string
 35 silly diff
 36 silly collectDependents
 37 silly collectUpdates
@@ -47,8 +47,12 @@
 46 silly commit vundefined
 47 verbose commit [ 'commit', '-m', 'vundefined' ]
 48 error execute Error: On branch master
-48 error execute Your branch is up-to-date with 'origin/master'.
-48 error execute nothing to commit, working tree clean
+48 error execute Your branch is ahead of 'origin/master' by 1 commit.
+48 error execute   (use "git push" to publish your local commits)
+48 error execute Changes not staged for commit:
+48 error execute 	modified:   lerna-debug.log
+48 error execute
+48 error execute no changes added to commit
 48 error execute
 48 error execute     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
 48 error execute     at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
@@ -62,8 +66,12 @@
 48 error execute     at PublishCommand.initialize (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:220:9)
 48 error execute  callback with error
 48 error execute  { Error: On branch master
-48 error execute Your branch is up-to-date with 'origin/master'.
-48 error execute nothing to commit, working tree clean
+48 error execute Your branch is ahead of 'origin/master' by 1 commit.
+48 error execute   (use "git push" to publish your local commits)
+48 error execute Changes not staged for commit:
+48 error execute 	modified:   lerna-debug.log
+48 error execute
+48 error execute no changes added to commit
 48 error execute
 48 error execute     at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
 48 error execute     at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
@@ -75,4 +83,4 @@
 48 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:276:15
 48 error execute     at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:298:13
 48 error execute     at PublishCommand.initialize (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:220:9)
-48 error execute   stack: 'Error: On branch master\nYour branch is up-to-date with \'origin/master\'.\nnothing to commit, working tree clean\n\n    at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)\n    at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)\n    at Function.commit (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/GitUtilities.js:84:39)\n    at PublishCommand.gitCommitAndTagVersion (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:612:30)\n    at PublishCommand.commitAndTagUpdates (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:582:27)\n    at PublishCommand.execute (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:261:16)\n    at PublishCommand._attempt (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:289:21)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:276:15\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:298:13\n    at PublishCommand.initialize (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:220:9)' }
+48 error execute   stack: 'Error: On branch master\nYour branch is ahead of \'origin/master\' by 1 commit.\n  (use "git push" to publish your local commits)\nChanges not staged for commit:\n\tmodified:   lerna-debug.log\n\nno changes added to commit\n\n    at Function.module.exports.sync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/node_modules/execa/index.js:277:26)\n    at Function.execSync (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)\n    at Function.commit (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/GitUtilities.js:84:39)\n    at PublishCommand.gitCommitAndTagVersion (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:612:30)\n    at PublishCommand.commitAndTagUpdates (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:582:27)\n    at PublishCommand.execute (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:261:16)\n    at PublishCommand._attempt (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:289:21)\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:276:15\n    at /Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/Command.js:298:13\n    at PublishCommand.initialize (/Users/sterjakov/.npm-packages/lib/node_modules/lerna/lib/commands/PublishCommand.js:220:9)' }
