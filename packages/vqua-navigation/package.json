@@ -1,6 +1,6 @@
 {
   "name": "vqua-navigation",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Navigation for vqua.",
   "main": "lib/index.js",
   "dependencies": {
