@@ -1,4 +1,4 @@
-const route = require('../createRoute')
+const route = require('../route')
 const initRoutes = require('../initRoutes')
 
 it('initRoutes()', () => {

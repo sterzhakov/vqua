@@ -1,12 +1,12 @@
-const createRoute = require('../createRoute')
+const route = require('../route')
 
-describe('Create route', () => {
+describe('route()', () => {
 
   it('object with segments, path, action', () => {
 
-    const route = createRoute('/posts/:id', 'posts-show')
-
-    expect(route).toEqual({
+    expect(
+      route('/posts/:id', 'posts-show')
+    ).toEqual({
       segments: ['posts', ':id'],
       path: '/posts/:id',
       action: 'posts-show',
@@ -18,9 +18,9 @@ describe('Create route', () => {
 
   it('object and convert array strings to path segments', () => {
 
-    const route = createRoute(['/posts/:id'], 'posts-show')
-
-    expect(route).toEqual({
+    expect(
+      route(['/posts/:id'], 'posts-show')
+    ).toEqual({
       segments: ['posts', ':id'],
       path: ['/posts/:id'],
       action: 'posts-show',

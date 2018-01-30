@@ -1,5 +1,6 @@
 module.exports = {
-  route: require('./lib/createRoute'),
+  route: require('./lib/route'),
+  scope: require('./lib/scope'),
   matchRoutes: require('./lib/matchRoutes'),
-  initRoutes: require('./lib/initRoutes'),
+  initRoutes:  require('./lib/initRoutes'),
 }

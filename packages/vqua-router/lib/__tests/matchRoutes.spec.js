@@ -1,4 +1,4 @@
-const createRoute = require('../createRoute')
+const route = require('../route')
 const matchRoutes = require('../matchRoutes')
 
 describe('Match route', () => {
@@ -8,10 +8,10 @@ describe('Match route', () => {
     const path = '/posts/2'
 
     const routes = [
-      createRoute('/users',     'users-all'),
-      createRoute('/users/:id', 'users-show'),
-      createRoute('/posts',     'posts-all'),
-      createRoute('/posts/:id', 'posts-show'),
+      route('/users',     'users-all'),
+      route('/users/:id', 'users-show'),
+      route('/posts',     'posts-all'),
+      route('/posts/:id', 'posts-show'),
     ]
 
     const matchedRoute = matchRoutes(routes, path)
@@ -44,10 +44,10 @@ describe('Match route', () => {
     ]
 
     const routes = [
-      createRoute('/users',     'users-all'),
-      createRoute('/users/:id', 'users-show'),
-      createRoute('/posts',     'posts-all'),
-      createRoute(matchers,     'posts-show'),
+      route('/users',     'users-all'),
+      route('/users/:id', 'users-show'),
+      route('/posts',     'posts-all'),
+      route(matchers,     'posts-show'),
     ]
 
     const matchedRoute = matchRoutes(routes, path)
