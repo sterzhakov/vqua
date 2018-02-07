@@ -112,7 +112,7 @@ module.exports = {
 
 const B = __webpack_require__(1)
 const humanizeNodes = __webpack_require__(22)
-const countDomNodes = __webpack_require__(9)
+const countDomNodes = __webpack_require__(10)
 const createLiveTree = __webpack_require__(11)
 const filterDomNodes = __webpack_require__(21)
 const getParentNodes = __webpack_require__(47)
@@ -122,10 +122,10 @@ const findDomNode = __webpack_require__(31)
 const updateDomTree = __webpack_require__(17)
 const eachNodes = __webpack_require__(12)
 const { INSTANCE_TYPE, CLASS_TYPE } = __webpack_require__(0)
-const hookNode = __webpack_require__(7)
+const hookNode = __webpack_require__(8)
 const { AFTER_DOM_CREATE } = __webpack_require__(5)
 const mapNodes = __webpack_require__(14)
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(7)
 
 class Base {
 
@@ -174,6 +174,8 @@ class Base {
     this.prevProps = {}
     this.prevState = {}
     this.prevContext = {}
+
+    this.unmounted = false
 
   }
 
@@ -336,7 +338,7 @@ const { ROOT_TYPE, INSTANCE_TYPE } = __webpack_require__(0)
 const createLiveTree = __webpack_require__(11)
 const filterDomNodes = __webpack_require__(21)
 const eachNodes = __webpack_require__(12)
-const hookNode = __webpack_require__(7)
+const hookNode = __webpack_require__(8)
 const { AFTER_DOM_CREATE } = __webpack_require__(5)
 const createPatchTree = __webpack_require__(19)
 const updateDomTree = __webpack_require__(17)
@@ -398,6 +400,34 @@ module.exports = (parentDomNode, liveNodes, templateNodes, context = {}) => {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
+const mapNodes = __webpack_require__(14)
+
+module.exports = (nodes, instance) => {
+
+    return mapNodes(nodes, node => {
+
+      if (node && 'ref' in node && !node.isChildFromProps) {
+
+        return Object.assign({}, node, {
+          ref: {
+            name: node.ref,
+            instance,
+          }
+        })
+
+      }
+
+      return node
+
+    })
+
+}
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
 const { removeRef } = __webpack_require__(15)
 const eachNodes = __webpack_require__(12)
 const isNodeForUnmount = __webpack_require__(49)
@@ -421,13 +451,20 @@ module.exports = (action, liveNode, templateNode, context) => {
 
     case BEFORE_EACH_ITERATION: {
 
-      if (liveNode && isNodeForUnmount(liveNode, templateNode)) {
+      if (
+        liveNode &&
+        liveNode.instance &&
+        !liveNode.instance.unmounted &&
+        isNodeForUnmount(liveNode, templateNode)  
+      ) {
 
         eachNodes(liveNode, (_liveNode) => {
 
           if (_liveNode.type == INSTANCE_TYPE) {
 
             callBeforeUnmount(_liveNode.instance)
+
+            _liveNode.instance.unmounted = true
 
           }
 
@@ -503,7 +540,7 @@ module.exports = (action, liveNode, templateNode, context) => {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const B = __webpack_require__(1)
@@ -550,7 +587,7 @@ module.exports = (leftProp, rightProp) => {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const {
@@ -583,34 +620,6 @@ module.exports = (nodes) => {
 
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const mapNodes = __webpack_require__(14)
-
-module.exports = (nodes, instance) => {
-
-    return mapNodes(nodes, node => {
-
-      if (node && 'ref' in node && !node.isChildFromProps) {
-
-        return Object.assign({}, node, {
-          ref: {
-            name: node.ref,
-            instance,
-          }
-        })
-
-      }
-
-      return node
-
-    })
-
-}
-
-
-/***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -619,7 +628,7 @@ const createNodes = __webpack_require__(44)
 const createCallback = __webpack_require__(43)
 const { sortLiveNodes, sortTemplateNodes } = __webpack_require__(23)
 const decorateNodes = __webpack_require__(20)
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(7)
 const createTextNodes = __webpack_require__(42)
 
 module.exports = (liveNodes, templateNodes, options = {}) => {
@@ -1869,7 +1878,7 @@ module.exports = loop
 const { addRef, removeRef } = __webpack_require__(15)
 const { createElement, insertAt, updateProps } = __webpack_require__(29)
 const sortProps = __webpack_require__(16)
-const isPropsEqual = __webpack_require__(8)
+const isPropsEqual = __webpack_require__(9)
 const {
   CREATE_NODE, UPDATE_NODE, DELETE_NODE, REPLACE_NODE, INSERT_NODE
 } = __webpack_require__(3)
@@ -2157,9 +2166,9 @@ module.exports = createNodes
 /***/ (function(module, exports, __webpack_require__) {
 
 const B = __webpack_require__(1)
-const hookNode = __webpack_require__(7)
+const hookNode = __webpack_require__(8)
 const { INSTANCE_TYPE } = __webpack_require__(0)
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(7)
 
 module.exports = ({
   templateNode,
@@ -2392,7 +2401,7 @@ module.exports = ({
 /***/ (function(module, exports, __webpack_require__) {
 
 const B = __webpack_require__(1)
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(7)
 
 module.exports = ({
   liveNode,
@@ -2487,7 +2496,7 @@ module.exports = (childs) => {
 
 const B = __webpack_require__(1)
 const createNode = __webpack_require__(40)
-const hookNode = __webpack_require__(7)
+const hookNode = __webpack_require__(8)
 const getCreateAction = __webpack_require__(46)
 const handleError = __webpack_require__(18)
 const mapNodes = __webpack_require__(14)
@@ -2548,7 +2557,8 @@ module.exports = ({
     )
   }
 
-  const createAction = getCreateAction(liveNode, newTemplateNode, injectedContext)
+  const createAction =
+    getCreateAction(liveNode, newTemplateNode, injectedContext)
 
   switch (createAction) {
 
@@ -2727,7 +2737,7 @@ module.exports = ({
 /* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const countDomNodes = __webpack_require__(9)
+const countDomNodes = __webpack_require__(10)
 
 const createNodes = ({
   liveNodes = [],
@@ -2921,7 +2931,7 @@ module.exports = (liveNode, templateNode, context) => {
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const countDomNodes = __webpack_require__(9)
+const countDomNodes = __webpack_require__(10)
 const { INSTANCE_TYPE } = __webpack_require__(0)
 
 const loop = (node, nodes = [], offset = 0) => {
@@ -3646,7 +3656,7 @@ describe('Get node actions', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const diffProps = __webpack_require__(28)
-const isPropsEqual = __webpack_require__(8)
+const isPropsEqual = __webpack_require__(9)
 
 describe('Get props diff for', () => {
 
@@ -3749,7 +3759,7 @@ describe('Get props diff for', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const { TEXT_TYPE, TAG_TYPE } = __webpack_require__(0)
-const isPropsEqual = __webpack_require__(8)
+const isPropsEqual = __webpack_require__(9)
 
 const {
   updateProps,
@@ -3949,7 +3959,7 @@ describe('Find node by offset', () => {
 /* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const isPropsEqual = __webpack_require__(8)
+const isPropsEqual = __webpack_require__(9)
 
 describe('Is props equal for', () => {
 
@@ -5398,7 +5408,7 @@ describe('Context', () => {
 /* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const countDomNodes = __webpack_require__(9)
+const countDomNodes = __webpack_require__(10)
 const {
   TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
 } = __webpack_require__(0)
@@ -5458,7 +5468,7 @@ describe('Count dom nodes for', () => {
 /* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const createNodesWithRefs = __webpack_require__(10)
+const createNodesWithRefs = __webpack_require__(7)
 
 describe('Create nodes with refs', () => {
 
@@ -8840,6 +8850,92 @@ describe('Create tree', () => {
 
   })
 
+  it('call beforeUnmount once time', () => {
+
+    class First extends Component {
+
+      beforeUnmount() {}
+
+    }
+
+    class Second extends Component {
+
+      beforeUnmount() {}
+
+    }
+
+    class Third extends Component {
+
+      beforeUnmount() {}
+
+    }
+
+    const first = new First
+    const second = new Second
+    const third = new Third
+
+    const liveNodes = [
+      {
+        type: INSTANCE_TYPE,
+        instance: first,
+        childs: [
+          {
+            type: INSTANCE_TYPE,
+            instance: second,
+            childs: [
+              {
+                type: INSTANCE_TYPE,
+                instance: third,
+                childs: []
+              },
+            ]
+          },
+        ]
+      },
+    ]
+
+    const templateNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: {},
+        childs: [
+          {
+            type: TAG_TYPE,
+            tag: 'div',
+            props: {},
+            childs: [
+              {
+                type: TAG_TYPE,
+                tag: 'div',
+                props: {},
+                childs: [],
+              }
+            ],
+          }
+        ],
+      }
+    ]
+
+    spyOn(first, 'beforeUnmount')
+    spyOn(second, 'beforeUnmount')
+    spyOn(third, 'beforeUnmount')
+
+    const newLiveNodes =
+      createTree(
+        liveNodes,
+        templateNodes,
+        {
+          hooks: true
+        }
+      )
+
+    expect(first.beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(second.beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(third.beforeUnmount).toHaveBeenCalledTimes(1)
+
+  })
+
 })
 
 
@@ -8938,7 +9034,7 @@ describe('Instance hooks', () => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const Component = __webpack_require__(2)
-const hookNode = __webpack_require__(7)
+const hookNode = __webpack_require__(8)
 
 const {
   TEXT_TYPE, TAG_TYPE, CLASS_TYPE, INSTANCE_TYPE
@@ -9197,11 +9293,9 @@ describe('Hook node', () => {
 
     hookNode(BEFORE_EACH_ITERATION, liveNode, templateNode, {})
 
-    instances.forEach((instance) => {
-      expect(
-        instance.beforeUnmount.calls.count()
-      ).toBe(1)
-    })
+    expect(instances[0].beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(instances[1].beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(instances[2].beforeUnmount).toHaveBeenCalledTimes(1)
 
   })
 

@@ -61,7 +61,8 @@ module.exports = ({
     )
   }
 
-  const createAction = getCreateAction(liveNode, newTemplateNode, injectedContext)
+  const createAction =
+    getCreateAction(liveNode, newTemplateNode, injectedContext)
 
   switch (createAction) {
 

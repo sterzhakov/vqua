@@ -21,13 +21,20 @@ module.exports = (action, liveNode, templateNode, context) => {
 
     case BEFORE_EACH_ITERATION: {
 
-      if (liveNode && isNodeForUnmount(liveNode, templateNode)) {
+      if (
+        liveNode &&
+        liveNode.instance &&
+        !liveNode.instance.unmounted &&
+        isNodeForUnmount(liveNode, templateNode)  
+      ) {
 
         eachNodes(liveNode, (_liveNode) => {
 
           if (_liveNode.type == INSTANCE_TYPE) {
 
             callBeforeUnmount(_liveNode.instance)
+
+            _liveNode.instance.unmounted = true
 
           }
 

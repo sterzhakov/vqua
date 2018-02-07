@@ -258,11 +258,9 @@ describe('Hook node', () => {
 
     hookNode(BEFORE_EACH_ITERATION, liveNode, templateNode, {})
 
-    instances.forEach((instance) => {
-      expect(
-        instance.beforeUnmount.calls.count()
-      ).toBe(1)
-    })
+    expect(instances[0].beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(instances[1].beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(instances[2].beforeUnmount).toHaveBeenCalledTimes(1)
 
   })
 

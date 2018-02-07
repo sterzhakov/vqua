@@ -163,4 +163,90 @@ describe('Create tree', () => {
 
   })
 
+  it('call beforeUnmount once time', () => {
+
+    class First extends Component {
+
+      beforeUnmount() {}
+
+    }
+
+    class Second extends Component {
+
+      beforeUnmount() {}
+
+    }
+
+    class Third extends Component {
+
+      beforeUnmount() {}
+
+    }
+
+    const first = new First
+    const second = new Second
+    const third = new Third
+
+    const liveNodes = [
+      {
+        type: INSTANCE_TYPE,
+        instance: first,
+        childs: [
+          {
+            type: INSTANCE_TYPE,
+            instance: second,
+            childs: [
+              {
+                type: INSTANCE_TYPE,
+                instance: third,
+                childs: []
+              },
+            ]
+          },
+        ]
+      },
+    ]
+
+    const templateNodes = [
+      {
+        type: TAG_TYPE,
+        tag: 'div',
+        props: {},
+        childs: [
+          {
+            type: TAG_TYPE,
+            tag: 'div',
+            props: {},
+            childs: [
+              {
+                type: TAG_TYPE,
+                tag: 'div',
+                props: {},
+                childs: [],
+              }
+            ],
+          }
+        ],
+      }
+    ]
+
+    spyOn(first, 'beforeUnmount')
+    spyOn(second, 'beforeUnmount')
+    spyOn(third, 'beforeUnmount')
+
+    const newLiveNodes =
+      createTree(
+        liveNodes,
+        templateNodes,
+        {
+          hooks: true
+        }
+      )
+
+    expect(first.beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(second.beforeUnmount).toHaveBeenCalledTimes(1)
+    expect(third.beforeUnmount).toHaveBeenCalledTimes(1)
+
+  })
+
 })

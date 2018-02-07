@@ -63,6 +63,8 @@ class Base {
     this.prevState = {}
     this.prevContext = {}
 
+    this.unmounted = false
+
   }
 
 
