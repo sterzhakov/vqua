@@ -100,12 +100,7 @@ class Navigation {
 
     }
 
-    if (!this.request) {
-
-      this.request = Object.assign({}, route.request)
-
-    }
-
+    this.request = Object.assign(this.request || {}, route.request)
 
     if (!this.response) {
 
