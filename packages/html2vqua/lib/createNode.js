@@ -10,10 +10,24 @@ module.exports = (htmlNode) => {
 
   if (htmlNode.node == 'element') {
 
+    const propKeys = Object.keys(htmlNode.attr || {})
+
+    const props = propKeys.reduce((props, key) => {
+
+      const value = htmlNode.attr[key]
+
+      const newValue = Array.isArray(value)
+        ? value.join(' ')
+        : value
+
+      return Object.assign({}, props, { [key]: newValue })
+
+    }, {})
+
     return {
       type: TAG_TYPE,
       tag: htmlNode.tag,
-      props: htmlNode.attr || {},
+      props,
     }
 
   } else

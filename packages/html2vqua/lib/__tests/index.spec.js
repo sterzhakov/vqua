@@ -7,7 +7,7 @@ describe('Html to vqua', () => {
   it('return new array', () => {
 
     const string = `
-      <p id='test'>
+      <p id='test' style='text-align: left;'>
         Hello world!
         <span>some text</span>
       </p>
@@ -19,9 +19,9 @@ describe('Html to vqua', () => {
       {
         type: 2,
         tag: 'p',
-        props: { id: 'test' },
+        props: { id: 'test', style: 'text-align: left;' },
         childs: [
-          ' Hello world! ',
+          'Hello world!',
           {
             type: 2,
             tag: 'span',

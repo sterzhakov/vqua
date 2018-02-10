@@ -5,7 +5,7 @@ const {
   getRightSpaces
 } = require('../filterText')
 
-fdescribe('Filter text,', () => {
+describe('Filter text,', () => {
 
   describe('filter spaces', () => {
 
