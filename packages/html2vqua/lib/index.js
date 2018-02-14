@@ -6,6 +6,8 @@ const mapNodes = require('./mapNodes')
 
 module.exports = (string) => {
 
+  if (typeof string != 'string') return null
+
   const htmlNodes = html2json(string)
 
   const vquaNodes = mapNodes(htmlNodes.child, createNode)
