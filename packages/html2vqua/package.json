@@ -1,6 +1,6 @@
 {
   "name": "html2vqua",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "Convert html to vqua nodes.",
   "main": "lib/index.js",
   "dependencies": {
